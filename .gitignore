@@ -1,1 +1,6 @@
+#Ignore the target folder anywhere
 **/target
+
+#Ignore the IDE folders anywhere
+**/.idea
+**/.vscode
