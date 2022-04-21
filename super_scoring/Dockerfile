@@ -1,9 +1,10 @@
-FROM maven:3.6.3-openjdk-11
+FROM maven:3.6.3-openjdk-11 AS build
 ADD src src
 ADD pom.xml .
-ADD src/etc/hibernate.properties .
-ADD src/etc/service.properties .
-ADD src/etc/service.properties.dev .
-RUN mvn package
+RUN mvn clean package
+
+FROM openjdk:11-jre-slim
+COPY --from=build /target/super_scoring.jar .
+COPY src/etc/* .
 EXPOSE 8000
-ENTRYPOINT ["java","-jar","target/super_scoring.jar"]
+ENTRYPOINT ["java","-jar","super_scoring.jar"]
