@@ -4,3 +4,5 @@
 # ignore ide files anywhere
 **/.idea
 **/.vscode
+
+**/node_modules
