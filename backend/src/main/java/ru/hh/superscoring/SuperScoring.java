@@ -7,12 +7,13 @@ import ru.hh.superscoring.config.ProdConfig;
 public class SuperScoring {
 
   public static void main(String[] args) {
+    System.setProperty(PropertiesUtils.SETINGS_DIR_PROPERTY, "src/etc");
 
     NabApplication
-            .builder()
-            .configureJersey()
-            .bindToRoot()
-            .build()
-            .run(ProdConfig.class);
+        .builder()
+        .configureJersey()
+        .bindToRoot()
+        .build()
+        .run(ProdConfig.class);
   }
 }

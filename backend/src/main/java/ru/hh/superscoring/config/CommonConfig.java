@@ -3,20 +3,27 @@ package ru.hh.superscoring.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.hh.nab.starter.NabCommonConfig;
+import ru.hh.superscoring.dao.GenericDao;
+import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.resource.ExampleResource;
+import org.springframework.context.annotation.Bean;
+import ru.hh.nab.hibernate.MappingConfig;
+import ru.hh.superscoring.service.TestService;
+
 
 @Configuration
 @Import({
-  // import your beans here
-  ExampleResource.class,
-  NabCommonConfig.class
+    // import your beans here
+    ExampleResource.class,
+    Test.class,
+    TestService.class,
+    GenericDao.class,
+    NabCommonConfig.class
 })
 public class CommonConfig {
 
-  /*@Bean
+  @Bean
   public MappingConfig mappingConfig() {
-    MappingConfig mappingConfig = new MappingConfig();
-    mappingConfig.addPackagesToScan("ru.hh.school.entity");
-    return mappingConfig;
-  }*/
+    return new MappingConfig(Test.class);
+  }
 }
