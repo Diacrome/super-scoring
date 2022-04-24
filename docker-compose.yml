@@ -1,14 +1,26 @@
-version: "3.9"
-
+version: '3.9'
 services:
+  backend:
+    container_name: backend
+    build: backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
   postgres:
     image: postgres:14.2-alpine
     restart: always
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5444:5432"
     environment:
       POSTGRES_PASSWORD: hh
       POSTGRES_DB: hh
       POSTGRES_USER: hh
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U hh" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
