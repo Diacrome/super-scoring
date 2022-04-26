@@ -1,0 +1,7 @@
+# ignore maven target anywhere
+**/target
+
+# ignore ide files anywher
+**/.idea
+**/.vscode
+ 
