@@ -1,10 +1,7 @@
-FROM maven:3.6.3-openjdk-11 AS build
+FROM maven:3.6.3-openjdk-11
 ADD src src
 ADD pom.xml .
-RUN mvn clean package
-
-FROM openjdk:11-jre-slim
-COPY --from=build /target/superscoring.jar .
-COPY src/etc/* .
+ADD src/etc .
+RUN mvn package
 EXPOSE 8000
-ENTRYPOINT ["java","-jar","superscoring.jar"]
+ENTRYPOINT ["java","-jar","target/superscoring.jar"]
