@@ -4,7 +4,8 @@
   description TEXT NOT NULL UNIQUE,
   date_created TIMESTAMP NOT NULL,
   date_modified TIMESTAMP,
-  creator_id INTEGER NOT NULL
+  creator_id INTEGER NOT NULL,
+  modifier_id INTEGER
 );
 
 INSERT INTO test (name,description,date_created,creator_id) VALUES

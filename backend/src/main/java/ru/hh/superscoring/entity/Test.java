@@ -27,7 +27,18 @@ public class Test {
   @Column(name = "creator_id")
   private Integer creatorId;
 
+  @Column(name = "modifier_id")
+  private Integer modifierId;
+
   public Test() {
+  }
+
+  public Integer getModifierId() {
+    return modifierId;
+  }
+
+  public void setModifierId(Integer modifierId) {
+    this.modifierId = modifierId;
   }
 
   public Integer getId() {

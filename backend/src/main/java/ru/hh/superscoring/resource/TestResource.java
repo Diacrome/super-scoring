@@ -19,9 +19,9 @@ public class TestResource {
   }
 
   @POST
-  @Path("ss/start/{id}")
+  @Path("start/{id}")
   @Produces("application/json")
-  public Response getTestObject(@PathParam("id") String id) {
+  public Response getTestObject(@PathParam("id") Integer id) {
     Optional<Test> test = testService.getTestById(id);
     if (test.isPresent()) {
       return Response.status(201)
