@@ -1,23 +1,36 @@
 package ru.hh.superscoring.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import ru.hh.superscoring.dao.GenericDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.validator.Validator;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 
 public class TestService {
-  private final ObjectMapper mapper;
-  private final GenericDao genericDao;
 
+  private static final Logger logger = LoggerFactory.getLogger(TestService.class);
+  private final TestDao testDao;
 
-  public TestService(GenericDao genericDao) {
-    this.mapper = new ObjectMapper();
-    this.genericDao = genericDao;
-
+  public TestService(TestDao testDao) {
+    this.testDao = testDao;
   }
 
-  public Test getTestById(Integer id) {
-    return genericDao.get(Test.class, id);
+  @Transactional
+  public Optional<Test> getTestById(String id) {
+    OptionalInt integerId = Validator.validateId(Test.class, id);
+    if (integerId.isPresent()) {
+      Test test = testDao.getTestById(integerId.getAsInt());
+      if (test != null) {
+        return Optional.of(test);
+      } else {
+        logger.error("There is no record with 'id' {} in the 'test' table!", id);
+      }
+    }
+    return Optional.empty();
   }
 
 }
