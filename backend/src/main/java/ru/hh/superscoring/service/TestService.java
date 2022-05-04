@@ -15,12 +15,6 @@ public class TestService {
   }
 
   public Test getTestById(Integer id) {
-    Test test = genericDao.get(Test.class, id);
-    if (test != null) {
-      return test;
-    } else {
-      logger.error("There is no record with 'id' {} in the 'test' table!", id);
-      return null;
-    }
+    return genericDao.get(Test.class, id);
   }
 }
