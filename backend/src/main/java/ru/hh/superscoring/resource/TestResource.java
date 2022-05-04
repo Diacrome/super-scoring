@@ -5,15 +5,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.service.TestService;
 
 @Path("/test")
 public class TestResource {
 
-  private static final Logger logger = LoggerFactory.getLogger(TestResource.class);
   private final TestService testService;
 
   public TestResource(TestService testService) {
@@ -24,7 +21,7 @@ public class TestResource {
   @Path("info/{id}")
   @Produces("application/json")
   public Response getTestObject(@PathParam("id") int id) {
-    Test test = testService.getTestById(id);
+    TestDto test = testService.getTestById(id);
     if (test != null) {
       return Response.status(201).entity(test).build();
     } else {

@@ -1,20 +1,30 @@
 package ru.hh.superscoring.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.hh.superscoring.dao.GenericDao;
+import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.entity.Test;
 
 public class TestService {
 
-  private static final Logger logger = LoggerFactory.getLogger(TestService.class);
   private final GenericDao genericDao;
 
   public TestService(GenericDao genericDao) {
     this.genericDao = genericDao;
   }
 
-  public Test getTestById(Integer id) {
-    return genericDao.get(Test.class, id);
+  private TestDto convertTestToTestDto(Test test) {
+    if (test != null) {
+      TestDto testDto = new TestDto();
+      testDto.setId(test.getId());
+      testDto.setName(test.getName());
+      testDto.setDescription(test.getDescription());
+      return testDto;
+    } else {
+      return null;
+    }
+  }
+
+  public TestDto getTestById(Integer id) {
+    return convertTestToTestDto(genericDao.get(Test.class, id));
   }
 }
