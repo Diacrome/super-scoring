@@ -12,19 +12,7 @@ public class TestService {
     this.genericDao = genericDao;
   }
 
-  private TestDto convertTestToTestDto(Test test) {
-    if (test != null) {
-      TestDto testDto = new TestDto();
-      testDto.setId(test.getId());
-      testDto.setName(test.getName());
-      testDto.setDescription(test.getDescription());
-      return testDto;
-    } else {
-      return null;
-    }
-  }
-
   public TestDto getTestById(Integer id) {
-    return convertTestToTestDto(genericDao.get(Test.class, id));
+    return TestDto.map(genericDao.get(Test.class, id));
   }
 }

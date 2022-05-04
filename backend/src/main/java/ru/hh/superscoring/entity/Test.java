@@ -51,12 +51,12 @@ public class Test {
     return description;
   }
 
-  public String getDateCreated() {
-    return dateCreated.toString();
+  public LocalDateTime getDateCreated() {
+    return dateCreated;
   }
 
-  public String getDateModified() {
-    return dateModified != null ? dateModified.toString() : "not modified yet";
+  public LocalDateTime getDateModified() {
+    return dateModified;
   }
 
   public Integer getCreatorId() {
