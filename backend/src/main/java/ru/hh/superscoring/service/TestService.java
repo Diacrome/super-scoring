@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.hh.superscoring.dao.GenericDao;
 import ru.hh.superscoring.entity.Test;
-import java.util.Optional;
 
 public class TestService {
 
@@ -15,13 +14,13 @@ public class TestService {
     this.genericDao = genericDao;
   }
 
-  public Optional<Test> getTestById(Integer id) {
+  public Test getTestById(Integer id) {
     Test test = genericDao.get(Test.class, id);
     if (test != null) {
-      return Optional.of(test);
+      return test;
     } else {
       logger.error("There is no record with 'id' {} in the 'test' table!", id);
-      return Optional.empty();
+      return null;
     }
   }
 }
