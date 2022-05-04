@@ -39,55 +39,27 @@ public class Test {
     return modifierId;
   }
 
-  public void setModifierId(Integer modifierId) {
-    this.modifierId = modifierId;
-  }
-
   public Integer getId() {
     return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getDescription() {
     return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   public String getDateCreated() {
     return dateCreated.toString();
   }
 
-  public void setDateCreated(LocalDateTime dateCreated) {
-    this.dateCreated = dateCreated;
-  }
-
   public String getDateModified() {
     return dateModified != null ? dateModified.toString() : "not modified yet";
   }
 
-  public void setDateModified(LocalDateTime dateModified) {
-    this.dateModified = dateModified;
-  }
-
   public Integer getCreatorId() {
     return creatorId;
-  }
-
-  public void setCreatorId(Integer creatorId) {
-    this.creatorId = creatorId;
   }
 }
