@@ -17,21 +17,10 @@ public class ExampleResourceTest {
   ResourceHelper resourceHelper;
 
   @Test
-  public void hello() {
-    final String name = "test";
-    Response response = resourceHelper.target("/hello")
-            .queryParam("name", name)
-            .request()
-            .get();
-    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    assertEquals(String.format("Hello, %s!", name), response.readEntity(String.class));
-  }
-
-  @Test
   public void helloWithoutParams() {
-    Response response = resourceHelper.createRequest("/hello").get();
+    Response response = resourceHelper.createRequest("/helloSuperScoringTeam").get();
     assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    assertEquals("Hello, world!", response.readEntity(String.class));
+    assertEquals("Hello, SuperScoring team!", response.readEntity(String.class));
   }
 
   @Configuration

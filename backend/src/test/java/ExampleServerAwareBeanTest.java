@@ -10,6 +10,7 @@ import ru.hh.nab.testbase.extensions.NabJunitWebConfig;
 import ru.hh.nab.testbase.extensions.NabTestServer;
 import ru.hh.nab.testbase.extensions.OverrideNabApplication;
 import ru.hh.superscoring.resource.ExampleResource;
+import ru.hh.superscoring.resource.HelloResource;
 
 @NabJunitWebConfig(NabTestConfig.class)
 public class ExampleServerAwareBeanTest {
@@ -19,9 +20,9 @@ public class ExampleServerAwareBeanTest {
 
   @Test
   public void testBeanWithNabTestContext() {
-    try (Response response = resourceHelper.createRequestFromAbsoluteUrl(resourceHelper.baseUrl() + "/hello").get()) {
+    try (Response response = resourceHelper.createRequestFromAbsoluteUrl(resourceHelper.baseUrl() + "/helloSuperScoringTeam").get()) {
       assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      assertEquals("Hello, world!", response.readEntity(String.class));
+      assertEquals("Hello, SuperScoring team!", response.readEntity(String.class));
     }
   }
 

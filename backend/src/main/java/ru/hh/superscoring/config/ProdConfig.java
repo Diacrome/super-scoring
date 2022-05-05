@@ -2,6 +2,7 @@ package ru.hh.superscoring.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import ru.hh.nab.hibernate.NabSessionFactoryBean;
 import ru.hh.nab.starter.NabProdConfig;
 import org.springframework.context.annotation.Bean;
 import ru.hh.nab.common.properties.FileSettings;
@@ -20,4 +21,5 @@ public class ProdConfig {
   public DataSource dataSource(DataSourceFactory dataSourceFactory, FileSettings fileSettings) {
     return dataSourceFactory.create("master", false, fileSettings);
   }
+
 }
