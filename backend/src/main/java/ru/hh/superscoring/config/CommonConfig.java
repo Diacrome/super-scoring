@@ -9,6 +9,8 @@ import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.resource.AnswerResource;
 import ru.hh.superscoring.resource.ExampleResource;
+import ru.hh.superscoring.resource.HelloResource;
+import ru.hh.superscoring.resource.TestResource;
 import org.springframework.context.annotation.Bean;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.superscoring.service.AnswerService;
@@ -23,12 +25,20 @@ import ru.hh.superscoring.service.TestService;
     GenericDao.class,
     AnswerService.class,
     AnswerResource.class,
+    GenericDao.class,
+    HelloResource.class,
+    TestResource.class,
+    Test.class,
+    TestService.class,
     NabCommonConfig.class
 })
+
 public class CommonConfig {
 
+  // ENTITES КЛАССЫ УКАЗЫВАТЬ В КОНСТРУКТОРЕ ЧЕРЕЗ ЗАПЯТУЮ
   @Bean
   public MappingConfig mappingConfig() {
     return new MappingConfig(Test.class, Answer.class);
   }
+
 }
