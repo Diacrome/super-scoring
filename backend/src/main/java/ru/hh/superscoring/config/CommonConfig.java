@@ -5,7 +5,8 @@ import org.springframework.context.annotation.Import;
 import ru.hh.nab.starter.NabCommonConfig;
 import ru.hh.superscoring.dao.GenericDao;
 import ru.hh.superscoring.entity.Test;
-import ru.hh.superscoring.resource.ExampleResource;
+import ru.hh.superscoring.resource.HelloResource;
+import ru.hh.superscoring.resource.TestResource;
 import org.springframework.context.annotation.Bean;
 import ru.hh.nab.hibernate.MappingConfig;
 import ru.hh.superscoring.service.TestService;
@@ -14,16 +15,20 @@ import ru.hh.superscoring.service.TestService;
 @Configuration
 @Import({
     // import your beans here
-    ExampleResource.class,
+    GenericDao.class,
+    HelloResource.class,
+    TestResource.class,
     Test.class,
     TestService.class,
-    GenericDao.class,
     NabCommonConfig.class
 })
+
 public class CommonConfig {
 
+  // ENTITES КЛАССЫ УКАЗЫВАТЬ В КОНСТРУКТОРЕ ЧЕРЕЗ ЗАПЯТУЮ
   @Bean
   public MappingConfig mappingConfig() {
     return new MappingConfig(Test.class);
   }
+
 }

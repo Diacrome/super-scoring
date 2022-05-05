@@ -1,15 +1,11 @@
 package ru.hh.superscoring.dao;
 
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
 public class GenericDao {
   protected final SessionFactory sessionFactory;
-
 
   public GenericDao(SessionFactory sessionFactory) {
     this.sessionFactory = sessionFactory;
@@ -31,5 +27,4 @@ public class GenericDao {
   protected Session getSession() {
     return sessionFactory.getCurrentSession();
   }
-
 }
