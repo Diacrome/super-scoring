@@ -5,6 +5,7 @@ import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ru.hh.superscoring.service.AnswerService;
@@ -22,11 +23,11 @@ public class AnswerResource {
   public Response saveAnswer(@FormParam("questionId") String questionString,
                              @FormParam("answer") String answer
                              ){
-    //  @FormParam("testPassId") Integer testPassId // если договоримся, что передаваться будет еще и этот параметр
-    Integer testPassId = 1; // Это просто заглушка для параметра, который пока не договорились как будет передаваться
+    //  @QueryParam(value = "testPassId") Integer testPassId // заготовка для получения userId
+    Integer userId = 1; // Это просто заглушка для параметра, который пока не договорились как будет передаваться
     try {
       Integer questionId = Integer.parseInt(questionString);
-      answerService.saveAnswer(testPassId, questionId, answer);
+      answerService.saveAnswer(userId, questionId, answer);
     }
     catch (NumberFormatException e){
       return Response.status(400).entity(e.toString()).build();
