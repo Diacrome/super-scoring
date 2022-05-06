@@ -2,6 +2,7 @@ package ru.hh.superscoring.service;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import javax.annotation.Resource;
 import ru.hh.superscoring.dao.AnswerDao;
 import ru.hh.superscoring.dao.GenericDao;
 import ru.hh.superscoring.entity.Answer;

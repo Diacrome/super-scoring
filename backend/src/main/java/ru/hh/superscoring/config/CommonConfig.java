@@ -22,10 +22,10 @@ import ru.hh.superscoring.service.TestService;
     // import your beans here
     ExampleResource.class,
     TestService.class,
-    GenericDao.class,
+    //GenericDao.class,
+    AnswerDao.class,
     AnswerService.class,
     AnswerResource.class,
-    GenericDao.class,
     HelloResource.class,
     TestResource.class,
     Test.class,
