@@ -1,6 +1,7 @@
 package ru.hh.superscoring.service;
 
 import java.time.LocalDateTime;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AuthDao;
 import java.util.Random;
 import java.security.SecureRandom;
@@ -15,14 +16,17 @@ public class AuthService {
     this.authDao = authDao;
   }
 
+  @Transactional(readOnly = true)
   public String getUserWithToken(String token) {
     return authDao.getUserNameWithToken(token);
   }
 
-  public Integer checkAuthentification(String login, String password) {
+  @Transactional(readOnly = true)
+  public Integer checkAuthentication(String login, String password) {
     return authDao.findUser(login, password);
   }
 
+  @Transactional(readOnly = true)
   public Token generateAccessToken(Integer userId) {
     Random random = new SecureRandom();
     String accessToken = new BigInteger(100, random).toString(32);

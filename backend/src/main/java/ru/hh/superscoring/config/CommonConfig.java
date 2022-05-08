@@ -24,7 +24,6 @@ import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.QuestionService;
 import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;
-import ru.hh.superscoring.service.UserService;
 
 
 @Configuration
@@ -47,7 +46,6 @@ import ru.hh.superscoring.service.UserService;
     UserDao.class,
     User.class,
     Token.class,
-    UserService.class,
     AuthService.class,
     AuthResource.class,
     NabCommonConfig.class

@@ -1,6 +1,5 @@
 package ru.hh.superscoring.resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.persistence.NoResultException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -10,7 +9,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import ru.hh.superscoring.entity.Token;
-import ru.hh.superscoring.service.UserService;
 import ru.hh.superscoring.service.AuthService;
 
 
@@ -33,7 +31,7 @@ public class AuthResource {
     } catch (NoResultException e) {
       return Response.status(404, "Invalid token").build();
     } catch (Exception e) {
-      return Response.status(404, "Some error occurred").build();
+      return Response.status(400, "Some error occurred").build();
     }
     String response = "{ \"name\" : \"" + userName + "\" }";
     return Response.ok(response).build();
@@ -45,11 +43,11 @@ public class AuthResource {
   public Response generateToken(@FormParam("login") String login, @FormParam("password") String password) {
     Integer userId;
     try {
-      userId = authService.checkAuthentification(login, password);
+      userId = authService.checkAuthentication(login, password);
     } catch (NoResultException e) {
       return Response.status(404, "Invalid login or password").build();
     } catch (Exception e) {
-      return Response.status(404, "Some error occurred").build();
+      return Response.status(400, "Some error occurred").build();
     }
     Token newToken = authService.generateAccessToken(userId);
     String token = "{ \"token\" : \"" + newToken.getToken() + "\" }";
