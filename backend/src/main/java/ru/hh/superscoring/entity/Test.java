@@ -32,7 +32,14 @@ public class Test {
   @Column(name = "modifier_id")
   private Integer modifierId;
 
+  @Column(name = "question_quantity")
+  private Integer questionQuantity;
+
   public Test() {
+  }
+
+  public Integer getQuestionQuantity() {
+    return questionQuantity;
   }
 
   public Integer getModifierId() {
