@@ -28,3 +28,10 @@ services:
     build: frontend
     ports:
       - "8080:80"
+  content:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - ./content:/usr/share/nginx/html
+    ports:
+      - "9999:80"
