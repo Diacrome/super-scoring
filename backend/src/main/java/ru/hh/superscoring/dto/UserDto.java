@@ -8,6 +8,7 @@ public class UserDto {
   private Integer id;
   private String login;
   private String password;
+  private String name;
   private Role role;
 
   public static UserDto map(User user) {
@@ -38,6 +39,10 @@ public class UserDto {
     return password;
   }
 
+  public String getName() {
+    return name;
+  }
+
   public Role getRole() {
     return role;
   }
@@ -52,6 +57,10 @@ public class UserDto {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public void setRole(Role role) {

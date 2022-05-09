@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import ru.hh.superscoring.util.Role;
 
 @Entity
-@Table(name = "user")
+@Table(name = "ss_user")
 public class User {
 
   @Id
@@ -23,6 +23,9 @@ public class User {
 
   @Column(name = "password")
   private String password;
+
+  @Column(name = "name")
+  private String name;
 
   @Column(name = "role")
   private Role role;
@@ -42,6 +45,10 @@ public class User {
     return password;
   }
 
+  public String getName() {
+    return name;
+  }
+
   public Role getRole() {
     return role;
   }
@@ -56,6 +63,10 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public void setRole(Role role) {

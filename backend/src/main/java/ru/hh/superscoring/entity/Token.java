@@ -20,8 +20,8 @@ public class Token {
   @Column(name = "user_id")
   private Integer userId;
 
-  @Column(name = "token")
-  private String token;
+  @Column(name = "access_token")
+  private String accessToken;
 
   @Column(name = "expire_date")
   private LocalDateTime expireDate;
@@ -37,8 +37,8 @@ public class Token {
     return userId;
   }
 
-  public String getToken() {
-    return token;
+  public String getAccessToken() {
+    return accessToken;
   }
 
   public LocalDateTime getExpireDate() {
@@ -53,8 +53,8 @@ public class Token {
     this.userId = userId;
   }
 
-  public void setToken(String token) {
-    this.token = token;
+  public void setAccessToken(String token) {
+    this.accessToken = accessToken;
   }
 
   public void setExpireDate(LocalDateTime expireDate) {

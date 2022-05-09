@@ -1,6 +1,8 @@
 package ru.hh.superscoring.resource;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,15 +30,31 @@ public class AuthResource {
   }
 
   @GET
-  @Path("/t")
-  public Response getUserByToken(@Context HttpHeaders headers) {
+  @Path("/token")
+  public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) {
 
-    String authorizationToken = headers.getRequestHeader("Authorization").get(0);
-    UserDto user = userService.getUserById(authService.getUserWithToken(authorizationToken));
-    if (user != null)
-      return Response.status(201).entity(user).build();
-    else
-      return Response.status(404, "There is no such user in the system").build();
+    if (authorizationToken != null) {
+      UserDto user = userService.getUserById(authService.getUserWithToken(authorizationToken));
+      if (user != null)
+        return Response.status(201).entity(user).build();
+      else
+        return Response.status(404, "There is no such user in the system").build();
+    } else {
+      return Response.status(404, "There is no such token in the system").build();
+    }
   }
 
+  @POST
+  @Path("/login")
+  @Consumes("application/json")
+  public Response userLogin(@PathParam("login") String login, @PathParam("password") String password) {
+    Integer userId = authService.checkAuthentification(login, password);
+    if (userId != null) {
+      authService.generateAccessToken(userId);
+      return Response.status(201, "User found, generated new token").build();
+    } else {
+      return Response.status(404, "Invalid login or password").build();
+    }
+
+  }
 }
