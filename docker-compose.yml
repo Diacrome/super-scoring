@@ -13,8 +13,6 @@ services:
     restart: always
     volumes:
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "5444:5432"
     environment:
       POSTGRES_PASSWORD: hh
       POSTGRES_DB: hh
