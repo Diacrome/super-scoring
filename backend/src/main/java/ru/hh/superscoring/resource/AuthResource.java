@@ -18,7 +18,6 @@ import ru.hh.superscoring.service.AuthService;
 
 
 @Path("/auth")
-@Produces("application/json")
 public class AuthResource {
 
   private final UserService userService;
@@ -31,30 +30,30 @@ public class AuthResource {
 
   @GET
   @Path("/token")
+  @Produces("application/json")
   public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) {
 
     if (authorizationToken != null) {
-      UserDto user = userService.getUserById(authService.getUserWithToken(authorizationToken));
-      if (user != null)
-        return Response.status(201).entity(user).build();
-      else
-        return Response.status(404, "There is no such user in the system").build();
-    } else {
-      return Response.status(404, "There is no such token in the system").build();
+      String userName = userService.getUserNameById(authService.getUserWithToken(authorizationToken));
+      if (userName != null) {
+        String r = "User found : " + userName;
+        return Response.status(201, r).build();
+      }
+      return Response.status(404, "There is no such user in the system").build();
     }
+    return Response.status(404, "There is no such token in the system").build();
   }
 
   @POST
-  @Path("/login")
-  @Consumes("application/json")
+  @Path("/login/")
+  @Produces("application/json")
   public Response userLogin(@PathParam("login") String login, @PathParam("password") String password) {
     Integer userId = authService.checkAuthentification(login, password);
     if (userId != null) {
-      authService.generateAccessToken(userId);
-      return Response.status(201, "User found, generated new token").build();
-    } else {
-      return Response.status(404, "Invalid login or password").build();
+      Token newToken = authService.generateAccessToken(userId);
+      String token = newToken.getAccessToken();
+      return Response.status(201, "User found, generated new token " + token).build();
     }
-
+    return Response.status(404, "Invalid login or password").build();
   }
 }

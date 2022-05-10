@@ -1,9 +1,11 @@
 package ru.hh.superscoring.service;
 
+import java.time.LocalDateTime;
 import ru.hh.superscoring.dao.AuthDao;
 import java.util.Random;
 import java.security.SecureRandom;
 import java.math.BigInteger;
+import ru.hh.superscoring.entity.Token;
 
 public class AuthService {
 
@@ -21,10 +23,15 @@ public class AuthService {
     return authDao.findUser(login, password);
   }
 
-  public void generateAccessToken(Integer userId) {
+  public Token generateAccessToken(Integer userId) {
     Random random = new SecureRandom();
-    String token = new BigInteger(100, random).toString(32);
-    authDao.generateNewAccessToken(userId, token);
+    String accessToken = new BigInteger(100, random).toString(32);
+    Token token = new Token();
+    token.setUserId(userId);
+    token.setAccessToken(accessToken);
+    token.setExpireDate(LocalDateTime.now().plusMinutes(20));
+    authDao.save(token);
+    return token;
   }
 
 }

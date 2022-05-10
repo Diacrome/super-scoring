@@ -13,8 +13,8 @@ public class UserService {
     this.userDao = userDao;
   }
 
-  public UserDto getUserById(Integer id) {
-    return UserDto.map(userDao.get(User.class, id));
+  public String getUserNameById(Integer id) {
+    return userDao.get(User.class, id).getName();
   }
 
 }
