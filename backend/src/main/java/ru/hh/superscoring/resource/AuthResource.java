@@ -1,6 +1,7 @@
 package ru.hh.superscoring.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import javax.persistence.NoResultException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -25,28 +26,33 @@ public class AuthResource {
   @GET
   @Path("/check-token")
   @Produces("application/json")
-  public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) throws JsonProcessingException {
-    if (authorizationToken != null) {
-      String userName = authService.getUserWithToken(authorizationToken);
-      if (userName != null) {
-        String response = "{ \"name\" : \"" + userName + "\" }";
-        return Response.ok(response).build();
-      }
-      return Response.status(404, "There is no such user in the system").build();
+  public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) {
+    String userName;
+    try {
+      userName = authService.getUserWithToken(authorizationToken);
+    } catch (NoResultException e) {
+      return Response.status(404, "There is no such token or user in the system").build();
+    } catch (Exception e) {
+      return Response.status(404, "Some error occurred").build();
     }
-    return Response.status(404, "There is no such token in the system").build();
+    String response = "{ \"name\" : \"" + userName + "\" }";
+    return Response.ok(response).build();
   }
 
   @POST
-  @Path("/token/")
+  @Path("/token")
   @Produces("application/json")
-  public Response userLogin(@FormParam("login") String login, @FormParam("password") String password) throws JsonProcessingException {
-    Integer userId = authService.checkAuthentification(login, password);
-    if (userId != null) {
-      Token newToken = authService.generateAccessToken(userId);
-      String token = "{ \"token\" : \"" + newToken.getToken() + "\" }";
-      return Response.ok(token).build();
+  public Response generateToken(@FormParam("login") String login, @FormParam("password") String password) {
+    Integer userId;
+    try {
+      userId = authService.checkAuthentification(login, password);
+    } catch (NoResultException e) {
+      return Response.status(404, "Invalid login or password").build();
+    } catch (Exception e) {
+      return Response.status(404, "Some error occurred").build();
     }
-    return Response.status(404, "Invalid login or password").build();
+    Token newToken = authService.generateAccessToken(userId);
+    String token = "{ \"token\" : \"" + newToken.getToken() + "\" }";
+    return Response.ok(token).build();
   }
 }
