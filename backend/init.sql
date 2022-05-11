@@ -31,15 +31,6 @@ create table question
     time_limit       smallint
 );
 
-create table answer
-(
-    id                  serial primary key,
-    test_pass_id        integer  not null references test_pass (id),
-    question_order      smallint not null,
-    answer              json     not null,
-    time_answer         timestamp without time zone not null
-);
-
 create table test_pass
 (
     id            serial primary key,
@@ -47,6 +38,15 @@ create table test_pass
     user_id       integer not null references ss_user (id),
     time_started  timestamp without time zone,
     time_finished timestamp without time zone
+);
+
+create table answer
+(
+    id                  serial primary key,
+    test_pass_id        integer  not null references test_pass (id),
+    question_order      smallint not null,
+    answer              text     not null,
+    time_answer         timestamp without time zone not null
 );
 
 create table test_pass_question_id
@@ -104,6 +104,7 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
 insert into test_pass (test_id, user_id, time_started, time_finished)
 values (1, 3, now() - interval '100 seconds', now()),
        (1, 4, now() - interval '200 seconds', null),
+       (1, 1, now() - interval '200 seconds', null),
        (2, 4, now() - interval '200 seconds', now());
 
 
@@ -140,36 +141,36 @@ values (1, 1, 2),
        (3, 0, 28);
 
 
-insert into answer (id, test_pass_id, question_order,  answer, time_answer)
+insert into answer (test_pass_id, question_order,  answer, time_answer)
 values
-    (1, 1, 0, '{"answer": "1"}', now()),
-    (2, 1, 1, '{"answer": "1"}', now()),
-    (3, 1, 2, '{"answer": "1"}', now()),
-    (4, 1, 3, '{"answer": "1"}', now()),
-    (5, 1, 4, '{"answer": "1"}', now()),
-    (6, 1, 5, '{"answer": "1"}', now()),
-    (7, 1, 6, '{"answer": "1"}', now()),
-    (8, 1, 7, '{"answer": "1"}', now()),
-    (9, 1, 8, '{"answer": "1"}', now()),
-    (10, 1, 9, '{"answer": "1"}', now()),
-    (11, 2, 0, '{"answer": "1"}', now()),
-    (12, 2, 1, '{"answer": "1"}', now()),
-    (13, 2, 2, '{"answer": "1"}', now()),
-    (14, 2, 3, '{"answer": "1"}', now()),
-    (15, 2, 4, '{"answer": "1"}', now()),
-    (16, 2, 5, '{"answer": "1"}', now()),
-    (17, 2, 6, '{"answer": "1"}', now()),
-    (18, 2, 7, '{"answer": "1"}', now()),
-    (19, 2, 8, '{"answer": "1"}', now()),
-    (20, 2, 9, '{"answer": "1"}', now()),
-    (21, 3, 0, '{"answer": "1"}', now()),
-    (22, 3, 1, '{"answer": "1"}', now()),
-    (23, 3, 2, '{"answer": "1"}', now()),
-    (24, 3, 3, '{"answer": "1"}', now()),
-    (25, 3, 4, '{"answer": "1"}', now()),
-    (26, 3, 5, '{"answer": "1"}', now()),
-    (27, 3, 6, '{"answer": "1"}', now()),
-    (28, 3, 7, '{"answer": "1"}', now()),
-    (28, 3, 8, '{"answer": "1"}', now()),
-    (29, 3, 9, '{"answer1": "1", "answer2" :  "2"}', now());
+    (1, 0, '{"answer": "1"}', now()),
+    (1, 1, '{"answer": "1"}', now()),
+    (1, 2, '{"answer": "1"}', now()),
+    (1, 3, '{"answer": "1"}', now()),
+    (1, 4, '{"answer": "1"}', now()),
+    (1, 5, '{"answer": "1"}', now()),
+    (1, 6, '{"answer": "1"}', now()),
+    (1, 7, '{"answer": "1"}', now()),
+    (1, 8, '{"answer": "1"}', now()),
+    (1, 9, '{"answer": "1"}', now()),
+    (2, 0, '{"answer": "1"}', now()),
+    (2, 1, '{"answer": "1"}', now()),
+    (2, 2, '{"answer": "1"}', now()),
+    (2, 3, '{"answer": "1"}', now()),
+    (2, 4, '{"answer": "1"}', now()),
+    (2, 5, '{"answer": "1"}', now()),
+    (2, 6, '{"answer": "1"}', now()),
+    (2, 7, '{"answer": "1"}', now()),
+    (2, 8, '{"answer": "1"}', now()),
+    (2, 9, '{"answer": "1"}', now()),
+    (3, 0, '{"answer": "1"}', now()),
+    (3, 1, '{"answer": "1"}', now()),
+    (3, 2, '{"answer": "1"}', now()),
+    (3, 3, '{"answer": "1"}', now()),
+    (3, 4, '{"answer": "1"}', now()),
+    (3, 5, '{"answer": "1"}', now()),
+    (3, 6, '{"answer": "1"}', now()),
+    (3, 7, '{"answer": "1"}', now()),
+    (3, 8, '{"answer": "1"}', now()),
+    (3, 9, '{"answer1": "1", "answer2" :  "2"}', now());
 

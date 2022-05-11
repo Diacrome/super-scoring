@@ -1,5 +1,7 @@
 package ru.hh.superscoring.entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -8,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.eclipse.jetty.util.ajax.JSON;
 
 @Entity
 @Table(name = "answer")
@@ -54,7 +57,7 @@ public class Answer {
     return answer;
   }
 
-  public void setAnswer(String answer) {
+  public void setAnswer(String answer){
     this.answer = answer;
   }
 
