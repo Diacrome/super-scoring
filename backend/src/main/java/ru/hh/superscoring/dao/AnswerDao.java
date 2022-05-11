@@ -12,12 +12,11 @@ public class AnswerDao extends GenericDao{
 
   @Transactional(readOnly = true)
   public Optional<Integer> getRecordByUserId(Integer userId) {
-//    return getSession()
-//        .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
-//        .setParameter("user_id", userId)
-//        .list()
-//        .stream()
-//        .findAny();
-    return  Optional.of(1); // Пока так (жду вливания SS-12)
+    return getSession()
+        .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
+        .setParameter("user_id", userId)
+        .list()
+        .stream()
+        .findAny();
   }
 }

@@ -20,17 +20,13 @@ public class AnswerResource {
 
   @POST
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-  public Response saveAnswer(@FormParam("questionId") String questionString,
+  public Response saveAnswer(@FormParam("questionOrder") Integer question,
                              @FormParam("answer") String answer
                              ){
     //  @QueryParam(value = "testPassId") Integer testPassId // заготовка для получения userId
     Integer userId = 1; // Это просто заглушка для параметра, который пока не договорились как будет передаваться
     try {
-      Integer questionId = Integer.parseInt(questionString);
-      answerService.saveAnswer(userId, questionId, answer);
-    }
-    catch (NumberFormatException e){
-      return Response.status(400).entity(e.toString()).build();
+      answerService.saveAnswer(userId, question, answer);
     }
     catch (Exception e){
       return Response.status(400).entity("Что-то пошло не так! " + e.toString()).build();

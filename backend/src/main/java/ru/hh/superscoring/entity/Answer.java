@@ -1,6 +1,7 @@
 package ru.hh.superscoring.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,39 +10,36 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Answers")
+@Table(name = "answer")
 public class Answer {
 
   @Id
-  @Column(name = "answer_id")
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(name = "test_pass_record_id")
-  private Integer testPassRecord;
+  @Column(name = "test_pass_id")
+  private Integer testPass;
 
-  @Column(name = "question_id")
+  @Column(name = "question_order")
   private Integer question;
 
   @Column(name = "answer")
   private String answer;
 
   @Column(name = "time_answer")
-  private Timestamp timeAnswer;
-
-  @Column(name = "time_took")
-  private Short timeTook;
+  private LocalDateTime timeAnswer;
 
   public Integer getId(){
     return id;
   }
 
-  public Integer getTestPassRecord(){
-    return testPassRecord;
+  public Integer getTestPass(){
+    return testPass;
   }
 
-  public void setTestPassRecord(Integer testPassRecord){
-    this.testPassRecord = testPassRecord;
+  public void setTestPass(Integer testPassRecord){
+    this.testPass = testPassRecord;
   }
 
   public Integer getQuestion(){
@@ -60,19 +58,11 @@ public class Answer {
     this.answer = answer;
   }
 
-  public Timestamp getTimeAnswer() {
+  public LocalDateTime getTimeAnswer() {
     return timeAnswer;
   }
 
-  public void setTimeAnswer(Timestamp timeAnswer) {
+  public void setTimeAnswer(LocalDateTime timeAnswer){
     this.timeAnswer = timeAnswer;
-  }
-
-  public Short getTimeTook(){
-    return timeTook;
-  }
-
-  public void setTimeTook(Short timeTook) {
-    this.timeTook = timeTook;
   }
 }

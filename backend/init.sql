@@ -31,32 +31,15 @@ create table question
     time_limit       smallint
 );
 
-create table test_pass_records
+create table answer
 (
-    test_pass_record_id serial primary key,
-    test_id             integer not null references tests (test_id),
-    user_id             integer not null references users (user_id),
-    question_ids        int[]   not null,
-    time_started        timestamp without time zone,
-    time_finished       timestamp without time zone
+    id                  serial primary key,
+    test_pass_id        integer  not null references test_pass (id),
+    question_order      smallint not null,
+    answer              json     not null,
+    time_answer         timestamp without time zone not null
 );
 
-create table answers
-(
-    answer_id           serial primary key,
-    test_pass_record_id integer  not null references test_pass_records (test_pass_record_id),
-    question_id         integer  not null references questions (question_id),
-    answer              text     not null,
-    time_answer         timestamp without time zone not null,
-    time_took           smallint not null -- этот параметр не передается пока
-);
-
-INSERT INTO test_pass_records
-    (test_pass_record_id, test_id, user_id, question_ids, time_started, time_finished)
-VALUES (1, 1, 1, '{1}', null, null);
-INSERT INTO test (name,description,date_created,creator_id) VALUES
-  ('Математический тест','Решите 10 математичесчких задач.',NOW(),1),
-  ('Ещё какой-то тест','Решите ещё чего-нибудь',NOW(),1);
 create table test_pass
 (
     id            serial primary key,
@@ -73,14 +56,6 @@ create table test_pass_question_id
     question_id_order smallint not null,
     question_id       integer  not null references question (id)
 
-);
-
-create table answer
-(
-    test_pass_question_id integer                     not null references test_pass_question_id (id),
-    answer                json                        not null,
-    time_start            timestamp with time zone    not null,
-    time_end              timestamp without time zone not null
 );
 
 insert into ss_user (login, password, role)
@@ -165,35 +140,36 @@ values (1, 1, 2),
        (3, 0, 28);
 
 
-insert into answer (test_pass_question_id,  answer, time_start, time_end)
+insert into answer (id, test_pass_id, question_order,  answer, time_answer)
 values
-    (1, '{"answer": "1"}', now()- interval'200s', now()),
-    (2, '{"answer": "1"}', now()-interval'200s', now()),
-    (3, '{"answer": "1"}', now()-interval'200s', now()),
-    (4, '{"answer": "1"}', now()-interval'200s', now()),
-    (5, '{"answer": "1"}', now()-interval'200s', now()),
-    (6, '{"answer": "1"}', now()-interval'200s', now()),
-    (7, '{"answer": "1"}', now()-interval'200s', now()),
-    (8, '{"answer": "1"}', now()-interval'200s', now()),
-    (9, '{"answer": "1"}', now()-interval'200s', now()),
-    (10, '{"answer": "1"}', now()-interval'200s', now()),
-    (11, '{"answer": "1"}', now()-interval'200s', now()),
-    (12, '{"answer": "1"}', now()-interval'200s', now()),
-    (13, '{"answer": "1"}', now()-interval'200s', now()),
-    (14, '{"answer": "1"}', now()-interval'200s', now()),
-    (15, '{"answer": "1"}', now()-interval'200s', now()),
-    (16, '{"answer": "1"}', now()-interval'200s', now()),
-    (17, '{"answer": "1"}', now()-interval'200s', now()),
-    (18, '{"answer": "1"}', now()-interval'200s', now()),
-    (19, '{"answer": "1"}', now()-interval'200s', now()),
-    (21, '{"answer": "1"}', now()-interval'200s', now()),
-    (22, '{"answer": "1"}', now()-interval'200s', now()),
-    (23, '{"answer": "1"}', now()-interval'200s', now()),
-    (24, '{"answer": "1"}', now()-interval'200s', now()),
-    (25, '{"answer": "1"}', now()-interval'200s', now()),
-    (26, '{"answer": "1"}', now()-interval'200s', now()),
-    (27, '{"answer": "1"}', now()-interval'200s', now()),
-    (28, '{"answer": "1"}', now()-interval'200s', now()),
-    (29, '{"answer": "1"}', now()-interval'200s', now()),
-    (30, '{"answer1": "1", "answer2" :  "2"}', now()-interval'200s', now());
+    (1, 1, 0, '{"answer": "1"}', now()),
+    (2, 1, 1, '{"answer": "1"}', now()),
+    (3, 1, 2, '{"answer": "1"}', now()),
+    (4, 1, 3, '{"answer": "1"}', now()),
+    (5, 1, 4, '{"answer": "1"}', now()),
+    (6, 1, 5, '{"answer": "1"}', now()),
+    (7, 1, 6, '{"answer": "1"}', now()),
+    (8, 1, 7, '{"answer": "1"}', now()),
+    (9, 1, 8, '{"answer": "1"}', now()),
+    (10, 1, 9, '{"answer": "1"}', now()),
+    (11, 2, 0, '{"answer": "1"}', now()),
+    (12, 2, 1, '{"answer": "1"}', now()),
+    (13, 2, 2, '{"answer": "1"}', now()),
+    (14, 2, 3, '{"answer": "1"}', now()),
+    (15, 2, 4, '{"answer": "1"}', now()),
+    (16, 2, 5, '{"answer": "1"}', now()),
+    (17, 2, 6, '{"answer": "1"}', now()),
+    (18, 2, 7, '{"answer": "1"}', now()),
+    (19, 2, 8, '{"answer": "1"}', now()),
+    (20, 2, 9, '{"answer": "1"}', now()),
+    (21, 3, 0, '{"answer": "1"}', now()),
+    (22, 3, 1, '{"answer": "1"}', now()),
+    (23, 3, 2, '{"answer": "1"}', now()),
+    (24, 3, 3, '{"answer": "1"}', now()),
+    (25, 3, 4, '{"answer": "1"}', now()),
+    (26, 3, 5, '{"answer": "1"}', now()),
+    (27, 3, 6, '{"answer": "1"}', now()),
+    (28, 3, 7, '{"answer": "1"}', now()),
+    (28, 3, 8, '{"answer": "1"}', now()),
+    (29, 3, 9, '{"answer1": "1", "answer2" :  "2"}', now());
 
