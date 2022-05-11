@@ -31,7 +31,7 @@ public class AuthResource {
     try {
       userName = authService.getUserWithToken(authorizationToken);
     } catch (NoResultException e) {
-      return Response.status(404, "There is no such token or user in the system").build();
+      return Response.status(404, "Invalid token").build();
     } catch (Exception e) {
       return Response.status(404, "Some error occurred").build();
     }

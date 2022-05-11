@@ -12,7 +12,7 @@ public class AuthDao extends GenericDao {
   @Transactional(readOnly = true)
   public String getUserNameWithToken(String token) {
     return getSession()
-        .createQuery("select u.name from User u join Token t on u.id = t.userId where t.token = :token", String.class)
+        .createQuery("select u.name from User u join Token t on u.id = t.userId where t.token = :token and t.expireDate > now()", String.class)
         .setParameter("token", token)
         .getSingleResult();
   }
