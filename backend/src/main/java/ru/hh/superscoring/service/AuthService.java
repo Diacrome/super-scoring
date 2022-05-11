@@ -15,8 +15,8 @@ public class AuthService {
     this.authDao = authDao;
   }
 
-  public Integer getUserWithToken(String token) {
-    return authDao.getUserIdWithToken(token);
+  public String getUserWithToken(String token) {
+    return authDao.getUserNameWithToken(token);
   }
 
   public Integer checkAuthentification(String login, String password) {

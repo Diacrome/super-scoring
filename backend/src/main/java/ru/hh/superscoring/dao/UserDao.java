@@ -9,13 +9,4 @@ public class UserDao extends GenericDao {
     super(sessionFactory);
   }
 
-  @Transactional
-  public String getUserNameById(Integer userId) {
-    return getSession()
-        .createQuery("select u.name from User u where u.id =:id", String.class)
-        .setParameter("id", userId)
-        .getSingleResult();
-  }
-
 }
-

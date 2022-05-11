@@ -10,9 +10,9 @@ public class AuthDao extends GenericDao {
   }
 
   @Transactional(readOnly = true)
-  public Integer getUserIdWithToken(String token) {
+  public String getUserNameWithToken(String token) {
     return getSession()
-        .createQuery("select t.userId from Token t where t.token = :token", Integer.class)
+        .createQuery("select u.name from User u join Token t on u.id = t.userId where t.token = :token", String.class)
         .setParameter("token", token)
         .getSingleResult();
   }

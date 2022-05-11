@@ -12,8 +12,4 @@ public class UserService {
     this.authService = authService;
   }
 
-  public String getUserNameByToken(String token) {
-    return userDao.getUserNameById(authService.getUserWithToken(token));
-  }
-
 }

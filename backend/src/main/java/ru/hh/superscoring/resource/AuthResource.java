@@ -16,22 +16,20 @@ import ru.hh.superscoring.service.AuthService;
 @Path("/auth")
 public class AuthResource {
 
-  private final UserService userService;
   private final AuthService authService;
 
-  public AuthResource(UserService userService, AuthService authService) {
-    this.userService = userService;
+  public AuthResource(AuthService authService) {
     this.authService = authService;
   }
 
   @GET
-  @Path("/token")
+  @Path("/check-token")
   @Produces("application/json")
   public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) throws JsonProcessingException {
     if (authorizationToken != null) {
-      String userName = userService.getUserNameByToken(authorizationToken);
+      String userName = authService.getUserWithToken(authorizationToken);
       if (userName != null) {
-        String response = "{ \"name\" : " + userName + " }";
+        String response = "{ \"name\" : \"" + userName + "\" }";
         return Response.ok(response).build();
       }
       return Response.status(404, "There is no such user in the system").build();
@@ -40,13 +38,13 @@ public class AuthResource {
   }
 
   @POST
-  @Path("/login/")
+  @Path("/token/")
   @Produces("application/json")
   public Response userLogin(@FormParam("login") String login, @FormParam("password") String password) throws JsonProcessingException {
     Integer userId = authService.checkAuthentification(login, password);
     if (userId != null) {
       Token newToken = authService.generateAccessToken(userId);
-      String token = "{ \"token\" : " + newToken.getToken() + " }";
+      String token = "{ \"token\" : \"" + newToken.getToken() + "\" }";
       return Response.ok(token).build();
     }
     return Response.status(404, "Invalid login or password").build();
