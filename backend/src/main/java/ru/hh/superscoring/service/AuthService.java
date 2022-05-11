@@ -15,8 +15,8 @@ public class AuthService {
     this.authDao = authDao;
   }
 
-  public Integer getUserWithToken(String accessToken) {
-    return authDao.getUserIdWithToken(accessToken);
+  public Integer getUserWithToken(String token) {
+    return authDao.getUserIdWithToken(token);
   }
 
   public Integer checkAuthentification(String login, String password) {
@@ -28,8 +28,8 @@ public class AuthService {
     String accessToken = new BigInteger(100, random).toString(32);
     Token token = new Token();
     token.setUserId(userId);
-    token.setAccessToken(accessToken);
-    token.setExpireDate(LocalDateTime.now().plusMinutes(20));
+    token.setToken(accessToken);
+    token.setExpireDate(LocalDateTime.now().plusDays(14));
     authDao.save(token);
     return token;
   }

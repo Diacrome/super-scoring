@@ -6,13 +6,13 @@ public class TokenDto {
 
   private Integer id;
   private Integer userId;
-  private String accessToken;
+  private String token;
   private LocalDateTime expireDate;
 
-  public TokenDto(Integer id, Integer userId, String accessToken, LocalDateTime expireDate) {
+  public TokenDto(Integer id, Integer userId, String token, LocalDateTime expireDate) {
     this.id = id;
     this.userId = userId;
-    this.accessToken = accessToken;
+    this.token = token;
     this.expireDate = expireDate;
   }
 
@@ -24,8 +24,8 @@ public class TokenDto {
     return userId;
   }
 
-  public String getAccessToken() {
-    return accessToken;
+  public String getToken() {
+    return token;
   }
 
   public LocalDateTime getExpireDate() {
@@ -40,8 +40,8 @@ public class TokenDto {
     this.userId = userId;
   }
 
-  public void setAccessToken(String accessToken) {
-    this.accessToken = accessToken;
+  public void setToken(String token) {
+    this.token = token;
   }
 
   public void setExpireDate(LocalDateTime expireDate) {

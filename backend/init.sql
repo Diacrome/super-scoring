@@ -60,9 +60,9 @@ create table answer
 
 create table token
 (
-    token_id     serial     primary key,
+    id     serial     primary key,
     user_id      integer    not null references ss_user (id),
-    access_token varchar(64) not null unique,
+    token varchar(64) not null unique,
     expire_date  timestamp  without time zone
 );
 
@@ -180,9 +180,7 @@ values
     (29, '{"answer": "1"}', now()-interval'200s', now()),
     (30, '{"answer1": "1", "answer2" :  "2"}', now()-interval'200s', now());
 
-insert into token (user_id, access_token, expire_date)
+insert into token (user_id, token, expire_date)
 values (1, '557sa7', now()),
-       (2, 'gggy46', now()),
-       (3, '665jk0', now()),
        (4, 'fs952j', now());
 

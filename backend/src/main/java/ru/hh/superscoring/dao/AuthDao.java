@@ -10,21 +10,20 @@ public class AuthDao extends GenericDao {
   }
 
   @Transactional(readOnly = true)
-  public Integer getUserIdWithToken(String accessToken) {
+  public Integer getUserIdWithToken(String token) {
     return getSession()
-        .createQuery("select t.userId from Token t where t.accessToken = :access_token", Integer.class)
-        .setParameter("access_token", accessToken)
+        .createQuery("select t.userId from Token t where t.token = :token", Integer.class)
+        .setParameter("token", token)
         .getSingleResult();
   }
 
   @Transactional(readOnly = true)
   public Integer findUser (String login, String password) {
     return getSession()
-        .createQuery("select u.userId from User u where u.login = :login and u.password = :password", Integer.class)
+        .createQuery("select u.id from User u where u.login = :login and u.password = :password", Integer.class)
         .setParameter("login", login)
         .setParameter("password", password)
         .getSingleResult();
   }
-
 
 }

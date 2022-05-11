@@ -14,14 +14,14 @@ public class Token {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "token_id")
+  @Column(name = "id")
   private Integer id;
 
   @Column(name = "user_id")
   private Integer userId;
 
-  @Column(name = "access_token")
-  private String accessToken;
+  @Column(name = "token")
+  private String token;
 
   @Column(name = "expire_date")
   private LocalDateTime expireDate;
@@ -37,8 +37,8 @@ public class Token {
     return userId;
   }
 
-  public String getAccessToken() {
-    return accessToken;
+  public String getToken() {
+    return token;
   }
 
   public LocalDateTime getExpireDate() {
@@ -53,8 +53,8 @@ public class Token {
     this.userId = userId;
   }
 
-  public void setAccessToken(String token) {
-    this.accessToken = accessToken;
+  public void setToken(String token) {
+    this.token = token;
   }
 
   public void setExpireDate(LocalDateTime expireDate) {
