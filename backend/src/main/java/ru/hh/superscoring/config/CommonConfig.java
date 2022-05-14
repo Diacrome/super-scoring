@@ -4,12 +4,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.hh.nab.starter.NabCommonConfig;
 import ru.hh.superscoring.dao.AnswerDao;
-import ru.hh.superscoring.dao.GenericDao;
 import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.resource.AnswerResource;
-import ru.hh.superscoring.resource.ExampleResource;
 import ru.hh.superscoring.resource.HelloResource;
 import ru.hh.superscoring.resource.TestResource;
 import ru.hh.superscoring.dao.QuestionDao;
@@ -28,7 +26,6 @@ import ru.hh.superscoring.service.TestService;
 @Configuration
 @Import({
     // import your beans here
-    ExampleResource.class,
     TestService.class,
     AnswerDao.class,
     AnswerService.class,
