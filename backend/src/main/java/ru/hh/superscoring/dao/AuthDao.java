@@ -27,7 +27,7 @@ public class AuthDao extends GenericDao {
     return getSession()
         .createQuery("select u.id from User u where u.login = :login", Integer.class)
         .setParameter("login", login)
-        .getSingleResult();
+        .uniqueResult();
   }
 
 }
