@@ -3,6 +3,7 @@ create table ss_user
     id       serial primary key,
     login    varchar(64)  not null,
     password varchar(128) not null,
+    name     varchar(64)  not null,
     role     varchar(16)  not null
 );
 
@@ -58,11 +59,20 @@ create table test_pass_question_id
 
 );
 
-insert into ss_user (login, password, role)
-values ('admin', 'admin1', 'admin'),
-       ('adminLiza', 'admin2', 'admin'),
-       ('user1', 'user1', 'user'),
-       ('user2', 'user2', 'user');
+
+create table token
+(
+    id     serial     primary key,
+    user_id      integer    not null references ss_user (id),
+    token varchar(64) not null unique,
+    expire_date  timestamp  without time zone
+);
+
+insert into ss_user (login, password, name, role)
+values ('admin', 'admin1', 'Ivan', 'admin'),
+       ('adminLiza', 'admin2', 'Liza', 'admin'),
+       ('user1', 'user1', 'Petr', 'user'),
+       ('user2', 'user2', 'Anna', 'user');
 
 
 insert into test (creator_id, name, description, date_created, date_modified)
@@ -173,4 +183,8 @@ values
     (3, 7, '{"answer": "1"}', now()),
     (3, 8, '{"answer": "1"}', now()),
     (3, 9, '{"answer1": "1", "answer2" :  "2"}', now());
+
+insert into token (user_id, token, expire_date)
+values (1, '557sa7', now()),
+       (4, 'fs952j', now()+interval'3d');
 
