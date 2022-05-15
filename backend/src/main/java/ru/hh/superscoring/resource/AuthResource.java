@@ -60,13 +60,11 @@ public class AuthResource {
   @Produces("application/json")
   public Response addNewUser(@FormParam("login") String login, @FormParam("password") String password,
                              @FormParam("name") String name, @FormParam("role") String role) {
-    if(authService.checkAuthenticationByLogin(login) == null) {
+    if (authService.checkAuthenticationByLogin(login) == null) {
       authService.addUser(login, password, name, Role.valueOf(role));
       return Response.status(201, "User added").build();
     }
-    else {
-      return Response.status(401, "User already exists in the system").build();
-    }
+    return Response.status(401, "User already exists in the system").build();
   }
 
 }

@@ -15,7 +15,7 @@ public class AuthDao extends GenericDao {
         .getSingleResult();
   }
 
-  public Integer findUser (String login, String password) {
+  public Integer findUser(String login, String password) {
     return getSession()
         .createQuery("select u.id from User u where u.login = :login and u.password = :password", Integer.class)
         .setParameter("login", login)
