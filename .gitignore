@@ -1,5 +1,6 @@
 # ignore maven target anywhere
 **/target
+**/*.iml
 
 # ignore ide files anywhere
 **/.idea
