@@ -66,5 +66,4 @@ public class AuthResource {
     }
     return Response.status(401, "User already exists in the system").build();
   }
-
 }
