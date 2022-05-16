@@ -28,7 +28,7 @@ public class AnswerResource {
                              @HeaderParam("authorization") String authorizationToken
   ) {
     if (authorizationToken == null) {
-      return Response.status(400).entity("No token found!").build();
+      return Response.status(401).entity("No token found!").build();
     }
     Integer userId = authService.getUserIdWithToken(authorizationToken);
     if (userId == null) {
