@@ -15,12 +15,19 @@ public class AuthDao extends GenericDao {
         .getSingleResult();
   }
 
-  public Integer findUser (String login, String password) {
+  public Integer findUser(String login, String password) {
     return getSession()
         .createQuery("select u.id from User u where u.login = :login and u.password = :password", Integer.class)
         .setParameter("login", login)
         .setParameter("password", password)
         .getSingleResult();
+  }
+
+  public Integer getUserIdWithToken(String token) {
+    return getSession()
+        .createQuery("select userId from Token where token = :token", Integer.class)
+        .setParameter("token", token)
+        .uniqueResult();
   }
 
 }

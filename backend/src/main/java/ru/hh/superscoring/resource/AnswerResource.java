@@ -9,22 +9,31 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.PropertyValueException;
 import ru.hh.superscoring.service.AnswerService;
+import ru.hh.superscoring.service.AuthService;
 
 @Path("/answer")
 public class AnswerResource {
   private final AnswerService answerService;
+  private final AuthService authService;
 
-  public AnswerResource(AnswerService answerService) {
+  public AnswerResource(AnswerService answerService, AuthService authService) {
     this.answerService = answerService;
+    this.authService = authService;
   }
 
   @POST
-  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
   public Response saveAnswer(@FormParam("questionOrder") Integer question,
                              @FormParam("answer") String answer,
                              @HeaderParam("authorization") String authorizationToken
   ) {
-    Integer userId = 1; // Это просто заглушка для параметра
+    if (authorizationToken == null) {
+      return Response.status(400).entity("No token found!").build();
+    }
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
     try {
       answerService.saveAnswer(userId, question, answer);
     } catch (PropertyValueException pve) {

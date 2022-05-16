@@ -1,11 +1,11 @@
 package ru.hh.superscoring.service;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Random;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AuthDao;
-import java.util.Random;
-import java.security.SecureRandom;
-import java.math.BigInteger;
 import ru.hh.superscoring.entity.Token;
 
 public class AuthService {
@@ -36,6 +36,11 @@ public class AuthService {
     token.setExpireDate(LocalDateTime.now().plusDays(14));
     authDao.save(token);
     return token;
+  }
+
+  @Transactional(readOnly = true)
+  public Integer getUserIdWithToken(String token) {
+    return authDao.getUserIdWithToken(token);
   }
 
 }
