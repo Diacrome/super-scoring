@@ -29,15 +29,10 @@ public class TestPassDao extends GenericDao {
 
   @Transactional(readOnly = true)
   public Integer getTestPassByUserId(Integer userId) {
-    try {
-      return getSession()
-          .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
-          .setParameter("user_id", userId)
-          .getSingleResult();
-    } catch (NoResultException e) {
-      return null;
-    }
-
+    return getSession()
+        .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
+        .setParameter("user_id", userId)
+        .uniqueResult();
   }
 
 }

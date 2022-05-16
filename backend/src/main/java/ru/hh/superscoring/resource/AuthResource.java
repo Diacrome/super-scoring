@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.service.AuthService;
+import ru.hh.superscoring.util.Role;
 
 
 @Path("/auth")
@@ -53,4 +54,17 @@ public class AuthResource {
     String token = "{ \"token\" : \"" + newToken.getToken() + "\" }";
     return Response.ok(token).build();
   }
+
+  @POST
+  @Path("/register")
+  @Produces("application/json")
+  public Response addNewUser(@FormParam("login") String login, @FormParam("password") String password,
+                             @FormParam("name") String name, @FormParam("role") String role) {
+    if (authService.checkAuthenticationByLogin(login) == null) {
+      authService.addUser(login, password, name, Role.valueOf(role));
+      return Response.status(201, "User added").build();
+    }
+    return Response.status(401, "User already exists in the system").build();
+  }
+
 }

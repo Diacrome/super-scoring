@@ -7,6 +7,8 @@ import java.util.Random;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AuthDao;
 import ru.hh.superscoring.entity.Token;
+import ru.hh.superscoring.entity.User;
+import ru.hh.superscoring.util.Role;
 
 public class AuthService {
 
@@ -41,6 +43,21 @@ public class AuthService {
   @Transactional(readOnly = true)
   public Integer getUserIdWithToken(String token) {
     return authDao.getUserIdWithToken(token);
+  }
+
+  @Transactional(readOnly = true)
+  public Integer checkAuthenticationByLogin(String login) {
+    return authDao.findUserByLogin(login);
+  }
+
+  @Transactional(readOnly = true)
+  public void addUser(String login, String password, String name, Role role) {
+    User user = new User();
+    user.setLogin(login);
+    user.setPassword(password);
+    user.setName(name);
+    user.setRole(role);
+    authDao.save(user);
   }
 
 }
