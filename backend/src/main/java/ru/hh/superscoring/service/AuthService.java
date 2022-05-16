@@ -7,6 +7,8 @@ import java.util.Random;
 import java.security.SecureRandom;
 import java.math.BigInteger;
 import ru.hh.superscoring.entity.Token;
+import ru.hh.superscoring.entity.User;
+import ru.hh.superscoring.util.Role;
 
 public class AuthService {
 
@@ -36,6 +38,21 @@ public class AuthService {
     token.setExpireDate(LocalDateTime.now().plusDays(14));
     authDao.save(token);
     return token;
+  }
+
+  @Transactional(readOnly = true)
+  public Integer checkAuthenticationByLogin(String login) {
+    return authDao.findUserByLogin(login);
+  }
+
+  @Transactional(readOnly = true)
+  public void addUser(String login, String password, String name, Role role) {
+    User user = new User();
+    user.setLogin(login);
+    user.setPassword(password);
+    user.setName(name);
+    user.setRole(role);
+    authDao.save(user);
   }
 
 }
