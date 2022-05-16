@@ -41,6 +41,15 @@ create table test_pass
     time_finished timestamp without time zone
 );
 
+create table answer
+(
+    id                  serial primary key,
+    test_pass_id        integer  not null references test_pass (id),
+    question_order      smallint not null,
+    answer              text     not null,
+    time_answer         timestamp without time zone not null
+);
+
 create table test_pass_question_id
 (
     id                serial primary key,
@@ -50,13 +59,6 @@ create table test_pass_question_id
 
 );
 
-create table answer
-(
-    test_pass_question_id integer                     not null references test_pass_question_id (id),
-    answer                json                        not null,
-    time_start            timestamp with time zone    not null,
-    time_end              timestamp without time zone not null
-);
 
 create table token
 (
@@ -112,6 +114,7 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
 insert into test_pass (test_id, user_id, time_started, time_finished)
 values (1, 3, now() - interval '100 seconds', now()),
        (1, 4, now() - interval '200 seconds', null),
+       (1, 1, now() - interval '200 seconds', null),
        (2, 4, now() - interval '200 seconds', now());
 
 
@@ -148,37 +151,38 @@ values (1, 1, 2),
        (3, 0, 28);
 
 
-insert into answer (test_pass_question_id,  answer, time_start, time_end)
+insert into answer (test_pass_id, question_order,  answer, time_answer)
 values
-    (1, '{"answer": "1"}', now()- interval'200s', now()),
-    (2, '{"answer": "1"}', now()-interval'200s', now()),
-    (3, '{"answer": "1"}', now()-interval'200s', now()),
-    (4, '{"answer": "1"}', now()-interval'200s', now()),
-    (5, '{"answer": "1"}', now()-interval'200s', now()),
-    (6, '{"answer": "1"}', now()-interval'200s', now()),
-    (7, '{"answer": "1"}', now()-interval'200s', now()),
-    (8, '{"answer": "1"}', now()-interval'200s', now()),
-    (9, '{"answer": "1"}', now()-interval'200s', now()),
-    (10, '{"answer": "1"}', now()-interval'200s', now()),
-    (11, '{"answer": "1"}', now()-interval'200s', now()),
-    (12, '{"answer": "1"}', now()-interval'200s', now()),
-    (13, '{"answer": "1"}', now()-interval'200s', now()),
-    (14, '{"answer": "1"}', now()-interval'200s', now()),
-    (15, '{"answer": "1"}', now()-interval'200s', now()),
-    (16, '{"answer": "1"}', now()-interval'200s', now()),
-    (17, '{"answer": "1"}', now()-interval'200s', now()),
-    (18, '{"answer": "1"}', now()-interval'200s', now()),
-    (19, '{"answer": "1"}', now()-interval'200s', now()),
-    (21, '{"answer": "1"}', now()-interval'200s', now()),
-    (22, '{"answer": "1"}', now()-interval'200s', now()),
-    (23, '{"answer": "1"}', now()-interval'200s', now()),
-    (24, '{"answer": "1"}', now()-interval'200s', now()),
-    (25, '{"answer": "1"}', now()-interval'200s', now()),
-    (26, '{"answer": "1"}', now()-interval'200s', now()),
-    (27, '{"answer": "1"}', now()-interval'200s', now()),
-    (28, '{"answer": "1"}', now()-interval'200s', now()),
-    (29, '{"answer": "1"}', now()-interval'200s', now()),
-    (30, '{"answer1": "1", "answer2" :  "2"}', now()-interval'200s', now());
+    (1, 0, '{"answer": "1"}', now()),
+    (1, 1, '{"answer": "1"}', now()),
+    (1, 2, '{"answer": "1"}', now()),
+    (1, 3, '{"answer": "1"}', now()),
+    (1, 4, '{"answer": "1"}', now()),
+    (1, 5, '{"answer": "1"}', now()),
+    (1, 6, '{"answer": "1"}', now()),
+    (1, 7, '{"answer": "1"}', now()),
+    (1, 8, '{"answer": "1"}', now()),
+    (1, 9, '{"answer": "1"}', now()),
+    (2, 0, '{"answer": "1"}', now()),
+    (2, 1, '{"answer": "1"}', now()),
+    (2, 2, '{"answer": "1"}', now()),
+    (2, 3, '{"answer": "1"}', now()),
+    (2, 4, '{"answer": "1"}', now()),
+    (2, 5, '{"answer": "1"}', now()),
+    (2, 6, '{"answer": "1"}', now()),
+    (2, 7, '{"answer": "1"}', now()),
+    (2, 8, '{"answer": "1"}', now()),
+    (2, 9, '{"answer": "1"}', now()),
+    (3, 0, '{"answer": "1"}', now()),
+    (3, 1, '{"answer": "1"}', now()),
+    (3, 2, '{"answer": "1"}', now()),
+    (3, 3, '{"answer": "1"}', now()),
+    (3, 4, '{"answer": "1"}', now()),
+    (3, 5, '{"answer": "1"}', now()),
+    (3, 6, '{"answer": "1"}', now()),
+    (3, 7, '{"answer": "1"}', now()),
+    (3, 8, '{"answer": "1"}', now()),
+    (3, 9, '{"answer1": "1", "answer2" :  "2"}', now());
 
 insert into token (user_id, token, expire_date)
 values (1, '557sa7', now()),
