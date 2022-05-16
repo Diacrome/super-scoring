@@ -24,7 +24,7 @@ public class AnswerResource {
                              @FormParam("answer") String answer,
                              @HeaderParam("authorization") String authorizationToken
   ) {
-    Integer userId = 1; // Это просто заглушка для параметра
+    Integer userId = 1; // В SS-31 реализовано
     try {
       answerService.saveAnswer(userId, question, answer);
     } catch (PropertyValueException pve) {
