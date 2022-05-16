@@ -23,6 +23,13 @@ public class AuthDao extends GenericDao {
         .getSingleResult();
   }
 
+  public Integer getUserIdWithToken(String token) {
+    return getSession()
+        .createQuery("select userId from Token where token = :token", Integer.class)
+        .setParameter("token", token)
+        .uniqueResult();
+  }
+  
   public Integer findUserByLogin(String login) {
     return getSession()
         .createQuery("select u.id from User u where u.login = :login", Integer.class)

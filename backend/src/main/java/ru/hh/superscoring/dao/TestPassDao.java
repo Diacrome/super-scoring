@@ -2,6 +2,7 @@ package ru.hh.superscoring.dao;
 
 
 import java.util.List;
+import javax.persistence.NoResultException;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.entity.TestPass;
