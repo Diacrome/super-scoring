@@ -24,9 +24,9 @@ public class AnswerResource {
 
   @POST
   @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
-  public Response saveAnswer(@QueryParam("questionOrder") Integer question,
-                             @QueryParam("answer") String answer,
-                             @QueryParam("authorization") String authorizationToken
+  public Response saveAnswer(@FormParam("questionOrder") Integer question,
+                             @FormParam("answer") String answer,
+                             @HeaderParam("authorization") String authorizationToken
   ) {
     if (authorizationToken == null) {
       return Response.status(401).entity("No token found!").build();
