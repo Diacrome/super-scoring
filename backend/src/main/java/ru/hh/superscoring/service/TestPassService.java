@@ -14,9 +14,10 @@ public class TestPassService {
   private final TestPassDao testPassDao;
   private final QuestionService questionService;
 
-  public TestPassService(TestPassDao testPassDao, QuestionService questionService) {
+  public TestPassService(TestPassDao testPassDao, QuestionService questionService, TestDao testDao) {
     this.testPassDao = testPassDao;
     this.questionService = questionService;
+    this.testDao = testDao;
   }
 
   @Transactional

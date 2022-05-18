@@ -195,6 +195,7 @@ values
     (3, 8, '{"answer": "1"}', now()),
     (3, 9, '{"answer1": "1", "answer2" :  "2"}', now());
 
+
 insert into token (user_id, token, expire_date)
-values (1, '557sa7', now()),
+values (1, '557sa7', now()+interval'3d'),
        (4, 'fs952j', now()+interval'3d');

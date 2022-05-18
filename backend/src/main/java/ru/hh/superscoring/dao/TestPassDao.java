@@ -30,7 +30,7 @@ public class TestPassDao extends GenericDao {
   }
 
   @Transactional(readOnly = true)
-  public Integer getTestPassByUserId(Integer userId) {
+  public Integer getTestPassIdByUserId(Integer userId) {
     return getSession()
         .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
         .setParameter("user_id", userId)

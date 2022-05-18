@@ -3,7 +3,6 @@ package ru.hh.superscoring.dao;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-
 public class TestDao extends GenericDao {
 
   protected TestDao(SessionFactory sessionFactory) {
