@@ -2,19 +2,21 @@ package ru.hh.superscoring.entity;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import javax.persistence.CollectionTable;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -39,11 +41,9 @@ public class TestPass {
   @Column(name = "time_finished")
   private LocalDateTime timeFinished;
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "test_pass_question_id", joinColumns=@JoinColumn(name="test_pass_id"))
-  @OrderColumn (name = "question_id_order")
-  @Column(name = "question_id")
-  private List<Integer> questionIds = new ArrayList<Integer>();
+  @Cascade(CascadeType.SAVE_UPDATE)
+  @OneToMany(mappedBy = "testPass", fetch = FetchType.LAZY)
+  private Set<TestPassQuestion> questions = new HashSet<>();
 
   public TestPass() {
   }
@@ -68,10 +68,6 @@ public class TestPass {
     return timeFinished;
   }
 
-  public List<Integer> getQuestionIds() {
-    return questionIds;
-  }
-
   public void setId(Integer id) {
     this.id = id;
   }
@@ -92,8 +88,16 @@ public class TestPass {
     this.timeFinished = timeFinished;
   }
 
-  public void setQuestionIds(List<Integer> questionIds) {
-    this.questionIds = questionIds;
+  public Set<TestPassQuestion> getQuestions() {
+    return questions;
   }
 
+  public void setQuestions(List<Question> questions) {
+    this.questions = Stream.iterate(1, x -> x + 1)
+        .limit(questions.size())
+        .map(order -> new TestPassQuestion(
+            this,
+            order, questions.get(order - 1)))
+        .collect(Collectors.toSet());
+  }
 }
