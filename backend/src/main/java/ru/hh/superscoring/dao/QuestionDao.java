@@ -3,6 +3,7 @@ package ru.hh.superscoring.dao;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hh.superscoring.entity.Question;
 
 public class QuestionDao extends GenericDao {
 
@@ -11,9 +12,9 @@ public class QuestionDao extends GenericDao {
   }
 
   @Transactional(readOnly = true)
-  public List<Integer> getQuestionsForTest(Integer testId) {
+  public List<Question> getQuestionsForTest(Integer testId) {
     return getSession()
-        .createQuery("select q.id from Question q where q.testId = :id", Integer.class)
+        .createQuery("select q from Question q where q.testId = :id", Question.class)
         .setParameter("id", testId)
         .getResultList();
   }
