@@ -14,6 +14,7 @@ import ru.hh.superscoring.resource.AnswerResource;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.entity.User;
 import ru.hh.superscoring.resource.AuthResource;
+import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.resource.HelloResource;
 import ru.hh.superscoring.resource.TestResource;
 import ru.hh.superscoring.dao.QuestionDao;
@@ -63,7 +64,13 @@ public class CommonConfig {
   // ENTITES КЛАССЫ УКАЗЫВАТЬ В КОНСТРУКТОРЕ ЧЕРЕЗ ЗАПЯТУЮ
   @Bean
   public MappingConfig mappingConfig() {
-    return new MappingConfig(Question.class, TestPass.class, Test.class, User.class, Token.class, Answer.class);
+    return new MappingConfig(Question.class,
+        TestPass.class,
+        Test.class,
+        User.class,
+        Token.class,
+        Answer.class,
+        TestPassQuestion.class);
   }
 
 }

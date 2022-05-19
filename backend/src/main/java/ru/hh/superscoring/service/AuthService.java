@@ -1,14 +1,15 @@
 package ru.hh.superscoring.service;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Random;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AuthDao;
-import java.util.Random;
-import java.security.SecureRandom;
-import java.math.BigInteger;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.entity.User;
 import ru.hh.superscoring.util.Role;
+import ru.hh.superscoring.util.Hasher;
 
 public class AuthService {
 
@@ -25,7 +26,7 @@ public class AuthService {
 
   @Transactional(readOnly = true)
   public Integer checkAuthentication(String login, String password) {
-    return authDao.findUser(login, password);
+    return authDao.findUser(login, Hasher.hash(password));
   }
 
   @Transactional(readOnly = true)
@@ -41,6 +42,11 @@ public class AuthService {
   }
 
   @Transactional(readOnly = true)
+  public Integer getUserIdWithToken(String token) {
+    return authDao.getUserIdWithToken(token);
+  }
+
+  @Transactional(readOnly = true)
   public Integer checkAuthenticationByLogin(String login) {
     return authDao.findUserByLogin(login);
   }
@@ -49,7 +55,7 @@ public class AuthService {
   public void addUser(String login, String password, String name, Role role) {
     User user = new User();
     user.setLogin(login);
-    user.setPassword(password);
+    user.setPassword(Hasher.hash(password));
     user.setName(name);
     user.setRole(role);
     authDao.save(user);

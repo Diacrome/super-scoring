@@ -69,10 +69,10 @@ create table token
 );
 
 insert into ss_user (login, password, name, role)
-values ('admin', 'admin1', 'Ivan', 'admin'),
-       ('adminLiza', 'admin2', 'Liza', 'admin'),
-       ('user1', 'user1', 'Petr', 'user'),
-       ('user2', 'user2', 'Anna', 'user');
+values ('admin', 'LyB7wiGICF5mCQizydjYMA', 'Ivan', 'admin'),-- pass: admin1
+       ('adminLiza', 'Md62AUIObyA3rWFdP6xq8w', 'Liza', 'admin'),  -- pass: admin2
+       ('user1', 'EggTS90B9fvld1RemOBBdQ', 'Petr', 'user'),  -- pass: user1
+       ('user2', 'pfH0FU_RuP4PRaTB84uFqw', 'Anna', 'user');   --  pass: user2
 
 
 insert into test (creator_id, name, description, date_created, date_modified)
@@ -128,7 +128,7 @@ values (1, 1, 2),
        (1, 7, 6),
        (1, 8, 5),
        (1, 9, 4),
-       (1, 0, 3),
+       (1, 10, 3),
        (2, 1, 1),
        (2, 2, 3),
        (2, 3, 4),
@@ -138,7 +138,7 @@ values (1, 1, 2),
        (2, 7, 11),
        (2, 8, 13),
        (2, 9, 15),
-       (2, 0, 17),
+       (2, 10, 17),
        (3, 1, 18),
        (3, 2, 19),
        (3, 3, 20),
@@ -148,7 +148,7 @@ values (1, 1, 2),
        (3, 7, 25),
        (3, 8, 26),
        (3, 9, 27),
-       (3, 0, 28);
+       (3, 10, 28);
 
 
 insert into answer (test_pass_id, question_order,  answer, time_answer)
