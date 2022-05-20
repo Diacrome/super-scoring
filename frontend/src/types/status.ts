@@ -1,47 +1,46 @@
-export interface StatusState  {
-    loading: boolean,
-    authorized: boolean
-    currentPass?: CurrentPass
+export interface StatusState {
+  loading: boolean;
+  authorized: boolean;
+  currentPass?: CurrentPass | null;
 }
 
-export type CurrentPass =
-    null |
-    {
-        answeredQuestions: {
-            [questionOrderNumber : string] : boolean
-        },
-        startTime: number,
-        testId: number
-    }
-
-
-export enum StatusActionTypes {
-    FETCH_STATUS = 'FETCH_STATUS',
-    FETCH_STATUS_SUCCESS = 'FETCH_STATUS_SUCCESS',
-    SIGN_IN = 'SIGN_IN',
-    LOG_OUT = 'LOG_OUT'
+export interface CurrentPass {
+  answeredQuestions: {
+    [questionOrderNumber: string]: boolean;
+  };
+  startTime: number;
+  testId: number;
 }
 
-export type StatusAction = FetchStatusAction | FetchStatusSuccessAction | SignInAction | LogOutAction
+export enum StatusActionType {
+  FetchStatus = "FetchStatus",
+  FetchStatusSuccess = "FetchStatusSuccess",
+  SignIn = "SignIn",
+  LogOut = "LogOut",
+}
+
+export type StatusAction =
+  | FetchStatusAction
+  | FetchStatusSuccessAction
+  | SignInAction
+  | LogOutAction;
 
 interface FetchStatusAction {
-    type: StatusActionTypes.FETCH_STATUS
+  type: StatusActionType.FetchStatus;
 }
 
 interface FetchStatusSuccessAction {
-    type: StatusActionTypes.FETCH_STATUS_SUCCESS,
-    payload: {
-        authorized: boolean,
-        currentPass: CurrentPass,
-    }
+  type: StatusActionType.FetchStatusSuccess;
+  payload: {
+    authorized: boolean;
+    currentPass: CurrentPass | null;
+  };
 }
 
 interface SignInAction {
-    type: StatusActionTypes.SIGN_IN
+  type: StatusActionType.SignIn;
 }
 
 interface LogOutAction {
-    type: StatusActionTypes.LOG_OUT
+  type: StatusActionType.LogOut;
 }
-
-
