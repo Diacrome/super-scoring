@@ -1,12 +1,14 @@
 package ru.hh.superscoring.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.hibernate.PropertyValueException;
 import ru.hh.superscoring.dao.AnswerDao;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Answer;
+import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 
 public class AnswerService {
@@ -33,17 +35,26 @@ public class AnswerService {
     answer.setAnswer(answerText);
     answer.setTimeAnswer(LocalDateTime.now());
     answerDao.save(answer);
-    if (testDao.getTestQuantity(testPassDao.getTestIdByUserId(userId)) == (questionOrder + 1)) {
+    if ((long) testDao.getTestQuantity(testPassDao.getTestIdByUserId(userId)) == answerDao.getValueAnswerByTestPassId(testPassId)) {
       setResultOfTestPass(testPassId);
     }
+
   }
 
   public void setResultOfTestPass(Integer testPassId) {
-    TestPass testPass = testPassDao.get(TestPass.class,testPassId);
+    TestPass testPass = testPassDao.get(TestPass.class, testPassId);
+    List<Answer> listAnswerByTestPass = answerDao.getListAnswerByTestPassId(testPass.getId());
+    List<Question> listQuestionByTestPass = questionDao.getListQuestionByTestPassId(testPass.getQuestionIds());
     Integer valueTrueAnswer = 0;
-    for(int index = 0;index < testDao.getTestQuantity(testPass.getTestId());++index){
-      if(questionDao.getTrueAnswerOnQuestion(testPass.getQuestionIds().get(index))
-                    .equals(answerDao.getAnswerByOrder(testPassId,index))) {
+    for (int i = 0; i < testDao.getTestQuantity(testPass.getTestId()); ++i) {
+      final int index = i;
+      if (listQuestionByTestPass.stream()
+          .filter(question -> testPass.getQuestionIds().get(index).equals(question.getId()))
+          .findAny()
+          .get().getAnswer().equals(listAnswerByTestPass.stream()
+              .filter(answer -> answer.getQuestion().equals(index))
+              .findAny()
+              .get().getAnswer())) {
         valueTrueAnswer++;
       }
     }
@@ -51,5 +62,4 @@ public class AnswerService {
     testPass.setTimeFinished(LocalDateTime.now());
     testPassDao.save(testPass);
   }
-
 }

@@ -21,10 +21,10 @@ public class QuestionDao extends GenericDao {
   }
 
   @Transactional(readOnly = true)
-  public String getTrueAnswerOnQuestion(Integer questionId) {
+  public List<Question> getListQuestionByTestPassId(List<Integer> listQuestionId) {
     return getSession()
-        .createQuery("select q.answer from Question q where q.id = :question_id", String.class)
-        .setParameter("question_id",questionId)
-        .uniqueResult();
+        .createQuery("select q from Question q where q.id in (:ids)", Question.class)
+        .setParameterList("ids", listQuestionId)
+        .getResultList();
   }
 }
