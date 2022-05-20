@@ -1,50 +1,26 @@
-import React, {useEffect} from 'react';
-import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
-import HomeScreen from "./pages/HomeScreen";
-import TestScreen from "./pages/TestScreen";
-import Results from "./pages/Results";
-import LoginScreen from "./pages/LoginScreen";
-import TestInfo from "./pages/TestInfo";
-import Loader from "./components/Loader/Loader";
-import {fetchStatus} from "./store/action-creators/status";
-import {useAppSelector} from "./hooks/useAppSelector";
-import {useAppDispatch} from "./hooks/useAppDispatch";
-import './styles/App.css'
+import React, { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { fetchStatus } from "./store/action-creators/status";
+import { useAppDispatch } from "./hooks/useAppDispatch";
+import "./styles/App.css";
+import AppRoutes from "./components/AppRoutes";
+import { useDispatch } from "react-redux";
+import "./types/global.d.ts";
 
 function App() {
-    const status = useAppSelector(state => state.status);
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(fetchStatus());
-    }, [])
+  useEffect(() => {
+    dispatch(fetchStatus());
+  }, []);
 
-    console.log(status.loading, status.authorized);
-
-    return (
-        <BrowserRouter>
-            {
-                status.loading ?
-                    <Loader/>
-                    : !status.authorized ?
-                        <Routes>
-                            <Route path="/auth" element={<LoginScreen/>}/>
-                            <Route path="*" element={<Navigate replace to="/auth"/>}/>
-                        </Routes>
-                        : status.currentPass === null ?
-                            <Routes>
-                                <Route path="/" element={<HomeScreen/>}/>
-                                <Route path="/:testId" element={<TestInfo/>}/>
-                                <Route path="/:testId/:completionId" element={<Results/>}/>
-                            </Routes>
-                            :
-                            <Routes>
-                                <Route path="/:testId/:completionId" element={<Results/>}/>
-                                <Route path="*" element={<TestScreen/>}/>
-                            </Routes>
-            }
-        </BrowserRouter>
-    );
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;

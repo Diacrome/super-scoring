@@ -1,4 +1,46 @@
 * {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.App {
+  width: 500px;
+  margin: 30px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  padding: 5px 15px;
+  color: cornflowerblue;
+  font-size: 14px;
+  background: transparent;
+  border: 1px solid cornflowerblue;
+}
+
+.btn-block {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.login-block {
+  display: flex;
+}
+
+.navbar {
+  width: 100%;
+  display: flex;
+}
+
+.navbar-logout {
+  margin-left: auto;
+}
+
+.label-choice {
+  margin-left: 5px;
+}
+
+.choice {
+  margin-top: 5px;
 }
