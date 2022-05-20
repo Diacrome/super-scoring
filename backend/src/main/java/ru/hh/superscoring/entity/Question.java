@@ -1,5 +1,7 @@
 package ru.hh.superscoring.entity;
 
+import ru.hh.superscoring.util.QuestionAnswerType;
+
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +32,9 @@ public class Question {
 
   @Column(name = "question_content")
   private String content;
+
+  @Column(name = "answer_type")
+  private QuestionAnswerType answerType;
 
   @Column(name = "date_created")
   private LocalDateTime dateCreated;
@@ -67,6 +72,8 @@ public class Question {
     return content;
   }
 
+  public QuestionAnswerType getAnswerType() { return answerType; }
+
   public LocalDateTime getDateCreated() {
     return dateCreated;
   }
@@ -102,6 +109,8 @@ public class Question {
   public void setContent(String content) {
     this.content = content;
   }
+
+  public void setAnswerType(QuestionAnswerType answerType) { this.answerType = answerType; }
 
   public void setDateCreated(LocalDateTime dateCreated) {
     this.dateCreated = dateCreated;
