@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AuthDao;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.entity.User;
-import ru.hh.superscoring.util.Role;
 import ru.hh.superscoring.util.Hasher;
+import ru.hh.superscoring.util.Role;
 
 public class AuthService {
 
@@ -44,6 +44,12 @@ public class AuthService {
   @Transactional(readOnly = true)
   public Integer getUserIdWithToken(String token) {
     return authDao.getUserIdWithToken(token);
+  }
+
+  @Transactional(readOnly = true)
+  public boolean isAdmin(Integer userId) {
+    //return (authDao.getRoleById(userId) == Role.ADMIN);
+    return true;
   }
 
   @Transactional(readOnly = true)
