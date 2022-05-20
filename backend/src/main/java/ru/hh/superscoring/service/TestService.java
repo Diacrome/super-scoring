@@ -28,7 +28,7 @@ public class TestService {
   }
 
   @Transactional(readOnly = true)
-  public void saveTest(String name, String description, Integer creatorId, Integer questionCount){
+  public Integer saveTest(String name, String description, Integer creatorId, Integer questionCount){
     Test test = new Test();
     test.setName(name);
     test.setDescription(description);
@@ -38,5 +38,7 @@ public class TestService {
     test.setDateCreated(LocalDateTime.now());
     test.setDateModified(LocalDateTime.now());
     testDao.save(test);
+    Integer maxId = testDao.getMaxId();
+    return maxId;
   }
 }

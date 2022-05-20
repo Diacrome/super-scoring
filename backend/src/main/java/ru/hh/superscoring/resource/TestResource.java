@@ -50,22 +50,16 @@ public class TestResource {
       return Response.status(404, "Invalid token!").build();
     }
     boolean isUserAdmin = authService.isAdmin(userId);
-    try {
-      isUserAdmin = authService.isAdmin(userId);
+    if (!isUserAdmin){
+      return Response.status(403, "Admin rights required").build();
     }
-    catch (Exception e){
-      return Response.status(400).entity(e.getMessage()).build();
-    }
-    /*if (!isUserAdmin){
-      //return Response.status(403, "Admin rights required").build();
-      return Response.status(403).entity(userId + " : " + isUserAdmin + " : " + name + " : " + role).build();
-    }*/
+    Integer savedId = -1;
     try {
-      testService.saveTest(name, description, userId, questionCount);
+      savedId = testService.saveTest(name, description, userId, questionCount);
     }
     catch (Exception e){
       return Response.status(400).entity("Unable to save test!").build();
     }
-    return Response.status(201).build();
+    return Response.status(201).entity(savedId).build();
   }
 }

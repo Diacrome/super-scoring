@@ -69,10 +69,10 @@ create table token
 );
 
 insert into ss_user (login, password, name, role)
-values ('admin', 'LyB7wiGICF5mCQizydjYMA', 'Ivan', 'admin'),-- pass: admin1
-       ('adminLiza', 'Md62AUIObyA3rWFdP6xq8w', 'Liza', 'admin'),  -- pass: admin2
-       ('user1', 'EggTS90B9fvld1RemOBBdQ', 'Petr', 'user'),  -- pass: user1
-       ('user2', 'pfH0FU_RuP4PRaTB84uFqw', 'Anna', 'user');   --  pass: user2
+values ('admin', 'LyB7wiGICF5mCQizydjYMA', 'Ivan', 'ADMIN'),-- pass: admin1
+       ('adminLiza', 'Md62AUIObyA3rWFdP6xq8w', 'Liza', 'ADMIN'),  -- pass: admin2
+       ('user1', 'EggTS90B9fvld1RemOBBdQ', 'Petr', 'USER'),  -- pass: user1
+       ('user2', 'pfH0FU_RuP4PRaTB84uFqw', 'Anna', 'USER');   --  pass: user2
 
 
 insert into test (creator_id, name, description, date_created, date_modified)
