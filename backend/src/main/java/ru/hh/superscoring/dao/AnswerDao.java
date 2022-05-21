@@ -12,14 +12,6 @@ public class AnswerDao extends GenericDao {
   }
 
   @Transactional(readOnly = true)
-  public Long getValueAnswerByTestPassId(Integer testPassId) {
-    return getSession()
-        .createQuery("select count(a) from Answer a where a.testPass = :test_pass_id", Long.class)
-        .setParameter("test_pass_id", testPassId)
-        .uniqueResult();
-  }
-
-  @Transactional(readOnly = true)
   public List<Answer> getListAnswerByTestPassId(Integer testPassId) {
     return getSession()
         .createQuery("select a from Answer a where a.testPass = :test_pass_id order by a.question", Answer.class)

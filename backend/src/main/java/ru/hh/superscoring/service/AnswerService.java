@@ -35,15 +35,15 @@ public class AnswerService {
     answer.setAnswer(answerText);
     answer.setTimeAnswer(LocalDateTime.now());
     answerDao.save(answer);
-    if ((long) testDao.getTestQuantity(testPassDao.getTestIdByUserId(userId)) == answerDao.getValueAnswerByTestPassId(testPassId)) {
-      setResultOfTestPass(testPassId);
+    List<Answer> listAnswerByTestPass = answerDao.getListAnswerByTestPassId(testPassId);
+    if (testDao.getTestQuantity(testPassDao.getTestIdByUserId(userId)) == listAnswerByTestPass.size()) {
+      setResultOfTestPass(testPassId,listAnswerByTestPass);
     }
 
   }
 
-  public void setResultOfTestPass(Integer testPassId) {
+  public void setResultOfTestPass(Integer testPassId, List<Answer> listAnswerByTestPass) {
     TestPass testPass = testPassDao.get(TestPass.class, testPassId);
-    List<Answer> listAnswerByTestPass = answerDao.getListAnswerByTestPassId(testPass.getId());
     List<Question> listQuestionByTestPass = questionDao.getListQuestionByTestPassId(testPass.getQuestionIds());
     Integer valueTrueAnswer = 0;
     for (int i = 0; i < testDao.getTestQuantity(testPass.getTestId()); ++i) {
