@@ -22,7 +22,7 @@ public class AnswerDao extends GenericDao {
   @Transactional(readOnly = true)
   public List<Answer> getListAnswerByTestPassId(Integer testPassId) {
     return getSession()
-        .createQuery("select a from Answer a where a.testPass = :test_pass_id", Answer.class)
+        .createQuery("select a from Answer a where a.testPass = :test_pass_id order by a.question", Answer.class)
         .setParameter("test_pass_id", testPassId)
         .getResultList();
   }

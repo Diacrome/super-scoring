@@ -51,10 +51,7 @@ public class AnswerService {
       if (listQuestionByTestPass.stream()
           .filter(question -> testPass.getQuestionIds().get(index).equals(question.getId()))
           .findAny()
-          .get().getAnswer().equals(listAnswerByTestPass.stream()
-              .filter(answer -> answer.getQuestion().equals(index))
-              .findAny()
-              .get().getAnswer())) {
+          .get().getAnswer().equals(listAnswerByTestPass.get(index).getAnswer())) {
         valueTrueAnswer++;
       }
     }
