@@ -37,7 +37,7 @@ public class AnswerService {
     answerDao.save(answer);
     List<Answer> listAnswerByTestPass = answerDao.getListAnswerByTestPassId(testPassId);
     if (testDao.getTestQuantity(testPassDao.getTestIdByUserId(userId)) == listAnswerByTestPass.size()) {
-      setResultOfTestPass(testPassId,listAnswerByTestPass);
+      setResultOfTestPass(testPassId, listAnswerByTestPass);
     }
 
   }
