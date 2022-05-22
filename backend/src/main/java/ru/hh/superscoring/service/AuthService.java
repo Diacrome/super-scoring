@@ -49,7 +49,6 @@ public class AuthService {
   @Transactional(readOnly = true)
   public boolean isAdmin(Integer userId) {
     return (authDao.getRoleById(userId) == Role.ADMIN);
-    //return true;
   }
 
   @Transactional(readOnly = true)
