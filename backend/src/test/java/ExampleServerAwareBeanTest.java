@@ -9,7 +9,7 @@ import ru.hh.nab.testbase.ResourceHelper;
 import ru.hh.nab.testbase.extensions.NabJunitWebConfig;
 import ru.hh.nab.testbase.extensions.NabTestServer;
 import ru.hh.nab.testbase.extensions.OverrideNabApplication;
-import ru.hh.superscoring.resource.HelloResource;
+import ru.hh.superscoring.resource.ExampleResource;
 
 @NabJunitWebConfig(NabTestConfig.class)
 public class ExampleServerAwareBeanTest {
@@ -19,14 +19,14 @@ public class ExampleServerAwareBeanTest {
 
   @Test
   public void testBeanWithNabTestContext() {
-    try (Response response = resourceHelper.createRequestFromAbsoluteUrl(resourceHelper.baseUrl() + "/hello").get()) {
+    try (Response response = resourceHelper.createRequestFromAbsoluteUrl(resourceHelper.baseUrl() + "/helloSuperScoringTeam").get()) {
       assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-      assertEquals("Hello, Super-Scoring team!", response.readEntity(String.class));
+      assertEquals("Hello, SuperScoring team!", response.readEntity(String.class));
     }
   }
 
   @Configuration
-  @Import(HelloResource.class)
+  @Import(ExampleResource.class)
   public static class SpringCtxForJersey implements OverrideNabApplication {
     @Override
     public NabApplication getNabApplication() {
