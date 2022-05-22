@@ -1,7 +1,9 @@
 package ru.hh.superscoring.service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
@@ -45,4 +47,20 @@ public class QuestionService {
     question.setActive(Boolean.TRUE);
     questionDao.save(question);
   }
+
+  @Transactional(readOnly = true)
+  public Boolean addQuestion(Question newQuestion) {
+    Question question = new Question();
+    question.setTestId(newQuestion.getTestId());
+    question.setWording(newQuestion.getWording());
+    question.setPayload(newQuestion.getPayload());
+    question.setAnswer(newQuestion.getAnswer());
+    question.setContent(newQuestion.getContent());
+    question.setDateCreated(LocalDateTime.now());
+
+    question.setDateModified(LocalDateTime.now());
+    question.setTimeLimit(newQuestion.getTimeLimit());
+    return true;
+  }
+
 }
