@@ -28,7 +28,7 @@ public class TestService {
   }
 
   @Transactional
-  public Integer saveTest(String name, String description, Integer creatorId, Integer questionCount){
+  public Integer saveTest(String name, String description, Integer creatorId, Integer questionCount) {
     Test test = new Test();
     test.setName(name);
     test.setDescription(description);

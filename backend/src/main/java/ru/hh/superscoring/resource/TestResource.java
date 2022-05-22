@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestService;
-import ru.hh.superscoring.util.Role;
 
 @Path("/test")
 public class TestResource {
@@ -41,23 +40,22 @@ public class TestResource {
   @POST
   @Path("create")
   @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
-  public Response createTest(@FormParam ("name") String name,
+  public Response createTest(@FormParam("name") String name,
                              @FormParam("description") String description,
                              @FormParam("questionCount") Integer questionCount,
-                             @HeaderParam("authorization") String authorizationToken){
+                             @HeaderParam("authorization") String authorizationToken) {
     Integer userId = authService.getUserIdWithToken(authorizationToken);
     if (userId == null) {
       return Response.status(404, "Invalid token!").build();
     }
     boolean isUserAdmin = authService.isAdmin(userId);
-    if (!isUserAdmin){
+    if (!isUserAdmin) {
       return Response.status(403, "Admin rights required").build();
     }
     Integer savedId = -1;
     try {
       savedId = testService.saveTest(name, description, userId, questionCount);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
     return Response.status(201).entity(savedId).build();

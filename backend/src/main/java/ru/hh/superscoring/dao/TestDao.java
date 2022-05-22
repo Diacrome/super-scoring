@@ -23,7 +23,7 @@ public class TestDao extends GenericDao {
         .setParameter("test_id", testId).setMaxResults(1).uniqueResult() != null;
   }
 
-  public Integer getMaxId(){
+  public Integer getMaxId() {
     return getSession()
         .createQuery("select max (id) from Test", Integer.class)
         .uniqueResult();
