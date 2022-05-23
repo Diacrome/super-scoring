@@ -14,10 +14,8 @@ public class QuestionDao extends GenericDao {
   @Transactional(readOnly = true)
   public List<Question> getQuestionsForTest(Integer testId) {
     return getSession()
-        .createQuery("select q from Question q where q.testId = :id", Question.class)
+        .createQuery("select q from Question q where q.testId = :id and q.activity = true", Question.class)
         .setParameter("id", testId)
         .getResultList();
   }
-
-
 }

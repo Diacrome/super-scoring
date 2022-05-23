@@ -177,3 +177,19 @@ Connection.
 "perPage":3,
 "found":3}
 
+### Установка вопроса по значению Id в состояние некативного ###
+
+`PUT /question?questionId = {значение Id вопроса в базе данных}`
+
+** Получает **
+- Id вопроса в базе данных (Integer questionId) в виде @QueryParam в простом текстовом формате
+- токен из заголовка запроса (String authorization) в виде @HeaderParam
+
+**Возвращает**
+- 201 и "Set question not activity with this QuestionId", если изменения успешно произведены
+- 401 и "No token found", если токен не передан.
+- 404 и "Invalid token!" если токен не связан с пользователем / не валиден
+- 404 и "Role user is not ADMIN. Access denied!", если пользователь имеет роль не ADMIN
+- 400 и "Unable to set question is not activity!", если запись не удалось произвести корректно.
+- 400 и "There is no question with such a QuestionId!" если отсутствует вопрос с заданным questionId
+

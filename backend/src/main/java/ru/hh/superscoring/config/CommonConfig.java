@@ -16,6 +16,7 @@ import ru.hh.superscoring.entity.User;
 import ru.hh.superscoring.resource.AuthResource;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.resource.HelloResource;
+import ru.hh.superscoring.resource.QuestionResource;
 import ru.hh.superscoring.resource.TestResource;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.dao.TestPassDao;
@@ -34,6 +35,7 @@ import ru.hh.superscoring.service.TestService;
 @Configuration
 @Import({
     // import your beans here
+    QuestionResource.class,
     TestService.class,
     AnswerDao.class,
     AnswerService.class,

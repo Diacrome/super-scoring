@@ -45,7 +45,18 @@ public class Question {
   @Column(name = "time_limit")
   private Short timeLimit;
 
+  @Column(name = "activity")
+  private Boolean activity;
+
   public Question() {
+  }
+
+  public Boolean getActivity() {
+    return activity;
+  }
+
+  public void setActivity(Boolean activity) {
+    this.activity = activity;
   }
 
   public Integer getId() {
@@ -123,5 +134,4 @@ public class Question {
   public void setTimeLimit(Short timeLimit) {
     this.timeLimit = timeLimit;
   }
-
 }
