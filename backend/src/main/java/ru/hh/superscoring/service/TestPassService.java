@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.TestPassDao;
+import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
@@ -43,4 +44,8 @@ public class TestPassService {
     return Set.of();
   }
 
+  @Transactional(readOnly = true)
+  public LeaderBoardDto getLeaders(Integer testId, Integer page, Integer perPage){
+    return LeaderBoardDto.map(testPassDao.getLeaders(testId, page, perPage), page, perPage, testPassDao.countLeadersForTest(testId));
+  }
 }

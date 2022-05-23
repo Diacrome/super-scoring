@@ -1,10 +1,12 @@
 package ru.hh.superscoring.dao;
 
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hh.superscoring.dto.LeaderDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
 
 public class TestPassDao extends GenericDao {
@@ -33,6 +35,26 @@ public class TestPassDao extends GenericDao {
         .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
         .setParameter("user_id", userId)
         .uniqueResult();
+  }
+
+  public List<LeaderDto> getLeaders(Integer testId, Integer page, Integer perPage) {
+    return getSession()
+        .createQuery("select new ru.hh.superscoring.dto.LeaderDto(u.name, max(tp.finalScore)) " +
+            "from TestPass as tp join User as u ON tp.userId = u.id " +
+            "where tp.testId = :test_id and tp.finalScore is not null " +
+            "group by tp.userId, u.name " +
+            "order by max(tp.finalScore) desc")
+        .setParameter("test_id", testId)
+        .setFirstResult(page * perPage)
+        .setMaxResults(perPage)
+        .getResultList();
+  }
+
+  public Long countLeadersForTest(Integer testId) {
+    return getSession()
+        .createQuery("select count(distinct tp.userId)  from TestPass as tp where tp.testId = :test_id and tp.finalScore is not null ", Long.class)
+        .setParameter("test_id", testId)
+        .getSingleResult();
   }
 
 }
