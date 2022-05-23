@@ -20,7 +20,6 @@ public class QuestionDao extends GenericDao {
         .getResultList();
   }
 
-  @Transactional(readOnly = true)
   public List<Question> getListQuestionByTestPassId(List<Integer> listQuestionId) {
     return getSession()
         .createQuery("select q from Question q where q.id in (:ids)", Question.class)

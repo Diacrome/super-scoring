@@ -48,8 +48,8 @@ public class TestPass {
   @Column(name = "final_score")
   private Integer finalScore;
 
-  @Column(name = "value_true_answer")
-  private Integer valueTrueAnswer;
+  @Column(name = "final_score")
+  private Integer finalScore;
 
   public TestPass() {
   }

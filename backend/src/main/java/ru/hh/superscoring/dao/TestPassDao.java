@@ -58,4 +58,3 @@ public class TestPassDao extends GenericDao {
   }
 
 }
-
