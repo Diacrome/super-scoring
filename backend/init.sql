@@ -22,11 +22,12 @@ create table test
 create table question
 (
     id               serial primary key,
-    test_id          integer not null references test (id),
-    question_wording text    not null,
-    payload          json    not null,
-    answer           json    not null,
+    test_id          integer     not null references test (id),
+    question_wording text        not null,
+    payload          json        not null,
+    answer           json        not null,
     question_content text,
+    answer_type      varchar(32) not null,
     date_created     timestamp without time zone default (now() at time zone 'utc'),
     date_modified    timestamp without time zone,
     time_limit       smallint
@@ -80,36 +81,37 @@ insert into test (creator_id, name, description, date_created, date_modified)
 values (1, 'Математический тест', 'Тест на знание таблицы умножения', now(), now()),
        (2, 'Тест по английскому языку', 'Тест на знание английского языка', now(), now());
 
-insert into question(test_id, question_wording, payload, answer, question_content, date_created, date_modified,
+insert into question(test_id, question_wording, payload, answer, question_content, answer_type, date_created, date_modified,
                      time_limit)
-values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null, now(), now(), 30),
-       (1, '2*2 = ', '{"1": 1, "2": 4, "3": 4, "4": 1}', '{"answer": "2"}', null, now(), now(), 30),
-       (1, '3*3 = ', '{"1": 1, "2": 3, "3": 9, "4": 1}', '{"answer": "3"}', null, now(), now(), 30),
-       (1, '4*4 = ', '{"1": 1, "2": 3, "3": 4, "4": 16}', '{"answer": "4"}', null, now(), now(), 30),
-       (1, '5*5 = ', '{"1": 25, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null, now(), now(), 30),
-       (1, '6*6 = ', '{"1": 1, "2": 36, "3": 4, "4": 1}', '{"answer": "2"}', null, now(), now(), 30),
-       (1, '7*7 = ', '{"1": 1, "2": 3, "3": 49, "4": 1}', '{"answer": "3"}', null, now(), now(), 30),
-       (1, '8*8 = ', '{"1": 1, "2": 3, "3": 4, "4": 64}', '{"answer": "4"}', null, now(), now(), 30),
-       (1, '9*9 = ', '{"1": 81, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null, now(), now(), 30),
-       (1, '10*10 = ', '{"1": 100, "2": 1000, "3": 4, "4": 1}', '{"answer": "1"}', null, now(), now(), 30),
-       (1, '6*5 = ', '{"1": 1, "2": 30, "3": 35, "4": 1}', '{"answer": "2"}', null, now(), now(), 30),
-       (1, '7*6 = ', '{"1": 1, "2": 3, "3": 42, "4": 44}', '{"answer": "3"}', null, now(), now(), 30),
-       (1, '7*8 = ', '{"1": 1, "2": 3, "3": 4, "4": 56}', '{"answer": "4"}', null, now(), now(), 30),
-       (1, '8*9 = ', '{"1": 72, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null, now(), now(), 30),
-       (1, '6*4 = ', '{"1": 1, "2": 24, "3": 4, "4": 1}', '{"answer": "2"}', null, now(), now(), 30),
-       (1, '2*3 = ', '{"1": 1, "2": 3, "3": 6, "4": 1}', '{"answer": "3"}', null, now(), now(), 30),
-       (1, '5*4 = ', '{"1": 1, "2": 3, "3": 4, "4": 20}', '{"answer": "4"}', null, now(), now(), 30),
-       (2, 'Kang thought the spicy tofu dish was %answer tasty, so he ordered it again.', '{"1": "mainly", "2": "fairy", "3": "especially", "4": "slightly"}', '{"answer": "3"}', null, now(), now(), 30),
-       (2, 'They’ve been married for over fifty years, but she still remembers the day she first %answer.', '{"1": "keen on him", "2": "stuck on him", "3": "fell for him", "4": "wed him"}', '{"answer": "3"}', null, now(), now(), 30),
-       (2, 'She arrived at 8 p.m., opened the door and shouted “Good %answer!”', '{"1": "morning", "2": "evening", "3": "night", "4": "bye"}', '{"answer": "2"}', null, now(), now(), 30),
-       (2, 'It %answer that our Earth is so safe and peaceful planet, doesn''t it?', '{"1": "seems", "2": "is seeming", "3": "seemed"}', '{"answer": "1"}', null, now(), now(), 30),
-       (2, 'If I had had a lot of money yesterday, I would a car now.', '{"1": "have bought", "2": "buy", "3": "bought"}', '{"answer": "1"}', null, now(), now(), 30),
-       (2, 'For the questions below, please choose the best option to complete the sentence or conversation. \n Can I park here?', '{"1": "Sorry, I did that.", "2": "It''s the same place.", "3": "Only for half an hour."}', '{"answer": "3"}', null, now(), now(), 30),
-       (2, ' I''m sorry - I didn''t %answer to disturb you.', '{"1": "hope", "2": "think", "3": "mean", "4": "suppose"}', '{"answer": "3"}', null, now(), now(), 30),
-       (2, '%answer tired Melissa is when she gets home from work, she always makes time to say goodnight to the children.', '{"1": "Whatever", "2": "No matter how", "3": "However much", "4": "Although"}', '{"answer": "2"}', null, now(), now(), 30),
-       (2, 'How old is your %answer?” – “She''s thirteen.”', '{"1": "brother", "2": "son", "3": "boyfriend", "4": "sister"}', '{"answer": "4"}', null, now(), now(), 30),
-       (2, 'Do you like horror movies?', '{"1": "Yes, I am", "2": "Yes, I like", "3": "Yes, I do", "4": "Yes, it is"}', '{"answer": "3"}', null, now(), now(), 30),
-       (2, 'Jane Smith – cacti gardener. Many people are fond %answer1 gardening but Jane is different from them – she %answer2 only cacti. As a young girl she liked watching how her mother took care of plants, trees, and bushes in their garden and Jane helped her a lot. Jane’s collection of cacti from all over the world reminds her of her mother and childhood.', '{"answer1":{"1": "plants", "2": "is planting", "3": "has planted"}, "answer2": {"1": "plants", "2": "is planting", "3": "has planted"}}', '{"answer1": "2", "answer2" : "3"}', null, now(), now(), 30);
+values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '2*2 = ', '{"1": 1, "2": 4, "3": 4, "4": 1}', '{"answer": "2"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '3*3 = ', '{"1": 1, "2": 3, "3": 9, "4": 1}', '{"answer": "3"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '4*4 = ', '{"1": 1, "2": 3, "3": 4, "4": 16}', '{"answer": "4"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '5*5 = ', '{"1": 25, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '6*6 = ', '{"1": 1, "2": 36, "3": 4, "4": 1}', '{"answer": "2"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '7*7 = ', '{"1": 1, "2": 3, "3": 49, "4": 1}', '{"answer": "3"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '8*8 = ', '{"1": 1, "2": 3, "3": 4, "4": 64}', '{"answer": "4"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '9*9 = ', '{"1": 81, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '10*10 = ', '{"1": 100, "2": 1000, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '6*5 = ', '{"1": 1, "2": 30, "3": 35, "4": 1}', '{"answer": "2"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '7*6 = ', '{"1": 1, "2": 3, "3": 42, "4": 44}', '{"answer": "3"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '7*8 = ', '{"1": 1, "2": 3, "3": 4, "4": 56}', '{"answer": "4"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '8*9 = ', '{"1": 72, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '6*4 = ', '{"1": 1, "2": 24, "3": 4, "4": 1}', '{"answer": "2"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '2*3 = ', '{"1": 1, "2": 3, "3": 6, "4": 1}', '{"answer": "3"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '5*4 = ', '{"1": 1, "2": 3, "3": 4, "4": 20}', '{"answer": "4"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (1, '5*4 = ', '{"1": 1, "2": 20, "3": 4, "4": 20}', '{"multiple_answer1": "2", "multiple_answer2":  "4"}', null,'MULTIPLE_CHOICE', now(), now(), 30),
+       (2, 'Kang thought the spicy tofu dish was %answer tasty, so he ordered it again.', '{"1": "mainly", "2": "fairy", "3": "especially", "4": "slightly"}', '{"answer": "3"}', null, 'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'They’ve been married for over fifty years, but she still remembers the day she first %answer.', '{"1": "keen on him", "2": "stuck on him", "3": "fell for him", "4": "wed him"}', '{"answer": "3"}', null, 'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'She arrived at 8 p.m., opened the door and shouted “Good %answer!”', '{"1": "morning", "2": "evening", "3": "night", "4": "bye"}', '{"answer": "2"}', null, 'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'It %answer that our Earth is so safe and peaceful planet, doesn''t it?', '{"1": "seems", "2": "is seeming", "3": "seemed"}', '{"answer": "1"}', null, 'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'If I had had a lot of money yesterday, I would a car now.', '{"1": "have bought", "2": "buy", "3": "bought"}', '{"answer": "1"}', null, 'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'For the questions below, please choose the best option to complete the sentence or conversation. \n Can I park here?', '{"1": "Sorry, I did that.", "2": "It''s the same place.", "3": "Only for half an hour."}', '{"answer": "3"}', null, 'SINGLE_CHOICE', now(), now(), 30),
+       (2, ' I''m sorry - I didn''t %answer to disturb you.', '{"1": "hope", "2": "think", "3": "mean", "4": "suppose"}', '{"answer": "3"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (2, '%answer tired Melissa is when she gets home from work, she always makes time to say goodnight to the children.', '{"1": "Whatever", "2": "No matter how", "3": "However much", "4": "Although"}', '{"answer": "2"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'How old is your %answer?” – “She''s thirteen.”', '{"1": "brother", "2": "son", "3": "boyfriend", "4": "sister"}', '{"answer": "4"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'Do you like horror movies?', '{"1": "Yes, I am", "2": "Yes, I like", "3": "Yes, I do", "4": "Yes, it is"}', '{"answer": "3"}', null,'SINGLE_CHOICE', now(), now(), 30),
+       (2, 'Jane Smith – cacti gardener. Many people are fond %answer1 gardening but Jane is different from them – she %answer2 only cacti. As a young girl she liked watching how her mother took care of plants, trees, and bushes in their garden and Jane helped her a lot. Jane’s collection of cacti from all over the world reminds her of her mother and childhood.', '{"answer1":{"1": "plants", "2": "is planting", "3": "has planted"}, "answer2": {"1": "plants", "2": "is planting", "3": "has planted"}}', '{"answer1": "2", "answer2" : "3"}', null, 'MULTIPLE_QUESTIONS_SINGLE_CHOICE', now(), now(), 30);
 
 
 insert into test_pass (test_id, user_id, time_started, time_finished, final_score)
@@ -196,4 +198,3 @@ values
 insert into token (user_id, token, expire_date)
 values (1, '557sa7', now()),
        (4, 'fs952j', now()+interval'3d');
-

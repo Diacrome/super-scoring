@@ -113,6 +113,10 @@ Connection.
 
 ### Пароль в базе данных хранится в виде хеша, сам пароль написан рядом в виде комментария
 
+### Формат возвращаемого ответа для раных answer_type
+`SINGLE_CHOICE` answer = '{"answer": "1"}' - по ключу answer в json можно получить ключ правильного ответа в payload<br> 
+`MULTIPLE_CHOICE` answer ='{"multiple_answer1": "2", "multiple_answer2": "4"}' - ключи multiple_answer[1,2,3...] в json содержат ключ правильных ответов в payload <br>
+`MULTIPLE_QUESTIONS_SINGLE_CHOICE` answer ='{"answer1": "2", "answer2" : "3"}'- ключи answer1, answer2 в json содержат ключ правильных ответов в payload для полей %answer1, %answer2 соотвественно.
 
 `POST /answer`
 
