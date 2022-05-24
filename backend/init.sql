@@ -38,7 +38,8 @@ create table test_pass
     test_id       integer not null references test (id),
     user_id       integer not null references ss_user (id),
     time_started  timestamp without time zone,
-    time_finished timestamp without time zone
+    time_finished timestamp without time zone,
+    final_score smallint
 );
 
 create table answer
@@ -111,11 +112,19 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
        (2, 'Jane Smith – cacti gardener. Many people are fond %answer1 gardening but Jane is different from them – she %answer2 only cacti. As a young girl she liked watching how her mother took care of plants, trees, and bushes in their garden and Jane helped her a lot. Jane’s collection of cacti from all over the world reminds her of her mother and childhood.', '{"answer1":{"1": "plants", "2": "is planting", "3": "has planted"}, "answer2": {"1": "plants", "2": "is planting", "3": "has planted"}}', '{"answer1": "2", "answer2" : "3"}', null, now(), now(), 30);
 
 
-insert into test_pass (test_id, user_id, time_started, time_finished)
-values (1, 3, now() - interval '100 seconds', now()),
-       (1, 4, now() - interval '200 seconds', null),
-       (1, 1, now() - interval '200 seconds', null),
-       (2, 4, now() - interval '200 seconds', now());
+insert into test_pass (test_id, user_id, time_started, time_finished, final_score)
+values (1, 3, now() - interval '100 seconds', now(), 6),
+       (1, 4, now() - interval '200 seconds', null, null),
+       (1, 1, now() - interval '200 seconds', null, null),
+       (2, 4, now() - interval '200 seconds', now(), 10),
+       (1, 3, now() - interval '100 seconds', now(), 7),
+       (2,3,'2022-05-20 17:46:39.791','2022-05-20 17:48:19.791',6),
+       (1,4,'2022-05-20 17:44:59.791','2022-05-20 17:48:19.791',10),
+       (1,3,'2022-05-20 17:46:39.791','2022-05-20 17:48:19.791',7),
+       (1,4,'2022-05-20 17:44:59.791','2022-05-20 23:02:35.601',8),
+       (1,4,'2022-05-20 18:03:21.564','2022-05-20 23:03:35.265',3),
+       (2,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',5),
+       (1,2,'2022-05-20 18:03:45.554',NULL,NULL);
 
 
 insert into test_pass_question_id (test_pass_id, question_id_order, question_id)

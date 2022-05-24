@@ -45,7 +45,18 @@ public class TestPass {
   @OneToMany(mappedBy = "testPass", fetch = FetchType.LAZY)
   private Set<TestPassQuestion> questions = new HashSet<>();
 
+  @Column(name = "final_score")
+  private Integer finalScore;
+
   public TestPass() {
+  }
+
+  public Integer getFinalScore() {
+    return finalScore;
+  }
+
+  public void setFinalScore(Integer finalScore) {
+    this.finalScore = finalScore;
   }
 
   public Integer getId() {

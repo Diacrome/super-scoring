@@ -9,7 +9,7 @@ import ru.hh.nab.testbase.ResourceHelper;
 import ru.hh.nab.testbase.extensions.NabJunitWebConfig;
 import ru.hh.nab.testbase.extensions.NabTestServer;
 import ru.hh.nab.testbase.extensions.OverrideNabApplication;
-import ru.hh.superscoring.resource.HelloResource;
+import ru.hh.superscoring.resource.ExampleResource;
 
 @NabJunitWebConfig(NabTestConfig.class)
 public class ExampleResourceTest {
@@ -17,25 +17,14 @@ public class ExampleResourceTest {
   ResourceHelper resourceHelper;
 
   @Test
-  public void hello() {
-    final String name = "test";
-    Response response = resourceHelper.target("/hello")
-            .queryParam("name", name)
-            .request()
-            .get();
-    assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    assertEquals(String.format("Hello, %s!", name), response.readEntity(String.class));
-  }
-
-  @Test
   public void helloWithoutParams() {
-    Response response = resourceHelper.createRequest("/hello").get();
+    Response response = resourceHelper.createRequest("/helloSuperScoringTeam").get();
     assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    assertEquals("Hello, Super-Scoring team!", response.readEntity(String.class));
+    assertEquals("Hello, SuperScoring team!", response.readEntity(String.class));
   }
 
   @Configuration
-  @Import(HelloResource.class)
+  @Import(ExampleResource.class)
   public static class SpringCtxForJersey implements OverrideNabApplication {
     @Override
     public NabApplication getNabApplication() {
