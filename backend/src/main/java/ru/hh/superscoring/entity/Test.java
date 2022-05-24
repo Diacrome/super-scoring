@@ -69,4 +69,32 @@ public class Test {
   public Integer getCreatorId() {
     return creatorId;
   }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setCreatorId(Integer creatorId) {
+    this.creatorId = creatorId;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public void setDateCreated(LocalDateTime dateCreated) {
+    this.dateCreated = dateCreated;
+  }
+
+  public void setDateModified(LocalDateTime dateModified) {
+    this.dateModified = dateModified;
+  }
+
+  public void setModifierId(Integer modifierId) {
+    this.modifierId = modifierId;
+  }
+
+  public void setQuestionQuantity(Integer questionQuantity) {
+    this.questionQuantity = questionQuantity;
+  }
 }

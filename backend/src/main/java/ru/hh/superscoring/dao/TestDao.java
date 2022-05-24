@@ -22,4 +22,5 @@ public class TestDao extends GenericDao {
         .createQuery("select t.id from Test t where t.id = :test_id", Integer.class)
         .setParameter("test_id", testId).setMaxResults(1).uniqueResult() != null;
   }
+
 }
