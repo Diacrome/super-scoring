@@ -52,7 +52,7 @@ public class TestResource {
     if (!isUserAdmin) {
       return Response.status(403, "Admin rights required").build();
     }
-    Integer savedId = -1;
+    Integer savedId;
     try {
       savedId = testService.saveTest(name, description, userId, questionCount);
     } catch (Exception e) {
