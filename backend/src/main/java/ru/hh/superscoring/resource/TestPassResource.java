@@ -3,10 +3,12 @@ package ru.hh.superscoring.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Set;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -68,4 +70,15 @@ public class TestPassResource {
     }
     return Response.ok(QuestionsForTestDto.map(questions)).build();
   }
+
+  @GET
+  @Path("/leaders/{testId}")
+  @Produces("application/json")
+  public Response startTest(@PathParam("testId") Integer testId,
+                            @QueryParam("page")@DefaultValue("0") Integer page,
+                            @QueryParam("perPage")@DefaultValue("10") Integer perPage) {
+
+    return Response.ok(testPassService.getLeaders(testId, page, perPage)).build();
+  }
+
 }

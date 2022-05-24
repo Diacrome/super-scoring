@@ -1,6 +1,7 @@
 package ru.hh.superscoring.dao;
 
 import org.hibernate.SessionFactory;
+import ru.hh.superscoring.util.Role;
 
 public class AuthDao extends GenericDao {
 
@@ -34,6 +35,13 @@ public class AuthDao extends GenericDao {
     return getSession()
         .createQuery("select u.id from User u where u.login = :login", Integer.class)
         .setParameter("login", login)
+        .uniqueResult();
+  }
+
+  public Role getRoleById(Integer userId){
+    return getSession()
+        .createQuery("select role from User where id = :userId", Role.class)
+        .setParameter("userId", userId)
         .uniqueResult();
   }
 
