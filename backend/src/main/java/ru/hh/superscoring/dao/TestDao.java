@@ -23,4 +23,11 @@ public class TestDao extends GenericDao {
         .setParameter("test_id", testId).setMaxResults(1).uniqueResult() != null;
   }
 
+  public boolean isTestActive(Integer testId){
+    return getSession()
+        .createQuery("select is_active from Test where id = :test_id", Boolean.class)
+        .setParameter("test_id", testId)
+        .uniqueResult() != null;
+  }
+
 }

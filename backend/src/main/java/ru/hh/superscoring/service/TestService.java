@@ -40,4 +40,9 @@ public class TestService {
     testDao.save(test);
     return test.getId();
   }
+
+  @Transactional(readOnly = true)
+  public Boolean isTestActive(Integer testId){
+    return testDao.isTestActive(testId);
+  }
 }

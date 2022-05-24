@@ -7,12 +7,15 @@ public class TestDto {
   private String name;
   private String description;
 
+  private Boolean isActive;
+
   public static TestDto map(Test test) {
     if (test != null) {
       TestDto testDto = new TestDto();
       testDto.setId(test.getId());
       testDto.setName(test.getName());
       testDto.setDescription(test.getDescription());
+
       return testDto;
     } else {
       return null;
@@ -44,5 +47,11 @@ public class TestDto {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Boolean getIsActive() {return isActive; }
+
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
   }
 }

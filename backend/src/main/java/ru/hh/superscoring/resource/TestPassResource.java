@@ -4,14 +4,14 @@ package ru.hh.superscoring.resource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Set;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.service.AuthService;
@@ -46,6 +46,9 @@ public class TestPassResource {
     if (!testService.isExistTest(testId)) {
       return Response.status(404, "There is no such test in the system ").build();
     }
+    if (!testService.isTestActive(testId)) {
+      return Response.status(404, "Test not active").build();
+    }
     if (testPassService.startTest(testId, userId)) {
       return Response.status(201).build();
     }
@@ -75,8 +78,8 @@ public class TestPassResource {
   @Path("/leaders/{testId}")
   @Produces("application/json")
   public Response startTest(@PathParam("testId") Integer testId,
-                            @QueryParam("page")@DefaultValue("0") Integer page,
-                            @QueryParam("perPage")@DefaultValue("10") Integer perPage) {
+                            @QueryParam("page") @DefaultValue("0") Integer page,
+                            @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
 
     return Response.ok(testPassService.getLeaders(testId, page, perPage)).build();
   }

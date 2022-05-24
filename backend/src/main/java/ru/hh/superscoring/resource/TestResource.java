@@ -1,6 +1,7 @@
 package ru.hh.superscoring.resource;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -59,5 +60,21 @@ public class TestResource {
       return Response.status(400).entity("Unable to save test!").build();
     }
     return Response.status(201).entity(savedId).build();
+  }
+
+  @POST
+  @Path("off/{id}")
+  @Produces("application/json")
+  public Response inactivateTest(@PathParam("id") Integer id,
+                             @HeaderParam("authorization") String authorizationToken){
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    boolean isUserAdmin = authService.isAdmin(userId);
+    if (!isUserAdmin){
+      return Response.status(403, "Admin rights required").build();
+    }
+    return Response.status(201).build();
   }
 }
