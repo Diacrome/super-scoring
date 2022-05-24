@@ -49,6 +49,13 @@ public class QuestionService {
   }
 
   @Transactional(readOnly = true)
+  public Boolean ifExistsTestFromQuestion(Question question) {
+    if (testService.isExistTest(question.getTestId()))
+      return true;
+    return false;
+  }
+
+  @Transactional
   public Boolean addQuestion(Question newQuestion) {
     Question question = new Question();
     question.setTestId(newQuestion.getTestId());
@@ -57,7 +64,6 @@ public class QuestionService {
     question.setAnswer(newQuestion.getAnswer());
     question.setContent(newQuestion.getContent());
     question.setDateCreated(LocalDateTime.now());
-
     question.setDateModified(LocalDateTime.now());
     question.setTimeLimit(newQuestion.getTimeLimit());
     return true;

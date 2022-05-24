@@ -56,7 +56,7 @@ public class AuthService {
     return authDao.findUserByLogin(login);
   }
 
-  @Transactional(readOnly = true)
+  @Transactional
   public void addUser(String login, String password, String name, Role role) {
     User user = new User();
     user.setLogin(login);
