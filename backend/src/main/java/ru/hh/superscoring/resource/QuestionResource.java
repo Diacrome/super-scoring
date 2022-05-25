@@ -1,11 +1,9 @@
 package ru.hh.superscoring.resource;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.hibernate.PropertyValueException;
 import ru.hh.superscoring.service.AuthService;
@@ -23,9 +21,42 @@ public class QuestionResource {
   }
 
   @PUT
-  @Consumes({MediaType.TEXT_HTML})
-  public Response disableActivityQuestion(@QueryParam("questionId") int questionId,
-                                          @HeaderParam("authorization") String authorizationToken) {
+  @Path("/inactive/{questionId}")
+  public Response disableActiveQuestion(@PathParam("questionId") int questionId,
+                                        @HeaderParam("authorization") String authorizationToken) {
+    Response response = checkAuthorization(authorizationToken);
+    if (response.getStatus() == 201) {
+      try {
+        questionService.setQuestionNotActive(questionId);
+      } catch (PropertyValueException pve) {
+        return Response.status(400).entity("There is no question with such a QuestionId!").build();
+      } catch (Exception e) {
+        return Response.status(400).entity("Unable to set question is not 'active'!").build();
+      }
+      return Response.status(201).entity("Set question not 'active' with this QuestionId").build();
+    }
+    return response;
+  }
+
+  @PUT
+  @Path("/active/{questionId}")
+  public Response enableInactiveQuestion(@PathParam("questionId") int questionId,
+                                         @HeaderParam("authorization") String authorizationToken) {
+    Response response = checkAuthorization(authorizationToken);
+    if (response.getStatus() == 201) {
+      try {
+        questionService.setQuestionActive(questionId);
+      } catch (PropertyValueException pve) {
+        return Response.status(400).entity("There is no question with such a QuestionId!").build();
+      } catch (Exception e) {
+        return Response.status(400).entity("Unable to set question is 'active'!").build();
+      }
+      return Response.status(201).entity("Set question 'active' with this QuestionId").build();
+    }
+    return response;
+  }
+
+  private Response checkAuthorization(String authorizationToken) {
     if (authorizationToken == null) {
       return Response.status(401).entity("No token found!").build();
     }
@@ -34,15 +65,9 @@ public class QuestionResource {
       return Response.status(404, "Invalid token!").build();
     }
     if (userRole != Role.ADMIN) {
-      return Response.status(404, "Role user is not ADMIN. Access denied!").build();
+      return Response.status(403, "Role user is not ADMIN. Access denied!").build();
     }
-    try {
-      questionService.setQuestionNotActivity(questionId);
-    } catch (PropertyValueException pve) {
-      return Response.status(400).entity("There is no question with such a QuestionId!").build();
-    } catch (Exception e) {
-      return Response.status(400).entity("Unable to set question is not activity!").build();
-    }
-    return Response.status(201).entity("Set question not activity with this QuestionId").build();
+    return Response.status(201).build();
   }
+
 }

@@ -38,7 +38,6 @@ public class AuthDao extends GenericDao {
         .uniqueResult();
   }
 
-<<<<<<< HEAD
   public Role getRoleById(Integer userId){
     return getSession()
         .createQuery("select role from User where id = :userId", Role.class)

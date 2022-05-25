@@ -31,7 +31,7 @@ create table question
     date_created     timestamp without time zone default (now() at time zone 'utc'),
     date_modified    timestamp without time zone,
     time_limit       smallint,
-    activity         boolean not null default TRUE
+    active           boolean not null default TRUE
 );
 
 create table test_pass
