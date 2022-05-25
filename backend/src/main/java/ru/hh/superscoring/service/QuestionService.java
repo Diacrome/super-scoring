@@ -1,9 +1,9 @@
 package ru.hh.superscoring.service;
 
-
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import org.hibernate.PropertyValueException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.entity.Question;
 
@@ -26,4 +26,23 @@ public class QuestionService {
     return allQuestions.subList(0, testSize);
   }
 
+  @Transactional
+  public void setQuestionNotActive(Integer questionId) {
+    Question question = questionDao.get(Question.class, questionId);
+    if (question == null) {
+      throw (new PropertyValueException("There is no question with such a QuestionId", "QuestionDao", "questionId"));
+    }
+    question.setActive(Boolean.FALSE);
+    questionDao.save(question);
+  }
+
+  @Transactional
+  public void setQuestionActive(Integer questionId) {
+    Question question = questionDao.get(Question.class, questionId);
+    if (question == null) {
+      throw (new PropertyValueException("There is no question with such a QuestionId", "QuestionDao", "questionId"));
+    }
+    question.setActive(Boolean.TRUE);
+    questionDao.save(question);
+  }
 }

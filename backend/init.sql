@@ -22,15 +22,16 @@ create table test
 create table question
 (
     id               serial primary key,
-    test_id          integer     not null references test (id),
-    question_wording text        not null,
-    payload          json        not null,
-    answer           json        not null,
+    test_id          integer not null references test (id),
+    question_wording text    not null,
+    payload          text    not null,
+    answer           text    not null,
     question_content text,
     answer_type      varchar(32) not null,
     date_created     timestamp without time zone default (now() at time zone 'utc'),
     date_modified    timestamp without time zone,
-    time_limit       smallint
+    time_limit       smallint,
+    active           boolean not null default TRUE
 );
 
 create table test_pass

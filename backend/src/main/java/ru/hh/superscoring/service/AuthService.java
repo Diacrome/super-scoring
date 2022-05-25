@@ -66,4 +66,9 @@ public class AuthService {
     authDao.save(user);
   }
 
+  @Transactional(readOnly = true)
+  public Role getRoleByToken(String token) {
+    return authDao.getRoleUserByTokenFromDataBase(token);
+  }
+
 }
