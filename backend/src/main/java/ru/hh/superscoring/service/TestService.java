@@ -37,12 +37,28 @@ public class TestService {
     test.setQuestionQuantity(questionCount);
     test.setDateCreated(LocalDateTime.now());
     test.setDateModified(LocalDateTime.now());
+    test.setIsActive(true);
     testDao.save(test);
     return test.getId();
   }
 
   @Transactional(readOnly = true)
-  public Boolean isTestActive(Integer testId){
-    return testDao.isTestActive(testId);
+  public boolean isTestActive(Integer testId){
+    Boolean testState = testDao.isTestActive(testId);
+    return testState != null && testState;
+  }
+
+  @Transactional
+  public void switchOffTest(Integer testId){
+    Test test = testDao.getTestById(testId);
+    test.setIsActive(false);
+    testDao.save(test);
+  }
+
+  @Transactional
+  public void switchOnTest(Integer testId){
+    Test test = testDao.getTestById(testId);
+    test.setIsActive(true);
+    testDao.save(test);
   }
 }

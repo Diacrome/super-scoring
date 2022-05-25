@@ -7,8 +7,6 @@ public class TestDto {
   private String name;
   private String description;
 
-  private Boolean isActive;
-
   public static TestDto map(Test test) {
     if (test != null) {
       TestDto testDto = new TestDto();
@@ -49,9 +47,4 @@ public class TestDto {
     this.description = description;
   }
 
-  public Boolean getIsActive() {return isActive; }
-
-  public void setIsActive(Boolean isActive) {
-    this.isActive = isActive;
-  }
 }

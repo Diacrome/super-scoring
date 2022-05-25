@@ -2,6 +2,7 @@ package ru.hh.superscoring.dao;
 
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hh.superscoring.entity.Test;
 
 
 public class TestDao extends GenericDao {
@@ -23,11 +24,18 @@ public class TestDao extends GenericDao {
         .setParameter("test_id", testId).setMaxResults(1).uniqueResult() != null;
   }
 
-  public boolean isTestActive(Integer testId){
+  public Boolean isTestActive(Integer testId){
     return getSession()
-        .createQuery("select is_active from Test where id = :test_id", Boolean.class)
+        .createQuery("select isActive from Test where id = :test_id", Boolean.class)
         .setParameter("test_id", testId)
-        .uniqueResult() != null;
+        .uniqueResult();
+  }
+
+  public Test getTestById(Integer testId){
+    return getSession()
+        .createQuery("select t from Test t where id = :testId", Test.class)
+        .setParameter("testId", testId)
+        .uniqueResult();
   }
 
 }
