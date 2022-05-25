@@ -14,10 +14,9 @@ public class TestPassService {
   private final TestPassDao testPassDao;
   private final QuestionService questionService;
 
-  public TestPassService(TestPassDao testPassDao, QuestionService questionService, TestDao testDao) {
+  public TestPassService(TestPassDao testPassDao, QuestionService questionService) {
     this.testPassDao = testPassDao;
     this.questionService = questionService;
-    this.testDao = testDao;
   }
 
   @Transactional
@@ -46,7 +45,7 @@ public class TestPassService {
   }
 
   @Transactional(readOnly = true)
-  public LeaderBoardDto getLeaders(Integer testId, Integer page, Integer perPage){
+  public LeaderBoardDto getLeaders(Integer testId, Integer page, Integer perPage) {
     return LeaderBoardDto.map(testPassDao.getLeaders(testId, page, perPage), page, perPage, testPassDao.countLeadersForTest(testId));
   }
 }

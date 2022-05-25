@@ -164,7 +164,6 @@ values (1, 1, 2),
 
 insert into answer (test_pass_id, question_order,  answer, time_answer)
 values
-    (1, 0, '{"answer": "1"}', now()),
     (1, 1, '{"answer": "1"}', now()),
     (1, 2, '{"answer": "1"}', now()),
     (1, 3, '{"answer": "1"}', now()),
@@ -174,7 +173,7 @@ values
     (1, 7, '{"answer": "1"}', now()),
     (1, 8, '{"answer": "1"}', now()),
     (1, 9, '{"answer": "1"}', now()),
-    (2, 0, '{"answer": "1"}', now()),
+    (1, 10, '{"answer": "1"}', now()),
     (2, 1, '{"answer": "1"}', now()),
     (2, 2, '{"answer": "1"}', now()),
     (2, 3, '{"answer": "1"}', now()),
@@ -184,7 +183,7 @@ values
     (2, 7, '{"answer": "1"}', now()),
     (2, 8, '{"answer": "1"}', now()),
     (2, 9, '{"answer": "1"}', now()),
-    (3, 0, '{"answer": "1"}', now()),
+    (2, 10, '{"answer": "1"}', now()),
     (3, 1, '{"answer": "1"}', now()),
     (3, 2, '{"answer": "1"}', now()),
     (3, 3, '{"answer": "1"}', now()),
@@ -193,7 +192,8 @@ values
     (3, 6, '{"answer": "1"}', now()),
     (3, 7, '{"answer": "1"}', now()),
     (3, 8, '{"answer": "1"}', now()),
-    (3, 9, '{"answer1": "1", "answer2" :  "2"}', now());
+    (3, 9, '{"answer": "1"}', now()),
+    (3, 10, '{"answer1": "1", "answer2" :  "2"}', now());
 
 
 insert into token (user_id, token, expire_date)

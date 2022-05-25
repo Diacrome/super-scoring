@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dto.LeaderDto;
+import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
 
 public class TestPassDao extends GenericDao {
@@ -57,4 +58,19 @@ public class TestPassDao extends GenericDao {
         .getSingleResult();
   }
 
+  @Transactional(readOnly = true)
+  public Integer getTestPassByUserId(Integer userId) {
+    return getSession()
+        .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
+        .setParameter("user_id", userId)
+        .uniqueResult();
+  }
+
+  public TestPass getTestPassByTestPassId(Integer testPassId) {
+    return getSession()
+        .createQuery("select testPass from TestPass testPass " +
+            "left join fetch testPass.questions where testPass.id = :test_pass_id", TestPass.class)
+        .setParameter("test_pass_id", testPassId)
+        .uniqueResult();
+  }
 }

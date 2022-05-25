@@ -48,9 +48,6 @@ public class TestPass {
   @Column(name = "final_score")
   private Integer finalScore;
 
-  @Column(name = "final_score")
-  private Integer finalScore;
-
   public TestPass() {
   }
 

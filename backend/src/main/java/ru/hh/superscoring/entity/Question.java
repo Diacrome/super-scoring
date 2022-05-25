@@ -1,7 +1,8 @@
 package ru.hh.superscoring.entity;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import ru.hh.superscoring.util.QuestionAnswerType;
-
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +35,7 @@ public class Question {
   private String content;
 
   @Column(name = "answer_type")
+  @Enumerated(EnumType.STRING)
   private QuestionAnswerType answerType;
 
   @Column(name = "date_created")
