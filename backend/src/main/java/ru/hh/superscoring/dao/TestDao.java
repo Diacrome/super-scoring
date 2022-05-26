@@ -22,7 +22,6 @@ public class TestDao extends GenericDao {
         .setParameter("test_id", testId).setMaxResults(1).uniqueResult() != null;
   }
 
-  @Transactional(readOnly = true)
   public Integer getTestSizeByTestPassId(Integer testPassId) {
     return getSession()
         .createQuery("select t.questionQuantity from Test t where t.id = " +

@@ -1,7 +1,7 @@
 package ru.hh.superscoring.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AnswerDao;
@@ -37,15 +37,14 @@ public class AnswerService {
     checkAndSetResultForTestPass(testPassId);
   }
 
-  public void checkAndSetResultForTestPass(Integer testPassId) {
-    ArrayList<Answer> arrayAnswerByTestPass = answerDao.getListAnswerByTestPassId(testPassId);
+  private void checkAndSetResultForTestPass(Integer testPassId) {
+    List<Answer> arrayAnswerByTestPass = answerDao.getListAnswerByTestPassId(testPassId);
     if (testDao.getTestSizeByTestPassId(testPassId) == arrayAnswerByTestPass.size()) {
       TestPass testPass = testPassDao.getTestPassByTestPassId(testPassId);
       Integer finalScore = 0;
       for (TestPassQuestion testPassQuestion : testPass.getQuestions()) {
         if (testPassQuestion.getQuestion().getAnswer().equals(
-            arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer()
-        )) {
+            arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
           finalScore++;
         }
       }

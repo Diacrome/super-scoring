@@ -1,11 +1,9 @@
 package ru.hh.superscoring.dao;
 
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.hibernate.SessionFactory;
-import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dto.LeaderDto;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
@@ -30,14 +28,6 @@ public class TestPassDao extends GenericDao {
         .collect(Collectors.toSet());
   }
 
-  @Transactional(readOnly = true)
-  public Integer getTestPassIdByUserId(Integer userId) {
-    return getSession()
-        .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
-        .setParameter("user_id", userId)
-        .uniqueResult();
-  }
-
   public List<LeaderDto> getLeaders(Integer testId, Integer page, Integer perPage) {
     return getSession()
         .createQuery("select new ru.hh.superscoring.dto.LeaderDto(u.name, max(tp.finalScore)) " +
@@ -58,7 +48,7 @@ public class TestPassDao extends GenericDao {
         .getSingleResult();
   }
 
-  @Transactional(readOnly = true)
+
   public Integer getTestPassByUserId(Integer userId) {
     return getSession()
         .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
