@@ -66,6 +66,7 @@ public class QuestionService {
     question.setDateCreated(LocalDateTime.now());
     question.setDateModified(LocalDateTime.now());
     question.setTimeLimit(newQuestion.getTimeLimit());
+    questionDao.save(question);
     return true;
   }
 
