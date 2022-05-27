@@ -15,13 +15,13 @@ public class TestService {
   }
 
   public TestDto getTestById(Integer id) {
-    return TestDto.map(testDao.get(Test.class, id));
+    Test test = testDao.get(Test.class, id);
+    if (test == null || !test.getIsActive()) {
+      return null;
+    }
+    return TestDto.map(test);
   }
 
-  @Transactional(readOnly = true)
-  public boolean isExistTest(Integer testId) {
-    return testDao.isExistTest(testId);
-  }
 
   public Integer getTestSizeById(Integer testId) {
     return testDao.getTestSize(testId);
@@ -43,20 +43,20 @@ public class TestService {
   }
 
   @Transactional(readOnly = true)
-  public boolean isTestActive(Integer testId){
-    Boolean testState = testDao.isTestActive(testId);
+  public boolean isExistActiveTest(Integer testId) {
+    Boolean testState = testDao.isExistActiveTest(testId);
     return testState != null && testState;
   }
 
   @Transactional
-  public void switchOffTest(Integer testId){
+  public void switchOffTest(Integer testId) {
     Test test = testDao.getTestById(testId);
     test.setIsActive(false);
     testDao.save(test);
   }
 
   @Transactional
-  public void switchOnTest(Integer testId){
+  public void switchOnTest(Integer testId) {
     Test test = testDao.getTestById(testId);
     test.setIsActive(true);
     testDao.save(test);

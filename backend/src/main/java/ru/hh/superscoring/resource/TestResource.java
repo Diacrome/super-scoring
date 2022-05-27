@@ -1,7 +1,6 @@
 package ru.hh.superscoring.resource;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -30,9 +29,6 @@ public class TestResource {
   @Path("info/{id}")
   @Produces("application/json")
   public Response getTestObject(@PathParam("id") int id) {
-    if (!testService.isTestActive(id)) {
-      return Response.status(404, "Test not active").build();
-    }
     TestDto test = testService.getTestById(id);
     if (test != null) {
       return Response.status(201).entity(test).build();
@@ -69,19 +65,18 @@ public class TestResource {
   @Path("off/{id}")
   @Produces("application/json")
   public Response inactivateTest(@PathParam("id") Integer testId,
-                             @HeaderParam("authorization") String authorizationToken){
+                                 @HeaderParam("authorization") String authorizationToken) {
     Integer userId = authService.getUserIdWithToken(authorizationToken);
     if (userId == null) {
       return Response.status(404, "Invalid token!").build();
     }
     boolean isUserAdmin = authService.isAdmin(userId);
-    if (!isUserAdmin){
+    if (!isUserAdmin) {
       return Response.status(403, "Admin rights required").build();
     }
     try {
       testService.switchOffTest(testId);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
     return Response.status(201).build();
@@ -91,19 +86,18 @@ public class TestResource {
   @Path("on/{id}")
   @Produces("application/json")
   public Response activateTest(@PathParam("id") Integer testId,
-                                 @HeaderParam("authorization") String authorizationToken){
+                               @HeaderParam("authorization") String authorizationToken) {
     Integer userId = authService.getUserIdWithToken(authorizationToken);
     if (userId == null) {
       return Response.status(404, "Invalid token!").build();
     }
     boolean isUserAdmin = authService.isAdmin(userId);
-    if (!isUserAdmin){
+    if (!isUserAdmin) {
       return Response.status(403, "Admin rights required").build();
     }
     try {
       testService.switchOnTest(testId);
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
     return Response.status(201).build();

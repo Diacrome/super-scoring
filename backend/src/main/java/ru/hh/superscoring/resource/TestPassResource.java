@@ -43,11 +43,8 @@ public class TestPassResource {
     if (userId == null) {
       return Response.status(404, "Invalid token!").build();
     }
-    if (!testService.isExistTest(testId)) {
+    if (!testService.isExistActiveTest(testId)) {
       return Response.status(404, "There is no such test in the system ").build();
-    }
-    if (!testService.isTestActive(testId)) {
-      return Response.status(404, "Test not active").build();
     }
     if (testPassService.startTest(testId, userId)) {
       return Response.status(201).build();

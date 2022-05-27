@@ -18,20 +18,14 @@ public class TestDao extends GenericDao {
         .setParameter("test_id", testId).getSingleResult();
   }
 
-  public boolean isExistTest(Integer testId) {
-    return getSession()
-        .createQuery("select t.id from Test t where t.id = :test_id", Integer.class)
-        .setParameter("test_id", testId).setMaxResults(1).uniqueResult() != null;
-  }
-
-  public Boolean isTestActive(Integer testId){
+  public Boolean isExistActiveTest(Integer testId) {
     return getSession()
         .createQuery("select isActive from Test where id = :test_id", Boolean.class)
         .setParameter("test_id", testId)
         .uniqueResult();
   }
 
-  public Test getTestById(Integer testId){
+  public Test getTestById(Integer testId) {
     return getSession()
         .createQuery("select t from Test t where id = :testId", Test.class)
         .setParameter("testId", testId)
