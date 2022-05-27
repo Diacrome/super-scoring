@@ -19,8 +19,7 @@ public final class Hasher {
   private static final Integer VALUE_BIT_IN_BYTE = 8;
 
   public static boolean checkPassword(String password, String passwordHash) {
-    String checkHash = hash(password);
-    return passwordHash.equals(checkHash);
+    return passwordHash.equals(hash(password));
   }
 
   public static String hash(String password) {

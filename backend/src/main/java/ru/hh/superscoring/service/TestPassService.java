@@ -45,7 +45,7 @@ public class TestPassService {
   }
 
   @Transactional(readOnly = true)
-  public LeaderBoardDto getLeaders(Integer testId, Integer page, Integer perPage){
+  public LeaderBoardDto getLeaders(Integer testId, Integer page, Integer perPage) {
     return LeaderBoardDto.map(testPassDao.getLeaders(testId, page, perPage), page, perPage, testPassDao.countLeadersForTest(testId));
   }
 }
