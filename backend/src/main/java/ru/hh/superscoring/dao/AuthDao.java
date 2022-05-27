@@ -13,7 +13,7 @@ public class AuthDao extends GenericDao {
     return getSession()
         .createQuery("select u.name from User u join Token t on u.id = t.userId where t.token = :token and t.expireDate > now()", String.class)
         .setParameter("token", token)
-        .uniqueResult();
+        .getSingleResult();
   }
 
   public Integer findUser(String login, String password) {
@@ -26,7 +26,7 @@ public class AuthDao extends GenericDao {
 
   public Integer getUserIdWithToken(String token) {
     return getSession()
-        .createQuery("select t.userId from Token t where t.token = :token and t.expireDate > now()", Integer.class)
+        .createQuery("select userId from Token where token = :token", Integer.class)
         .setParameter("token", token)
         .uniqueResult();
   }

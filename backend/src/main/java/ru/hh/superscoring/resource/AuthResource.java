@@ -27,9 +27,12 @@ public class AuthResource {
   @Produces("application/json")
   public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) {
     String userName;
-    userName = authService.getUserWithToken(authorizationToken);
-    if (userName == null) {
+    try {
+      userName = authService.getUserWithToken(authorizationToken);
+    } catch (NoResultException e) {
       return Response.status(404, "Invalid token").build();
+    } catch (Exception e) {
+      return Response.status(400, "Some error occurred").build();
     }
     String response = "{ \"name\" : \"" + userName + "\" }";
     return Response.ok(response).build();
