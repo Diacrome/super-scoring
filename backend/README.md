@@ -209,3 +209,39 @@ Connection.
 - 400 и "Unable to set question is not activity!", если запись не удалось произвести корректно.
 - 400 и "There is no question with such a QuestionId!" если отсутствует вопрос с заданным questionId
 
+### Статус прохождения теста
+
+`GET /test/status`
+
+В заголовке "authorization" HTTP-запроса получает строку - токен.
+Возвращает JSON объект с полями:
+
+* **authorized** : boolean
+* **currentPass** : | null 
+    * **answeredQuestions** : Словарь: [порядковый номер вопроса : отвечен или нет (boolean)]
+    * **startTime** : время начала прохождения
+    * **testId** : id базового теста
+
+Пример возвращаемого объекта:
+```json
+{
+  "authorized": true,
+  "currentPass": {
+    "answeredQuestions": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": true,
+      "7": true,
+      "8": true,
+      "9": false,
+      "10": false
+    },
+    "startTime": "2022-05-28 09:48:23",
+    "testId": 1
+  }
+}
+```
+Возвращает ошибку 401 "No token found", если не передан заголовок с токеном.

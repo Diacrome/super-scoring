@@ -1,5 +1,10 @@
 package ru.hh.superscoring.resource;
 
+import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.service.AuthService;
+import ru.hh.superscoring.service.StatusService;
+import ru.hh.superscoring.service.TestService;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -10,18 +15,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import ru.hh.superscoring.dto.TestDto;
-import ru.hh.superscoring.service.AuthService;
-import ru.hh.superscoring.service.TestService;
 
 @Path("/test")
 public class TestResource {
 
   private final TestService testService;
+  private final StatusService statusService;
   private final AuthService authService;
 
-  public TestResource(TestService testService, AuthService authService) {
+  public TestResource(TestService testService, StatusService statusService, AuthService authService) {
     this.testService = testService;
+    this.statusService = statusService;
     this.authService = authService;
   }
 
@@ -35,6 +39,16 @@ public class TestResource {
     } else {
       return Response.status(404, "There is no such test in the system").build();
     }
+  }
+
+  @GET
+  @Path("/status")
+  @Produces("application/json")
+  public Response getStatus(@HeaderParam("authorization") String token) {
+    if (token == null) {
+      return Response.status(401).entity("No token found").build();
+    }
+    return Response.status(200).entity(statusService.getStatus(token)).build();
   }
 
   @POST
