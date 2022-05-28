@@ -1,6 +1,8 @@
 package ru.hh.superscoring.resource;
 
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -8,6 +10,7 @@ import javax.ws.rs.core.Response;
 import org.hibernate.PropertyValueException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.QuestionService;
+import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.util.Role;
 
 @Path("/question")
@@ -68,6 +71,21 @@ public class QuestionResource {
       return Response.status(403, "Role user is not ADMIN. Access denied!").build();
     }
     return Response.status(201).build();
+  }
+
+  @POST
+  @Path("add/question")
+  @Consumes("application/json")
+  public Response addQuestionToTest(Question question, @HeaderParam("authorization") String authorizationToken) {
+    Role role;
+    role = authService.getRoleByToken(authorizationToken);
+    if (role == Role.ADMIN) {
+      if (questionService.ifExistsTestFromQuestion(question) && questionService.addQuestion(question)) {
+        return Response.status(201, "Question added").build();
+      }
+      return Response.status(404,"There is no such test in the system").build();
+    }
+    return Response.status(403, "Access denied").build();
   }
 
 }
