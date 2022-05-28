@@ -1,12 +1,14 @@
 package ru.hh.superscoring.dao;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.hibernate.SessionFactory;
 import ru.hh.superscoring.dto.LeaderDto;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TestPassDao extends GenericDao {
 
@@ -62,5 +64,19 @@ public class TestPassDao extends GenericDao {
             "left join fetch testPass.questions where testPass.id = :test_pass_id", TestPass.class)
         .setParameter("test_pass_id", testPassId)
         .uniqueResult();
+  }
+
+  public LocalDateTime getStartTime(Integer testPassId) {
+    return getSession()
+        .createQuery("SELECT t.timeStarted FROM TestPass t WHERE t.id = :id", LocalDateTime.class)
+        .setParameter("id", testPassId)
+        .getSingleResult();
+  }
+
+  public int getTestId(Integer testPassId) {
+    return getSession()
+        .createQuery("SELECT testId FROM TestPass WHERE id = :id", Integer.class)
+        .setParameter("id", testPassId)
+        .getSingleResult();
   }
 }

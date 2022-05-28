@@ -6,7 +6,6 @@ import ru.hh.nab.starter.NabCommonConfig;
 import ru.hh.superscoring.dao.AnswerDao;
 import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.dao.AuthDao;
-import ru.hh.superscoring.dao.GenericDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.UserDao;
 import ru.hh.superscoring.entity.Test;
@@ -28,6 +27,7 @@ import ru.hh.superscoring.service.AnswerService;
 import ru.hh.superscoring.resource.TestPassResource;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.QuestionService;
+import ru.hh.superscoring.service.StatusService;
 import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;
 
@@ -58,7 +58,8 @@ import ru.hh.superscoring.service.TestService;
     Token.class,
     AuthService.class,
     AuthResource.class,
-    NabCommonConfig.class
+    NabCommonConfig.class,
+    StatusService.class
 })
 
 public class CommonConfig {
