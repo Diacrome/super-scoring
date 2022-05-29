@@ -1,0 +1,166 @@
+{
+	"info": {
+		"_postman_id": "5396734f-6299-469c-9f70-3dbf4518dc63",
+		"name": "super-scoring test requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19464190"
+	},
+	"item": [
+		{
+			"name": "begin test info request tests",
+			"item": [
+				{
+					"name": "true begin test info request tests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Begin test info' return 'Status code' is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"'Begin test info' return 'id' is 1\", function () {\r",
+									"    pm.expect(jsonData.id).to.eql(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Begin test info' return 'name' is 'Математический тест'\", function () {\r",
+									"    pm.expect(jsonData.name).to.eql(\"Математический тест\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Begin test info' return 'description' is 'Тест на знание таблицы умножения'\", function () {\r",
+									"    pm.expect(jsonData.description).to.eql(\"Тест на знание таблицы умножения\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{beginTestEndPoint}}/info/1",
+							"host": [
+								"{{server}}{{beginTestEndPoint}}"
+							],
+							"path": [
+								"info",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false begin test info request tests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Begin test info' return 'Status code' is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Begin test info' return text 'There is no such test in the system'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"There is no such test in the system\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{beginTestEndPoint}}/info/100500",
+							"host": [
+								"{{server}}{{beginTestEndPoint}}"
+							],
+							"path": [
+								"info",
+								"100500"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "hello request tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"'Hello' request return 'Status code' is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"'Hello' request return true text answer \", function () {\r",
+							"    pm.expect(pm.response.text()).to.eql(\"Hello, Super-Scoring team!\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}{{helloEndPoint}}",
+					"host": [
+						"{{server}}{{helloEndPoint}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "helloEndPoint",
+			"value": "/hello",
+			"type": "string"
+		},
+		{
+			"key": "beginTestEndPoint",
+			"value": "/test",
+			"type": "string"
+		}
+	]
+}
