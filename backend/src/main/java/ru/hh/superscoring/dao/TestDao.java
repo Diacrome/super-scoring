@@ -4,7 +4,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.entity.Test;
 
-
 public class TestDao extends GenericDao {
 
   protected TestDao(SessionFactory sessionFactory) {
@@ -32,4 +31,11 @@ public class TestDao extends GenericDao {
         .uniqueResult();
   }
 
+  public Integer getTestSizeByTestPassId(Integer testPassId) {
+    return getSession()
+        .createQuery("select t.questionQuantity from Test t where t.id = " +
+            "(select tp.testId from TestPass tp where tp.id = :test_pass_id)", Integer.class)
+        .setParameter("test_pass_id", testPassId)
+        .uniqueResult();
+  }
 }

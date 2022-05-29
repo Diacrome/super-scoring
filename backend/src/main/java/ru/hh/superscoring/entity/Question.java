@@ -1,5 +1,8 @@
 package ru.hh.superscoring.entity;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import ru.hh.superscoring.util.QuestionAnswerType;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +34,10 @@ public class Question {
   @Column(name = "question_content")
   private String content;
 
+  @Column(name = "answer_type")
+  @Enumerated(EnumType.STRING)
+  private QuestionAnswerType answerType;
+
   @Column(name = "date_created")
   private LocalDateTime dateCreated;
 
@@ -40,7 +47,18 @@ public class Question {
   @Column(name = "time_limit")
   private Short timeLimit;
 
+  @Column(name = "active")
+  private Boolean active;
+
   public Question() {
+  }
+
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
   public Integer getId() {
@@ -65,6 +83,10 @@ public class Question {
 
   public String getContent() {
     return content;
+  }
+
+  public QuestionAnswerType getAnswerType() {
+    return answerType;
   }
 
   public LocalDateTime getDateCreated() {
@@ -103,6 +125,10 @@ public class Question {
     this.content = content;
   }
 
+  public void setAnswerType(QuestionAnswerType answerType) {
+    this.answerType = answerType;
+  }
+
   public void setDateCreated(LocalDateTime dateCreated) {
     this.dateCreated = dateCreated;
   }
@@ -114,5 +140,4 @@ public class Question {
   public void setTimeLimit(Short timeLimit) {
     this.timeLimit = timeLimit;
   }
-
 }

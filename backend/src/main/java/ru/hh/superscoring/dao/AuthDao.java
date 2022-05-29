@@ -45,4 +45,11 @@ public class AuthDao extends GenericDao {
         .uniqueResult();
   }
 
+  public Role getRoleUserByTokenFromDataBase(String token) {
+    return getSession()
+        .createQuery("select u.role from User u where u.id = (select t.userId from Token t where t.token = :token)", Role.class)
+        .setParameter("token",token)
+        .uniqueResult();
+  }
+
 }

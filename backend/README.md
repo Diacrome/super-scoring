@@ -113,6 +113,10 @@ Connection.
 
 ### Пароль в базе данных хранится в виде хеша, сам пароль написан рядом в виде комментария
 
+### Формат возвращаемого ответа для раных answer_type
+`SINGLE_CHOICE` answer = '{"answer": "1"}' - по ключу answer в json можно получить ключ правильного ответа в payload<br> 
+`MULTIPLE_CHOICE` answer ='{"multiple_answer1": "2", "multiple_answer2": "4"}' - ключи multiple_answer[1,2,3...] в json содержат ключ правильных ответов в payload <br>
+`MULTIPLE_QUESTIONS_SINGLE_CHOICE` answer ='{"answer1": "2", "answer2" : "3"}'- ключи answer1, answer2 в json содержат ключ правильных ответов в payload для полей %answer1, %answer2 соотвественно.
 
 `POST /answer`
 
@@ -173,3 +177,71 @@ Connection.
 "perPage":3,
 "found":3}
 
+### Установка вопроса по значению Id в состояние некативного ###
+
+`PUT /question/inactive/{questionId}`
+
+** Получает **
+- Id вопроса в базе данных (Integer questionId) в виде @PathParam в формате целого числа
+- токен из заголовка запроса (String authorization) в виде @HeaderParam
+
+**Возвращает**
+- 201 и "Set question not 'active' with this QuestionId", если изменения успешно произведены
+- 401 и "No token found", если токен не передан.
+- 404 и "Invalid token!" если токен не связан с пользователем / не валиден
+- 403 и "Role user is not ADMIN. Access denied!", если пользователь имеет роль не ADMIN
+- 400 и "Unable to set question is not activity!", если запись не удалось произвести корректно.
+- 400 и "There is no question with such a QuestionId!" если отсутствует вопрос с заданным questionId
+
+### Установка неактивного вопроса по значению Id в состояние ативного ###
+
+`PUT /question/active/{questionId}`
+
+** Получает **
+- Id вопроса в базе данных (Integer questionId) в виде @PathParam в формате целого числа
+- токен из заголовка запроса (String authorization) в виде @HeaderParam
+
+**Возвращает**
+- 201 и "Set question 'active' with this QuestionId", если изменения успешно произведены
+- 401 и "No token found", если токен не передан.
+- 404 и "Invalid token!" если токен не связан с пользователем / не валиден
+- 403 и "Role user is not ADMIN. Access denied!", если пользователь имеет роль не ADMIN
+- 400 и "Unable to set question is not activity!", если запись не удалось произвести корректно.
+- 400 и "There is no question with such a QuestionId!" если отсутствует вопрос с заданным questionId
+
+### Статус прохождения теста
+
+`GET /test/status`
+
+В заголовке "authorization" HTTP-запроса получает строку - токен.
+Возвращает JSON объект с полями:
+
+* **authorized** : boolean
+* **currentPass** : | null 
+    * **answeredQuestions** : Словарь: [порядковый номер вопроса : отвечен или нет (boolean)]
+    * **startTime** : время начала прохождения
+    * **testId** : id базового теста
+
+Пример возвращаемого объекта:
+```json
+{
+  "authorized": true,
+  "currentPass": {
+    "answeredQuestions": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": true,
+      "7": true,
+      "8": true,
+      "9": false,
+      "10": false
+    },
+    "startTime": "2022-05-28 09:48:23",
+    "testId": 1
+  }
+}
+```
+Возвращает ошибку 401 "No token found", если не передан заголовок с токеном.
