@@ -245,3 +245,28 @@ Connection.
 }
 ```
 Возвращает ошибку 401 "No token found", если не передан заголовок с токеном.
+
+### Добавление вопроса к тесту
+
+`POST question/add`
+
+**Получает**
+- токен из заголовка запроса (`String authorization`) в виде @HeaderParam
+- поля вопроса в Body в виде JSON-объекта, пример:
+
+`{
+"testId": "1",
+"wording": "3*5=",
+"payload": "{\"1\": 81, \"2\": 3, \"3\": 4, \"4\": 15}",
+"answer": "{\"answer\": \"4\"}",
+"content": "null",
+"answerType": "SINGLE_CHOICE",
+"timeLimit": "30"
+}`
+
+**Возвращает**
+
+- 201 и "Question added", если вопрос успешно добавлен.
+- 404 и "There is no such test in the system", если вопрос добавляется в несуществующий тест.
+- 403 и "Access denied", если пользователь не является админом.
+

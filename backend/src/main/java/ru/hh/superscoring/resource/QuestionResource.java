@@ -74,7 +74,7 @@ public class QuestionResource {
   }
 
   @POST
-  @Path("add/question")
+  @Path("/add")
   @Consumes("application/json")
   public Response addQuestionToTest(Question question, @HeaderParam("authorization") String authorizationToken) {
     Role role;
