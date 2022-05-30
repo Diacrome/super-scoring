@@ -8,7 +8,6 @@ import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.entity.Question;
-import ru.hh.superscoring.service.TestService;
 
 public class QuestionService {
   private final QuestionDao questionDao;
