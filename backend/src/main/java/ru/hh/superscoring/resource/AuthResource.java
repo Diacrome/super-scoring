@@ -1,16 +1,17 @@
 package ru.hh.superscoring.resource;
 
 import javax.persistence.NoResultException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.service.AuthService;
-import ru.hh.superscoring.util.Role;
 
 
 @Path("/auth")
@@ -59,11 +60,39 @@ public class AuthResource {
   @Path("/register")
   @Produces("application/json")
   public Response addNewUser(@FormParam("login") String login, @FormParam("password") String password,
-                             @FormParam("name") String name, @FormParam("role") String role) {
+                             @FormParam("name") String name) {
     if (authService.checkAuthenticationByLogin(login) == null) {
-      authService.addUser(login, password, name, Role.valueOf(role));
+      authService.addUser(login, password, name);
       return Response.status(201, "User added").build();
     }
     return Response.status(401, "User already exists in the system").build();
+  }
+
+  @POST
+  @Path("/set-admin")
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public Response setAdminRights(@FormParam("login") String login,
+                                 @HeaderParam("authorization") String token) {
+    if (token == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    Integer currentUserId = authService.getUserIdWithToken(token);
+    if (currentUserId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    boolean isUserAdmin = authService.isAdmin(currentUserId);
+    if (!isUserAdmin) {
+      return Response.status(403, "Admin rights required").build();
+    }
+    Integer newAdminId = authService.checkAuthenticationByLogin(login);
+    if (newAdminId == null) {
+      return Response.status(400).build();
+    }
+    try {
+      authService.setAdmin(newAdminId);
+    } catch (Exception e) {
+      return Response.status(400).build();
+    }
+    return Response.status(201, "created").build();
   }
 }

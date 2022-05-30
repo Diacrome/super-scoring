@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AuthDao;
+import ru.hh.superscoring.dao.UserDao;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.entity.User;
 import ru.hh.superscoring.util.Hasher;
@@ -14,9 +15,11 @@ import ru.hh.superscoring.util.Role;
 public class AuthService {
 
   private final AuthDao authDao;
+  private final UserDao userDao;
 
-  public AuthService(AuthDao authDao) {
+  public AuthService(AuthDao authDao, UserDao userDao) {
     this.authDao = authDao;
+    this.userDao = userDao;
   }
 
   @Transactional(readOnly = true)
@@ -57,18 +60,25 @@ public class AuthService {
   }
 
   @Transactional(readOnly = true)
-  public void addUser(String login, String password, String name, Role role) {
+  public void addUser(String login, String password, String name) {
     User user = new User();
     user.setLogin(login);
     user.setPassword(Hasher.hash(password));
     user.setName(name);
-    user.setRole(role);
+    user.setRole(Role.USER);
     authDao.save(user);
   }
 
   @Transactional(readOnly = true)
   public Role getRoleByToken(String token) {
     return authDao.getRoleUserByTokenFromDataBase(token);
+  }
+
+  @Transactional
+  public void setAdmin(Integer userId) {
+    User user = userDao.get(User.class, userId);
+    user.setRole(Role.ADMIN);
+    userDao.save(user);
   }
 
 }
