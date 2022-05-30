@@ -74,4 +74,46 @@ public class TestResource {
     }
     return Response.status(201).entity(savedId).build();
   }
+
+  @POST
+  @Path("off/{id}")
+  @Produces("application/json")
+  public Response inactivateTest(@PathParam("id") Integer testId,
+                                 @HeaderParam("authorization") String authorizationToken) {
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    boolean isUserAdmin = authService.isAdmin(userId);
+    if (!isUserAdmin) {
+      return Response.status(403, "Admin rights required").build();
+    }
+    try {
+      testService.switchOffTest(testId);
+    } catch (Exception e) {
+      return Response.status(400).entity("Unable to save test!").build();
+    }
+    return Response.status(201).build();
+  }
+
+  @POST
+  @Path("on/{id}")
+  @Produces("application/json")
+  public Response activateTest(@PathParam("id") Integer testId,
+                               @HeaderParam("authorization") String authorizationToken) {
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    boolean isUserAdmin = authService.isAdmin(userId);
+    if (!isUserAdmin) {
+      return Response.status(403, "Admin rights required").build();
+    }
+    try {
+      testService.switchOnTest(testId);
+    } catch (Exception e) {
+      return Response.status(400).entity("Unable to save test!").build();
+    }
+    return Response.status(201).build();
+  }
 }

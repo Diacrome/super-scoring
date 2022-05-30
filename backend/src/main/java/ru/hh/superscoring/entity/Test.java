@@ -35,6 +35,9 @@ public class Test {
   @Column(name = "question_quantity")
   private Integer questionQuantity;
 
+  @Column(name = "is_active")
+  private Boolean isActive;
+
   public Test() {
   }
 
@@ -70,6 +73,10 @@ public class Test {
     return creatorId;
   }
 
+  public Boolean getIsActive() {
+    return isActive;
+  }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -96,5 +103,9 @@ public class Test {
 
   public void setQuestionQuantity(Integer questionQuantity) {
     this.questionQuantity = questionQuantity;
+  }
+
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
   }
 }

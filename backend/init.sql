@@ -16,7 +16,8 @@ create table test
     question_quantity smallint not null           default 10,
     date_created      timestamp without time zone default (now() at time zone 'utc'),
     date_modified     timestamp without time zone,
-    modifier_id       integer references  ss_user (id)
+    modifier_id       integer references  ss_user (id),
+    is_active         boolean default true
 );
 
 create table question
