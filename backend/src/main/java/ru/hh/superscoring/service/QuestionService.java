@@ -50,7 +50,7 @@ public class QuestionService {
 
   @Transactional(readOnly = true)
   public Boolean ifExistsTestFromQuestion(Question question) {
-    if (testService.isExistTest(question.getTestId()))
+    if (testService.isExistActiveTest(question.getTestId()))
       return true;
     return false;
   }
