@@ -8,6 +8,7 @@ import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.service.TestService;
 
 public class QuestionService {
   private final QuestionDao questionDao;
@@ -50,7 +51,7 @@ public class QuestionService {
 
   @Transactional(readOnly = true)
   public Boolean ifExistsTestFromQuestion(Question question) {
-    if (testService.isExistTest(question.getTestId()))
+    if (testService.isExistActiveTest(question.getTestId()))
       return true;
     return false;
   }
