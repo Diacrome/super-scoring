@@ -69,7 +69,7 @@ public class AuthResource {
   }
 
   @POST
-  @Path("/setAdmin")
+  @Path("/set-admin")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public Response setAdminRights(@FormParam("login") String login,
                                  @HeaderParam("authorization") String token) {
