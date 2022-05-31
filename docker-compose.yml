@@ -35,3 +35,8 @@ services:
       - ./content:/usr/share/nginx/html
     ports:
       - "9999:80"
+  tests:
+    image: postman/newman:latest
+    volumes:
+      - ./tests:/etc/newman
+    entrypoint: sh wait-for.sh backend:8000 --timeout=1000 -- newman run tests.json

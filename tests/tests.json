@@ -149,7 +149,7 @@
 	"variable": [
 		{
 			"key": "server",
-			"value": "localhost:8000",
+			"value": "backend:8000",
 			"type": "string"
 		},
 		{
