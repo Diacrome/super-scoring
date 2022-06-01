@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5396734f-6299-469c-9f70-3dbf4518dc63",
+		"_postman_id": "8af36bfe-b71b-4593-b16e-ca91400109a9",
 		"name": "super-scoring test requests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "19464190"
@@ -77,13 +77,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{server}}{{beginTestEndPoint}}/info/100500",
+							"raw": "{{server}}{{beginTestEndPoint}}/info/0",
 							"host": [
 								"{{server}}{{beginTestEndPoint}}"
 							],
 							"path": [
 								"info",
-								"100500"
+								"0"
 							]
 						}
 					},
