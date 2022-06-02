@@ -2,6 +2,7 @@ package ru.hh.superscoring.dao;
 
 import org.hibernate.SessionFactory;
 import ru.hh.superscoring.dto.LeaderDto;
+import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
 
@@ -50,7 +51,6 @@ public class TestPassDao extends GenericDao {
         .getSingleResult();
   }
 
-
   public Integer getTestPassByUserId(Integer userId) {
     return getSession()
         .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
@@ -78,5 +78,14 @@ public class TestPassDao extends GenericDao {
         .createQuery("SELECT testId FROM TestPass WHERE id = :id", Integer.class)
         .setParameter("id", testPassId)
         .getSingleResult();
+  }
+
+  public Question getQuestionByQuestionIdOrderForUser(Integer userId, Integer questionIdOrder) {
+    return getSession()
+        .createQuery("select q from TestPassQuestion tpq join tpq.question q join tpq.testPass tp " +
+            "where tp.userId = :user_id and tp.timeFinished is null and tpq.questionIdOrder = :question_id_order ", Question.class)
+        .setParameter("user_id", userId)
+        .setParameter("question_id_order", questionIdOrder)
+        .uniqueResult();
   }
 }

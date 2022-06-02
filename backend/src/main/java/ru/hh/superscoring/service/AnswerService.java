@@ -1,15 +1,19 @@
 package ru.hh.superscoring.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.hibernate.HibernateException;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AnswerDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Answer;
+import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
+import ru.hh.superscoring.util.JsonValidator;
 
 public class AnswerService {
   private final AnswerDao answerDao;
@@ -53,4 +57,14 @@ public class AnswerService {
       testPassDao.save(testPass);
     }
   }
+
+  @Transactional(readOnly = true)
+  public boolean validateAnswer(String answer, Integer userId, Integer questionIdOrder) throws JsonProcessingException, PropertyValueException {
+    Question question = testPassDao.getQuestionByQuestionIdOrderForUser(userId, questionIdOrder);
+    if (question == null) {
+      throw new HibernateException("The user was not asked a question with this number");
+    }
+    return JsonValidator.verifyAnswer(answer, question.getPayload(), question.getAnswerType());
+  }
+
 }

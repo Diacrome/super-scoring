@@ -7,7 +7,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.hibernate.PropertyValueException;
+import org.hibernate.HibernateException;
 import ru.hh.superscoring.service.AnswerService;
 import ru.hh.superscoring.service.AuthService;
 
@@ -35,9 +35,12 @@ public class AnswerResource {
       return Response.status(404, "Invalid token!").build();
     }
     try {
+      if (!answerService.validateAnswer(answer, userId, question)) {
+        return Response.status(400).entity("Answer format does not match the question").build();
+      }
       answerService.saveAnswer(userId, question, answer);
-    } catch (PropertyValueException pve) {
-      return Response.status(400).entity("No testPass for the user!").build();
+    } catch (HibernateException he) {
+      return Response.status(400).entity(he.getMessage()).build();
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save answer!").build();
     }
