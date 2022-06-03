@@ -19,3 +19,6 @@ HH school 2022 project
       Важно формировать строку запроса из переменных коллекции.
       После завершения экспортировать коллекцию обратно в файл ./tests/tests.json
       и поставить в конце символ перевода строки
+* Иструкция по составлению тестов, составленая специально для комманды: https://docs.google.com/document/d/1LYcL9fo5yuCZ1yCJtYXeNFw1VLT9_HBx/edit
+* Сторонний гайд для начинающих работать с Postman: https://testengineer.ru/gajd-po-testirovaniyu-v-postman/
+* Ещё полезная информация для создания тестов в Postman: https://medium.com/genesis-media/%D0%B8-%D0%B2%D1%81%D0%B5-%D0%B6%D0%B5-%D0%BA%D0%B0%D0%BA-%D1%82%D0%B5%D1%81%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C-api-%D0%B2-postman-b02dd977da14
