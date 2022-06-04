@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import ru.hh.superscoring.util.TestPassStatus;
 
 public class TestPassDao extends GenericDao {
 
@@ -19,13 +20,13 @@ public class TestPassDao extends GenericDao {
 
   public boolean isExistUnfinishedRecord(Integer userId) {
     return getSession()
-        .createQuery("select tp.id from TestPass tp where tp.userId = :user_id and tp.timeFinished is null", Integer.class)
+        .createQuery("select tp.id from TestPass tp where tp.userId = :user_id and tp.timeFinished is null and tp.status = 'PASS'", Integer.class)
         .setParameter("user_id", userId).setMaxResults(1).uniqueResult() != null;
   }
 
   public Set<TestPassQuestion> getTestPassQuestionsByUser(Integer userId) {
     return getSession()
-        .createQuery("select q from TestPass tp join tp.questions q where tp.userId = :user_id and tp.timeFinished is null ", TestPassQuestion.class)
+        .createQuery("select q from TestPass tp join tp.questions q where tp.userId = :user_id and tp.timeFinished is null and tp.status = 'PASS' ", TestPassQuestion.class)
         .setParameter("user_id", userId)
         .getResultStream()
         .collect(Collectors.toSet());
@@ -53,7 +54,7 @@ public class TestPassDao extends GenericDao {
 
   public Integer getTestPassByUserId(Integer userId) {
     return getSession()
-        .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null", Integer.class)
+        .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null and r.status = 'PASS'", Integer.class)
         .setParameter("user_id", userId)
         .uniqueResult();
   }
@@ -83,9 +84,21 @@ public class TestPassDao extends GenericDao {
   public Question getQuestionByQuestionIdOrderForUser(Integer userId, Integer questionIdOrder) {
     return getSession()
         .createQuery("select q from TestPassQuestion tpq join tpq.question q join tpq.testPass tp " +
-            "where tp.userId = :user_id and tp.timeFinished is null and tpq.questionIdOrder = :question_id_order ", Question.class)
+            "where tp.userId = :user_id and tp.timeFinished is null and tp.status = 'PASS' and tpq.questionIdOrder = :question_id_order ", Question.class)
         .setParameter("user_id", userId)
         .setParameter("question_id_order", questionIdOrder)
         .uniqueResult();
+  }
+
+  public void setTestPassStatusCanceled(Integer testPassId) {
+    String query = "UPDATE TestPass tp SET tp.status = 'CANCELED' WHERE id = "+testPassId;
+    getSession().createQuery(query).executeUpdate();
+  }
+
+  public TestPassStatus getStatus(Integer testPassId) {
+    return getSession()
+        .createQuery("SELECT status FROM TestPass WHERE id = :id", TestPassStatus.class)
+        .setParameter("id", testPassId)
+        .getSingleResult();
   }
 }

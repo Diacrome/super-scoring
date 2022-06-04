@@ -2,6 +2,7 @@ package ru.hh.superscoring.service;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AnswerDao;
+import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.dto.StatusDto;
 
@@ -13,12 +14,13 @@ public class StatusService {
   private final AuthService authService;
   private final TestPassDao testPassDao;
   private final AnswerDao answerDao;
-  private static final int NUMBER_OF_QUESTIONS = 10;
+  private final TestDao testDao;
 
-  public StatusService(AuthService authService, TestPassDao testPassDao, AnswerDao answerDao) {
+  public StatusService(AuthService authService, TestPassDao testPassDao, AnswerDao answerDao,TestDao testDao) {
     this.authService = authService;
     this.testPassDao = testPassDao;
     this.answerDao = answerDao;
+    this.testDao = testDao;
   }
 
   @Transactional(readOnly = true)
@@ -46,11 +48,12 @@ public class StatusService {
     }
     List<Integer> answeredQuestions = answerDao.getSequenceNumbersOfAnsweredQuestions(testPassId);
     Map<Integer, Boolean> questions = new HashMap<>();
-    for (int i = 1; i <= NUMBER_OF_QUESTIONS; i++) {
+    for (int i = 1; i <= testDao.getTestSizeByTestPassId(testPassId); i++) {
       questions.put(i, answeredQuestions.contains(i));
     }
     StatusDto.CurrentPass currentPass = new StatusDto.CurrentPass();
     currentPass.setAnsweredQuestions(questions);
+    currentPass.setStatus(testPassDao.getStatus(testPassId));
     currentPass.setTestId(testPassDao.getTestId(testPassId));
     currentPass.setStartTime(testPassDao.getStartTime(testPassId));
     return currentPass;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import ru.hh.superscoring.util.TestPassStatus;
 
 public class StatusDto {
   private boolean authorized;
@@ -30,6 +31,15 @@ public class StatusDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
     private int testId;
+    private TestPassStatus status;
+
+    public TestPassStatus getStatus() {
+      return status;
+    }
+
+    public void setStatus(TestPassStatus status) {
+      this.status = status;
+    }
 
     public Map<Integer, Boolean> getAnsweredQuestions() {
       return answeredQuestions;
