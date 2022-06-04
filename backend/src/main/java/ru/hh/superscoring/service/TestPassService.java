@@ -56,7 +56,7 @@ public class TestPassService {
   public void cancelTestPassByUserId(Integer userId){
     Integer testPassId = testPassDao.getTestPassByUserId(userId);
     if (testPassId == null) {
-      throw (new PropertyValueException("No testPass for such user!", "AnswerDao", "userId"));
+      throw (new PropertyValueException("No testPass for such user!", "testPassDao", "userId"));
     }
     testPassDao.setTestPassStatusCanceled(testPassId);
   }
