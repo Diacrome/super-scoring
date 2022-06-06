@@ -125,9 +125,9 @@
                     <resourcePackages>
                         ru.hh.superscoring.resource
                     </resourcePackages>
-                    <configurationFilePath>
+                    <openapiFilePath>
                         src/etc/openapi.yaml
-                    </configurationFilePath>
+                    </openapiFilePath>
                 </configuration>
                 <executions>
                     <execution>
