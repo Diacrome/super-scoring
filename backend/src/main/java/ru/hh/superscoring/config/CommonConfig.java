@@ -1,5 +1,7 @@
 package ru.hh.superscoring.config;
 
+import io.swagger.v3.jaxrs2.integration.resources.AcceptHeaderOpenApiResource;
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.hh.nab.starter.NabCommonConfig;
@@ -59,7 +61,9 @@ import ru.hh.superscoring.service.TestService;
     AuthService.class,
     AuthResource.class,
     NabCommonConfig.class,
-    StatusService.class
+    StatusService.class,
+    OpenApiResource.class,
+    AcceptHeaderOpenApiResource.class
 })
 
 public class CommonConfig {
