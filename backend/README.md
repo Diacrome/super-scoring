@@ -234,7 +234,7 @@ Connection.
 - 401 и "No token found", если токен не передан.
 - 404 и "Invalid token!" если токен не связан с пользователем / не валиден
 - 403 и "Role user is not ADMIN. Access denied!", если пользователь имеет роль не ADMIN
-- 400 и "Unable to set question is not activity!", если запись не удалось произвести корректно.
+- 400 и "Unable to set question is activity!", если запись не удалось произвести корректно.
 - 400 и "There is no question with such a QuestionId!" если отсутствует вопрос с заданным questionId
 
 ### Статус прохождения теста
@@ -311,4 +311,3 @@ Connection.
 - 401 и "No token found", если токен не передан.
 - 404 и "Invalid token!" если токен не связан с пользователем / не валиден
 - 400 и "Unable to cancel testPass!", если запись об отмене теста не удалось произвести корректно.
-- 400 и "*****" описание кода ошибки системы Hibernate

@@ -16,6 +16,7 @@ public class StatusService {
   private final AnswerDao answerDao;
   private final TestDao testDao;
 
+
   public StatusService(AuthService authService, TestPassDao testPassDao, AnswerDao answerDao,TestDao testDao) {
     this.authService = authService;
     this.testPassDao = testPassDao;
@@ -48,7 +49,8 @@ public class StatusService {
     }
     List<Integer> answeredQuestions = answerDao.getSequenceNumbersOfAnsweredQuestions(testPassId);
     Map<Integer, Boolean> questions = new HashMap<>();
-    for (int i = 1; i <= testDao.getTestSizeByTestPassId(testPassId); i++) {
+    final Integer NUMBER_OF_QUESTIONS = testDao.getTestSizeByTestPassId(testPassId);
+    for (int i = 1; i <= NUMBER_OF_QUESTIONS; i++) {
       questions.put(i, answeredQuestions.contains(i));
     }
     StatusDto.CurrentPass currentPass = new StatusDto.CurrentPass();
