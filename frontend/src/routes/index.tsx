@@ -14,6 +14,7 @@ export const notAuthorizedRoutes: IRoutes = [
 
 export const authorizedRoutes = [
   { path: "/", element: <HomeScreen /> },
+  { path: "/auth", element: <Navigate replace to="/" /> },
   { path: "/:testId", element: <TestInfo /> },
   { path: "/:testId/:completionId", element: <Results /> },
 ];

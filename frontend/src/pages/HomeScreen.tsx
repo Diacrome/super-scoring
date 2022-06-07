@@ -1,16 +1,16 @@
 import React, { FC } from "react";
-import { logOut } from "../store/action-creators/status";
-import { useDispatch } from "react-redux";
+import { fetchStatus } from "../store/action-creators/status";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button/Button";
+import { useAppDispatch } from "../hooks/useAppDispatch";
 
 const HomeScreen: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const auth = () => {
-    localStorage.setItem("authorized", "false");
-    dispatch(logOut());
+  const logout = () => {
+    localStorage.removeItem("Authorization");
+    dispatch(fetchStatus());
   };
 
   const goToTest = () => {
@@ -18,12 +18,18 @@ const HomeScreen: FC = () => {
   };
 
   return (
-    <div className="navbar">
-      <Button onClick={goToTest}>Тест 1</Button>
-      <div className="navbar-logout">
-        <Button onClick={auth}>Выйти</Button>
+    <>
+      <div className="navbar">
+        <div className="navbar-logout">
+          <Button onClick={logout}>Выйти</Button>
+        </div>
       </div>
-    </div>
+      <div className="test-catalog">
+        <div className="test-card">
+          <Button onClick={goToTest}>Тест 1</Button>
+        </div>
+      </div>
+    </>
   );
 };
 
