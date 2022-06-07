@@ -25,10 +25,6 @@ export const statusReducer = (
         authorized: action.payload.authorized,
         currentPass: action.payload.currentPass,
       };
-    case StatusActionType.SignIn:
-      return { ...state, authorized: true };
-    case StatusActionType.LogOut:
-      return { ...state, authorized: false };
     default:
       return state;
   }

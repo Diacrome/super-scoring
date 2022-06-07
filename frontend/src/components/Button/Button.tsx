@@ -1,6 +1,6 @@
-import React, { FC, HTMLAttributes } from "react";
+import React, { ComponentPropsWithoutRef, FC } from "react";
 
-const Button: FC<HTMLAttributes<HTMLButtonElement>> = (props) => {
+const Button: FC<ComponentPropsWithoutRef<"button">> = (props) => {
   return <button className="btn" {...props} />;
 };
 
