@@ -49,8 +49,8 @@ public class StatusService {
     }
     List<Integer> answeredQuestions = answerDao.getSequenceNumbersOfAnsweredQuestions(testPassId);
     Map<Integer, Boolean> questions = new HashMap<>();
-    final Integer NUMBER_OF_QUESTIONS = testDao.getTestSizeByTestPassId(testPassId);
-    for (int i = 1; i <= NUMBER_OF_QUESTIONS; i++) {
+    final Integer NumberOfQuestions = testDao.getTestSizeByTestPassId(testPassId);
+    for (int i = 1; i <= NumberOfQuestions; i++) {
       questions.put(i, answeredQuestions.contains(i));
     }
     StatusDto.CurrentPass currentPass = new StatusDto.CurrentPass();
