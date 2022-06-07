@@ -16,6 +16,9 @@ public class JsonValidator {
     HashMap payloadMap = mapper.readValue(questionPayload, HashMap.class);
     try {
       JsonNode root = mapper.readTree(jsonString);
+      if (root.isEmpty()) {
+        return false;
+      }
       Iterator<String> fieldNames = root.fieldNames();
       return (fieldNames.next().equals("answer")
           && !fieldNames.hasNext()
