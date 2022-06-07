@@ -3,12 +3,14 @@ package ru.hh.superscoring.service;
 
 import java.util.List;
 import java.util.Set;
+import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
+import ru.hh.superscoring.util.TestPassStatus;
 
 public class TestPassService {
   private final TestPassDao testPassDao;
@@ -29,6 +31,7 @@ public class TestPassService {
       TestPass testPass = new TestPass();
       testPass.setTestId(testId);
       testPass.setUserId(userId);
+      testPass.setStatus(TestPassStatus.PASS);
       testPass.setQuestions(questionService.getQuestionsForStart(testId));
       testPassDao.save(testPass);
       return true;
@@ -47,5 +50,14 @@ public class TestPassService {
   @Transactional(readOnly = true)
   public LeaderBoardDto getLeaders(Integer testId, Integer page, Integer perPage) {
     return LeaderBoardDto.map(testPassDao.getLeaders(testId, page, perPage), page, perPage, testPassDao.countLeadersForTest(testId));
+  }
+
+  @Transactional
+  public void cancelTestPassByUserId(Integer userId){
+    Integer testPassId = testPassDao.getTestPassByUserId(userId);
+    if (testPassId == null) {
+      throw (new PropertyValueException("No testPass for such user!", "testPassDao", "userId"));
+    }
+    testPassDao.setTestPassStatusCanceled(testPassId);
   }
 }

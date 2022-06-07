@@ -14,6 +14,7 @@ import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.util.JsonValidator;
+import ru.hh.superscoring.util.TestPassStatus;
 
 public class AnswerService {
   private final AnswerDao answerDao;
@@ -53,6 +54,7 @@ public class AnswerService {
         }
       }
       testPass.setFinalScore(finalScore);
+      testPass.setStatus(TestPassStatus.PASSED);
       testPass.setTimeFinished(LocalDateTime.now());
       testPassDao.save(testPass);
     }
