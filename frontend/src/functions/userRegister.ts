@@ -2,11 +2,7 @@ import { LoginParams } from "../types/login";
 import axios from "axios";
 
 export const userRegister = async (loginParams: LoginParams) => {
-  const params = new URLSearchParams(
-    Object.entries(loginParams)
-      .map(([param, value]) => `${param}=${value}`)
-      .join("&")
-  );
+  const params = new URLSearchParams({ ...loginParams, name: "Alex" });
   params.append("name", "Alex");
   axios
     .post("http://localhost:8000/auth/register", params)
