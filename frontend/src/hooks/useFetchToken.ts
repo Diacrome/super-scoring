@@ -7,11 +7,7 @@ export const useFetchToken = () => {
   const dispatch = useAppDispatch();
 
   return async (loginParams: LoginParams) => {
-    const params = new URLSearchParams(
-      Object.entries(loginParams)
-        .map(([param, value]) => `${param}=${value}`)
-        .join("&")
-    );
+    const params = new URLSearchParams({ ...loginParams });
     axios
       .post("http://localhost:8000/auth/token", params)
       .then((response) => {
