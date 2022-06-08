@@ -8,8 +8,9 @@ export interface CurrentPass {
   answeredQuestions: {
     [questionOrderNumber: string]: boolean;
   };
-  startTime: number;
+  startTime: string;
   testId: number;
+  status: string;
 }
 
 export enum StatusActionType {
