@@ -8,13 +8,11 @@ const HomeScreen: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const tests = [1, 2, 3];
+
   const logout = () => {
     localStorage.removeItem("Authorization");
     dispatch(fetchStatus());
-  };
-
-  const goToTest = () => {
-    navigate("/1");
   };
 
   return (
@@ -25,9 +23,13 @@ const HomeScreen: FC = () => {
         </div>
       </div>
       <div className="test-catalog">
-        <div className="test-card">
-          <Button onClick={goToTest}>Тест 1</Button>
-        </div>
+        {tests.map((testId) => (
+          <div className="test-card">
+            <Button key={testId} onClick={() => navigate("/" + testId)}>
+              Тест {testId}
+            </Button>
+          </div>
+        ))}
       </div>
     </>
   );
