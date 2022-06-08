@@ -67,6 +67,14 @@ label {
     display: flex;
 }
 
+.test-card {
+    padding-right: 20px;
+}
+
+.test-info__text {
+    text-align: center;
+}
+
 .label-choice {
     margin-left: 5px;
 }
