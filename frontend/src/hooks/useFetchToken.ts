@@ -12,6 +12,7 @@ export const useFetchToken = () => {
       .post("http://localhost:8000/auth/token", params)
       .then((response) => {
         localStorage.setItem("Authorization", response.data.token);
+        axios.defaults.headers.common["Authorization"] = response.data.token;
         dispatch(fetchStatus());
       })
       .catch((e) => console.error(e));

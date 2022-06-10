@@ -21,10 +21,10 @@ const TestInfo: FC = () => {
   if (testDescription === null) {
     return <Loader />;
   } else {
-    return testId === "1" || testId === "2" ? (
-      <div className="test-info">
-        <div className="test-info__text">{testDescription.description}</div>
-        <div className="btn-block">
+    return testId === "1" || testId === "2" || testId === "3" ? (
+      <div className="test">
+        <div className="test-info-text">{testDescription.description}</div>
+        <div className="btn-start">
           <Button onClick={handleTestStart}>Начать тест</Button>
         </div>
       </div>
