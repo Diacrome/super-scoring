@@ -4,12 +4,12 @@ import { fetchStatus } from "./store/action-creators/status";
 import { useAppDispatch } from "./hooks/useAppDispatch";
 import "./styles/App.css";
 import AppRoutes from "./components/AppRoutes";
-import { setDefaultToken } from "./functions/setDefaultToken";
+import { updateDefaultToken } from "./functions/updateDefaultToken";
+
+updateDefaultToken();
 
 function App() {
   const dispatch = useAppDispatch();
-
-  setDefaultToken();
 
   useEffect(() => {
     dispatch(fetchStatus());

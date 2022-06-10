@@ -1,13 +1,11 @@
 export interface StatusState {
   loading: boolean;
   authorized: boolean;
-  currentPass?: CurrentPass | null;
+  currentPass: CurrentPass | null;
 }
 
 export interface CurrentPass {
-  answeredQuestions: {
-    [questionOrderNumber: string]: boolean;
-  };
+  answeredQuestions: Record<string, boolean>;
   startTime: string;
   testId: number;
   status: string;

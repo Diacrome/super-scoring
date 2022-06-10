@@ -11,7 +11,7 @@ const TestScreen: FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [questions, setQuestions] = useState<Questions | null>(null);
-  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [selectedOption, setSelectedOption] = useState("");
 
   const currentQuestion = localStorage.getItem("currentQuestion") || "1";
 
@@ -40,53 +40,53 @@ const TestScreen: FC = () => {
 
   if (questions === null) {
     return <Loader />;
-  } else {
-    const questionText = questions[currentQuestion].question
-      .replace("%answer", "______")
-      .split("\\n");
-    const questionAnswers = Object.entries(questions[currentQuestion].payload);
-    const questionsCount = Object.keys(questions).length;
-    return (
-      <div className="test">
-        <div>Вопрос {currentQuestion}:</div>
-        <div className="test__question-text">
-          {questionText.map((paragraphText) => (
-            <p className="test__question-paragraph" key={paragraphText}>
-              {paragraphText}
-            </p>
-          ))}
-        </div>
-        <form>
-          {questionAnswers.map(([number, answer]) => (
-            <div className="option" key={number}>
-              <input
-                id={"option-" + number}
-                type="radio"
-                name="option"
-                value={number}
-                checked={selectedOption === number}
-                onChange={handleOptionChange}
-              />
-              <label className="label-option" htmlFor={"option-" + number}>
-                {answer}
-              </label>
-            </div>
-          ))}
-          <div className="test__btn-answer">
-            {currentQuestion != questionsCount + "" ? (
-              <Button type="button" onClick={nextQuestion}>
-                Ответить
-              </Button>
-            ) : (
-              <Button type="button" onClick={endTest}>
-                Завершить тест
-              </Button>
-            )}
-          </div>
-        </form>
-      </div>
-    );
   }
+
+  const questionText = questions[currentQuestion].question
+    .replace("%answer", "______")
+    .split("\\n");
+  const questionAnswers = Object.entries(questions[currentQuestion].payload);
+  const questionsCount = Object.keys(questions).length;
+  return (
+    <div className="test">
+      <div>Вопрос {currentQuestion}:</div>
+      <div className="test__question-text">
+        {questionText.map((paragraphText) => (
+          <p className="test__question-paragraph" key={paragraphText}>
+            {paragraphText}
+          </p>
+        ))}
+      </div>
+      <form>
+        {questionAnswers.map(([number, answer]) => (
+          <div className="option" key={number}>
+            <input
+              id={"option-" + number}
+              type="radio"
+              name="option"
+              value={number}
+              checked={selectedOption === number}
+              onChange={handleOptionChange}
+            />
+            <label className="label-option" htmlFor={"option-" + number}>
+              {answer}
+            </label>
+          </div>
+        ))}
+        <div className="test__btn-answer">
+          {currentQuestion != questionsCount + "" ? (
+            <Button type="button" onClick={nextQuestion}>
+              Ответить
+            </Button>
+          ) : (
+            <Button type="button" onClick={endTest}>
+              Завершить тест
+            </Button>
+          )}
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default TestScreen;

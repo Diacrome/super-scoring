@@ -9,6 +9,7 @@ const authLocalStorage = Boolean(localStorage.getItem("authorized"));
 const initialState: StatusState = {
   loading: true,
   authorized: authLocalStorage,
+  currentPass: null,
 };
 
 export const statusReducer = (
