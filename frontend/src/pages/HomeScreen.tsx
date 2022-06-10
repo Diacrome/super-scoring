@@ -3,7 +3,7 @@ import { fetchStatus } from "../store/action-creators/status";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button/Button";
 import { useAppDispatch } from "../hooks/useAppDispatch";
-import { setDefaultToken } from "../functions/setDefaultToken";
+import { updateDefaultToken } from "../functions/updateDefaultToken";
 
 const HomeScreen: FC = () => {
   const dispatch = useAppDispatch();
@@ -13,7 +13,7 @@ const HomeScreen: FC = () => {
 
   const logout = () => {
     localStorage.removeItem("Authorization");
-    setDefaultToken();
+    updateDefaultToken();
     dispatch(fetchStatus());
   };
 

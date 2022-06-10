@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const setDefaultToken = () => {
+export const updateDefaultToken = () => {
   axios.defaults.headers.common["Authorization"] =
     localStorage.getItem("Authorization") || "";
 };

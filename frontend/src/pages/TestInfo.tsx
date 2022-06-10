@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import Button from "../components/Button/Button";
-import { getTestDecription } from "../functions/getTestDecription";
+import { fetchTestDecription } from "../functions/fetchTestDecription";
 import { TestDescription } from "../types/testDescription";
 import Loader from "../components/Loader/Loader";
 import { useParams } from "react-router-dom";
@@ -13,7 +13,7 @@ const TestInfo: FC = () => {
   const testStart = useTestStart();
 
   useEffect(() => {
-    getTestDecription(testId).then((data) => setTestDescription(data));
+    fetchTestDecription(testId).then((data) => setTestDescription(data));
   }, []);
 
   const handleTestStart = () => testStart(testId);
