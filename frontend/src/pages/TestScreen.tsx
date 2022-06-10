@@ -1,64 +1,92 @@
-import React, { FC } from "react";
+import React, { ChangeEventHandler, FC, useEffect, useState } from "react";
 import Button from "../components/Button/Button";
-import { fetchStatus } from "../store/action-creators/status";
 import { useNavigate } from "react-router-dom";
 import { Questions } from "../types/questions";
+import { fetchQuestions } from "../functions/fetchQuestions";
+import Loader from "../components/Loader/Loader";
+import { useAppDispatch } from "../hooks/useAppDispatch";
+import { fetchStatus } from "../store/action-creators/status";
 
 const TestScreen: FC = () => {
-  const currentQuestion = localStorage.getItem("currentQuestion") || "1";
-  const questionInfo = questions[currentQuestion];
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [questions, setQuestions] = useState<Questions | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string>("");
+
+  const currentQuestion = localStorage.getItem("currentQuestion") || "1";
+
+  useEffect(() => {
+    fetchQuestions().then((response) => setQuestions(response.question));
+  }, []);
+
+  const handleOptionChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSelectedOption(e.target.value);
+  };
 
   const nextQuestion = () => {
-    localStorage.setItem("currentQuestion", +currentQuestion + 1 + "");
-    fetchStatus();
+    if (selectedOption) {
+      localStorage.setItem("currentQuestion", +currentQuestion + 1 + "");
+      dispatch(fetchStatus());
+    }
   };
 
   const endTest = () => {
-    localStorage.setItem("currentPass", "null");
-    localStorage.setItem("currentQuestion", "1");
-    fetchStatus();
-    navigate("/1/1");
+    if (selectedOption) {
+      localStorage.removeItem("currentQuestion");
+      dispatch(fetchStatus);
+      navigate(`/3/1`);
+    }
   };
 
-  return (
-    <div className="test">
-      <div>Вопрос {currentQuestion}:</div>
-      <div>{questionInfo.question}</div>
-      <form>
-        {[1, 2, 3, 4].map((elem) => (
-          <div className="choice" key={elem}>
-            <input id={elem + ""} type="radio" name="answer" value={elem} />
-            <label className="label-choice" htmlFor={`choice${elem}`}>
-              {questionInfo.payload[elem]}
-            </label>
-          </div>
-        ))}
-        <div className="btn-block">
-          {currentQuestion != "3" ? (
-            <Button onClick={nextQuestion}>Ответить</Button>
-          ) : (
-            <Button onClick={endTest}>Завершить тест</Button>
-          )}
+  if (questions === null) {
+    return <Loader />;
+  } else {
+    const questionText = questions[currentQuestion].question
+      .replace("%answer", "______")
+      .split("\\n");
+    const questionAnswers = Object.entries(questions[currentQuestion].payload);
+    const questionsCount = Object.keys(questions).length;
+    return (
+      <div className="test">
+        <div>Вопрос {currentQuestion}:</div>
+        <div className="test__question-text">
+          {questionText.map((paragraphText) => (
+            <p className="test__question-paragraph" key={paragraphText}>
+              {paragraphText}
+            </p>
+          ))}
         </div>
-      </form>
-    </div>
-  );
-};
-
-const questions: Questions = {
-  "1": {
-    question: "5*4 = ",
-    payload: { "1": 1, "2": 3, "3": 4, "4": 20 },
-  },
-  "2": {
-    question: "1*1 = ",
-    payload: { "1": 1, "2": 3, "3": 4, "4": 1 },
-  },
-  "3": {
-    question: "3*3 = ",
-    payload: { "1": 1, "2": 3, "3": 9, "4": 1 },
-  },
+        <form>
+          {questionAnswers.map(([number, answer]) => (
+            <div className="option" key={number}>
+              <input
+                id={"option-" + number}
+                type="radio"
+                name="option"
+                value={number}
+                checked={selectedOption === number}
+                onChange={handleOptionChange}
+              />
+              <label className="label-option" htmlFor={"option-" + number}>
+                {answer}
+              </label>
+            </div>
+          ))}
+          <div className="test__btn-answer">
+            {currentQuestion != questionsCount + "" ? (
+              <Button type="button" onClick={nextQuestion}>
+                Ответить
+              </Button>
+            ) : (
+              <Button type="button" onClick={endTest}>
+                Завершить тест
+              </Button>
+            )}
+          </div>
+        </form>
+      </div>
+    );
+  }
 };
 
 export default TestScreen;

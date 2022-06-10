@@ -1,14 +1,22 @@
 * {
-    font: 14px/1.0 Arial, sans-serif;
+    font: 14px/1.4 Arial, sans-serif;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
 
+h1{
+    font-size: 24px;
+}
+
 .App {
     margin: 0 auto;
-    padding: 30px 50px;
+    padding: 50px 50px;
     justify-content: center;
+}
+
+.loader {
+    text-align: center;
 }
 
 .btn {
@@ -18,6 +26,16 @@
     font-size: 14px;
     background: transparent;
     border: 1px solid cornflowerblue;
+}
+
+.btn:hover {
+    background: cornflowerblue;
+    color: white;
+}
+
+.btn:active {
+    background: transparent;
+    color: cornflowerblue;
 }
 
 .auth-form {
@@ -43,6 +61,12 @@
     margin-top: 10px;
     display: flex;
     justify-content: center;
+}
+
+.btn-start {
+    margin: 0 auto;
+    margin-top: 10px;
+    max-width: 300px;
 }
 
 label {
@@ -71,14 +95,50 @@ label {
     padding-right: 20px;
 }
 
-.test-info__text {
+
+.test-info-text {
     text-align: center;
 }
 
-.label-choice {
+.test {
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+
+.test__question-text {
+    margin: 15px 0;
+}
+
+.test__question-paragraph {
+    margin-bottom: 5px;
+}
+
+@media (min-width: 600px) {
+    .test__btn-answer {
+        width: 200px;
+    }
+
+}
+
+.option {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.label-option {
     margin-left: 5px;
 }
 
 .choice {
     margin-top: 5px;
 }
+
+.results {
+    text-align: center;
+}
+
+.results__title{
+    margin-bottom: 10px;
+}
+

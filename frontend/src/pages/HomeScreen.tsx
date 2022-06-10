@@ -3,6 +3,7 @@ import { fetchStatus } from "../store/action-creators/status";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button/Button";
 import { useAppDispatch } from "../hooks/useAppDispatch";
+import { setDefaultToken } from "../functions/setDefaultToken";
 
 const HomeScreen: FC = () => {
   const dispatch = useAppDispatch();
@@ -12,6 +13,7 @@ const HomeScreen: FC = () => {
 
   const logout = () => {
     localStorage.removeItem("Authorization");
+    setDefaultToken();
     dispatch(fetchStatus());
   };
 
@@ -24,7 +26,7 @@ const HomeScreen: FC = () => {
       </div>
       <div className="test-catalog">
         {tests.map((testId) => (
-          <div className="test-card">
+          <div className="test-card" key={testId}>
             <Button key={testId} onClick={() => navigate("/" + testId)}>
               Тест {testId}
             </Button>
