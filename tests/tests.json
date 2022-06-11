@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "8af36bfe-b71b-4593-b16e-ca91400109a9",
+		"_postman_id": "4928e083-3abc-4577-96a2-a0eacc5f090f",
 		"name": "super-scoring test requests",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "19464190"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -92,6 +91,187 @@
 			]
 		},
 		{
+			"name": "token request tests",
+			"item": [
+				{
+					"name": "true token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Token returns successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Token' request returns token\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.token).to.be.a(\"string\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "login",
+									"value": "admin",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "admin1",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}{{tokenEndPoint}}",
+							"host": [
+								"{{server}}{{tokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Token' return 'Status code' is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Token' return text 'Invalid login or password'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid login or password\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "login",
+									"value": "chicken",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "nuggets",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}{{tokenEndPoint}}",
+							"host": [
+								"{{server}}{{tokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false check token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Check token' return 'Status code' is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Check token' return text 'Invalid token'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid token\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "asdf123",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}{{checkTokenEndPoint}}",
+							"host": [
+								"{{server}}{{checkTokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "true check token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Check token' return code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"'Check token' return user name\", function () {\r",
+									"    pm.expect(jsonData.name).to.eql(\"Anna\");    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "fs952j",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{checkTokenEndPoint}}",
+							"host": [
+								"{{server}}{{checkTokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "hello request tests",
 			"event": [
 				{
@@ -161,6 +341,16 @@
 			"key": "beginTestEndPoint",
 			"value": "/test",
 			"type": "string"
+		},
+		{
+			"key": "tokenEndPoint",
+			"value": "/auth/token",
+			"type": "default"
+		},
+		{
+			"key": "checkTokenEndPoint",
+			"value": "/auth/check-token",
+			"type": "default"
 		}
 	]
 }
