@@ -69,7 +69,7 @@ Connection.
 
 Пример возвращаемого объекта:
 
-{"question": { "1": { "question": "5\*4 = ", "payload": { "1": 1, "2": 3, "3": 4, "4": 20 } }, "2": { "question": "1\*1 = ", "payload": { "1": 1, "2": 3, "3": 4, "4": 1 } } } }
+{"question": { "1": { "question": "5\*4 = ", "payload": { "1": 1, "2": 3, "3": 4, "4": 20 }, "answerType": "SINGLE_CHOICE"}, "2": { "question": "1\*1 = ", "payload": { "1": 1, "2": 3, "3": 4, "4": 1 }, "answerType": "SINGLE_CHOICE" } } }
 
 Возвращает код 404 если для данного пользователя не запущено прохождение теста или пользователь не найден в базе.
 
@@ -130,7 +130,8 @@ Connection.
 `SINGLE_CHOICE` answer = '{"answer": "1"}' - по ключу answer в json можно получить ключ правильного ответа в payload<br> 
 `MULTIPLE_CHOICE` answer ='{"multiple_answer1": "2", "multiple_answer2": "4"}' - ключи multiple_answer[1,2,3...] в json содержат ключ правильных ответов в payload <br>
 `MULTIPLE_QUESTIONS_SINGLE_CHOICE` answer ='{"answer1": "2", "answer2" : "3"}'- ключи answer1, answer2 в json содержат ключ правильных ответов в payload для полей %answer1, %answer2 соотвественно.
-
+`RANKING' answer = '{"1": "3", "2": "1", "3": "4", "4": "2"}' - ключи с номерами задают последовательность, какое содержимое из payload идёт первым, какой вторым и т.д.
+ 
 `POST /answer`
 
 Записывает ответ в базу данных.
