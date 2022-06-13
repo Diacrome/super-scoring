@@ -3,12 +3,20 @@ package ru.hh.superscoring.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.util.JsonValidator;
+import ru.hh.superscoring.util.QuestionAnswerType;
+
+import javax.ws.rs.core.MultivaluedMap;
 
 public class QuestionService {
   private final QuestionDao questionDao;
@@ -80,5 +88,33 @@ public class QuestionService {
     questionDao.save(question);
     return true;
   }
+
+  public Map<Integer, Boolean> saveQuestionsFromForm(int testId, MultivaluedMap<String, String> formParams) throws JsonProcessingException {
+    Map<Integer,Boolean> questionRecordsLog = new LinkedHashMap<>();
+//    int questionCount = Integer.parseInt(formParams.get("question-counter").get(0));
+//    for (int i = 1; i <= questionCount; i++) {
+//      Map<Integer,String> answerOptions = new LinkedHashMap<>();
+//      int j = 1;
+//      while (!formParams.get("answer" + i + "-" + j).isEmpty()) {
+//        answerOptions.put(j, formParams.get("answer" + i + "-" + j).get(0));
+//        j++;
+//      }
+//      Question question = new Question();
+//      question.setTestId(testId);
+//      question.setTimeLimit(Short.parseShort(formParams.get("time-limit").get(0)));
+//      question.setWeight(formParams.get("weight"));
+//      question.setWording(formParams.get("question" + i).get(0));
+//      question.setAnswerType(QuestionAnswerType.valueOf(formParams.get("answer-type" + i).get(0)));
+//      question.setPayload(new ObjectMapper().writeValueAsString(answerOptions));
+//      question.setAnswer(buildAnswer(answerOptions, question.getAnswerType()));
+//      question.setContent();
+//      saveQuestionTable.put(i, questionService.addQuestion(question);
+//    }
+    return questionRecordsLog;
+  }
+
+//  private String buildAnswer(Map<Integer, String> answerOptions, QuestionAnswerType answerType) {
+//    return
+//  }
 
 }

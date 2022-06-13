@@ -64,7 +64,7 @@ public class TestResource {
     }
     boolean isUserAdmin = authService.isAdmin(userId);
     if (!isUserAdmin) {
-      return Response.status(403, "Admin rights required").build();
+      return Response.status(403, "AdminResource rights required").build();
     }
     Integer savedId;
     try {
