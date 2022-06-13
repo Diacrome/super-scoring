@@ -1,5 +1,6 @@
 package ru.hh.superscoring;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import ru.hh.nab.common.properties.PropertiesUtils;
 import ru.hh.nab.starter.NabApplication;
 import ru.hh.superscoring.config.ProdConfig;
@@ -12,6 +13,7 @@ public class SuperScoring {
     NabApplication
         .builder()
         .configureJersey()
+        .registerResources(MultiPartFeature.class)
         .bindToRoot()
         .build()
         .run(ProdConfig.class);
