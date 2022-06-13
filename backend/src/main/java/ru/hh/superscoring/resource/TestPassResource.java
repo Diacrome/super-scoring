@@ -47,11 +47,16 @@ public class TestPassResource {
     if (!testService.isExistActiveTest(testId)) {
       return Response.status(404, "There is no such test in the system ").build();
     }
-    if (testPassService.startTest(testId, userId)) {
-      return Response.status(201).build();
+    try {
+      if (testPassService.startTest(testId, userId)) {
+        return Response.status(201).build();
+      }
+      return Response.status(400, "This user has already started the test")
+          .build();
+    } catch (HibernateException he) {
+      return Response.status(400, "This test is not yet available for passing. Please try again later.")
+          .build();
     }
-    return Response.status(400, "Failure: this user has already started the test or not enough questions for the test")
-        .build();
   }
 
   @GET

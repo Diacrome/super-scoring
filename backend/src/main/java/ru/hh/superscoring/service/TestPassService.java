@@ -3,6 +3,7 @@ package ru.hh.superscoring.service;
 
 import java.util.List;
 import java.util.Set;
+import org.hibernate.HibernateException;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.TestPassDao;
@@ -25,7 +26,7 @@ public class TestPassService {
   public boolean startTest(Integer testId, Integer userId) {
     List<Question> questionsForStart = questionService.getQuestionsForStart(testId);
     if (questionsForStart.isEmpty()) {
-      return false;
+      throw new HibernateException("Not enough questions for the test");
     }
     if (!testPassDao.isExistUnfinishedRecord(userId)) {
       TestPass testPass = new TestPass();
@@ -53,7 +54,7 @@ public class TestPassService {
   }
 
   @Transactional
-  public void cancelTestPassByUserId(Integer userId){
+  public void cancelTestPassByUserId(Integer userId) {
     Integer testPassId = testPassDao.getTestPassByUserId(userId);
     if (testPassId == null) {
       throw (new PropertyValueException("No testPass for such user!", "testPassDao", "userId"));
