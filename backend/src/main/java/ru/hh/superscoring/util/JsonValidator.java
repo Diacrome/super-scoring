@@ -89,5 +89,9 @@ public class JsonValidator {
     return false;
   }
 
+  public static boolean verifyPayload(){
+    return true;
+  }
+
 
 }
