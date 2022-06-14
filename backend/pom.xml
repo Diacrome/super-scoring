@@ -46,11 +46,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.8</version>
-        </dependency>
-        <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-jaxrs2</artifactId>
             <version>2.2.0</version>
@@ -59,6 +54,11 @@
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-jaxrs2-servlet-initializer-v2</artifactId>
             <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>2.1.6</version>
         </dependency>
 
     </dependencies>
@@ -123,7 +123,7 @@
                         true
                     </prettyPrint>
                     <resourcePackages>
-                        ru.hh.superscoring.resource
+                        ru.hh.superscoring.resource, ru.hh.superscoring.dto
                     </resourcePackages>
                     <openapiFilePath>
                         src/etc/openapi.yaml

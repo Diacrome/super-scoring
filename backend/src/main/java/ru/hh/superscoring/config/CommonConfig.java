@@ -61,9 +61,7 @@ import ru.hh.superscoring.service.TestService;
     AuthService.class,
     AuthResource.class,
     NabCommonConfig.class,
-    StatusService.class,
-    OpenApiResource.class,
-    AcceptHeaderOpenApiResource.class
+    StatusService.class
 })
 
 public class CommonConfig {
