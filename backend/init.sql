@@ -220,4 +220,5 @@ values
 
 insert into token (user_id, token, expire_date)
 values (1, '557sa7', now()+interval'3d'),
+       (3, 'sdf543', now()+interval'3d'),
        (4, 'fs952j', now()+interval'3d');
