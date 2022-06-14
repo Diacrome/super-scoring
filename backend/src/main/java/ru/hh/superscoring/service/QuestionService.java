@@ -60,10 +60,13 @@ public class QuestionService {
   @Transactional
   public Boolean addQuestion(Question newQuestion) {
     try {
-      if (JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
+      if (!JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
         return false;
       }
     } catch (JsonProcessingException e) {
+      return false;
+    }
+    if (!JsonValidator.verifyPayload(newQuestion.getPayload(), newQuestion.getAnswerType())) {
       return false;
     }
     Question question = new Question();
