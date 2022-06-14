@@ -1,17 +1,19 @@
 package ru.hh.superscoring.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.util.JsonValidator;
 
 public class QuestionService {
   private final QuestionDao questionDao;
   private final TestService testService;
+
 
   public QuestionService(QuestionDao questionDao, TestService testService) {
     this.questionDao = questionDao;
@@ -67,6 +69,13 @@ public class QuestionService {
 
   @Transactional
   public Boolean addQuestion(Question newQuestion) {
+    try {
+      if (JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
+        return false;
+      }
+    } catch (JsonProcessingException e) {
+      return false;
+    }
     Question question = new Question();
     question.setTestId(newQuestion.getTestId());
     question.setWording(newQuestion.getWording());

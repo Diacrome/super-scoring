@@ -59,7 +59,8 @@ import ru.hh.superscoring.service.TestService;
     AuthService.class,
     AuthResource.class,
     NabCommonConfig.class,
-    StatusService.class
+    StatusService.class,
+    CorsConfig.class
 })
 
 public class CommonConfig {

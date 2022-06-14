@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +20,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.hh.superscoring.util.QuestionAnswerType;
+import ru.hh.superscoring.util.TestPassStatus;
 
 @Entity
 @Table(name = "test_pass")
@@ -48,7 +52,19 @@ public class TestPass {
   @Column(name = "final_score")
   private Integer finalScore;
 
+  @Column(name = "status")
+  @Enumerated(EnumType.STRING)
+  private TestPassStatus status;
+
   public TestPass() {
+  }
+
+  public TestPassStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(TestPassStatus status) {
+    this.status = status;
   }
 
   public Integer getFinalScore() {
