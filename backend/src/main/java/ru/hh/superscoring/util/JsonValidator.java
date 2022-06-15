@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -53,6 +54,32 @@ public class JsonValidator {
     }
   }
 
+  public static boolean verifyRanking(String jsonString, String questionPayload) throws JsonProcessingException {
+    try {
+      HashMap payloadMap = mapper.readValue(questionPayload, HashMap.class);
+      JsonNode root = mapper.readTree(jsonString);
+      if (root.size() != payloadMap.size()) {
+        return false;
+      }
+      Set<String> valuesOfJson = new HashSet<>();
+      for (Iterator<String> fieldNames = root.fieldNames(); fieldNames.hasNext(); ) {
+        String fieldName = fieldNames.next();
+        String valueOfJson = root.path(fieldName).asText();
+        if (!payloadMap.containsKey(valueOfJson)
+            || !root.path(fieldName).isTextual()) {
+          return false;
+        }
+        valuesOfJson.add(valueOfJson);
+      }
+      if (!valuesOfJson.equals(payloadMap.keySet())) {
+        return false;
+      }
+      return true;
+    } catch (JsonProcessingException e) {
+      return false;
+    }
+  }
+
   public static boolean verifyMultipleQuestionsSingleChoice(String jsonString, String questionPayload) throws JsonProcessingException {
     HashMap<String, HashMap<String, String>> payloadMap = mapper.readValue(questionPayload, HashMap.class);
     Set<String> payloadKeys = payloadMap.keySet();
@@ -86,8 +113,10 @@ public class JsonValidator {
     if (answerType == QuestionAnswerType.MULTIPLE_QUESTIONS_SINGLE_CHOICE) {
       return JsonValidator.verifyMultipleQuestionsSingleChoice(answer, payload);
     }
+    if (answerType == QuestionAnswerType.RANKING) {
+      return JsonValidator.verifyRanking(answer, payload);
+    }
     return false;
   }
-
 
 }
