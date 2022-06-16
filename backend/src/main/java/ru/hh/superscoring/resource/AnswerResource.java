@@ -1,5 +1,9 @@
 package ru.hh.superscoring.resource;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -11,6 +15,7 @@ import org.hibernate.HibernateException;
 import ru.hh.superscoring.service.AnswerService;
 import ru.hh.superscoring.service.AuthService;
 
+@Tag(name = "Ответы", description = "API для взаимодействия с ответами")
 @Path("/answer")
 public class AnswerResource {
   private final AnswerService answerService;
@@ -22,6 +27,11 @@ public class AnswerResource {
   }
 
   @POST
+  @Operation(summary = "Сохранение ответа", description = "Сохранят ответ пользователя на вопрос")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "При успешном сохранении"
+  ), @ApiResponse(responseCode = "401", description = "Не передан токен пользователя"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "400", description = "Ошибка при сохранении или ответ отклонен валидатором")})
   @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
   public Response saveAnswer(@FormParam("questionOrder") Integer question,
                              @FormParam("answer") String answer,
