@@ -1,6 +1,8 @@
 package ru.hh.superscoring.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dto.TestDto;
@@ -60,5 +62,10 @@ public class TestService {
     Test test = testDao.getTestById(testId);
     test.setIsActive(true);
     testDao.save(test);
+  }
+
+  @Transactional(readOnly = true)
+  public List<Test> getAllTests(int page, int perPage) {
+    return testDao.getAllTests(page, perPage);
   }
 }

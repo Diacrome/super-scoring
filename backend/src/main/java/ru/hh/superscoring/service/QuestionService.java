@@ -41,6 +41,16 @@ public class QuestionService {
   }
 
   @Transactional
+  public List<Question> getAllQuestionsForTest(Integer testId, int page, int perPage) {
+    return questionDao.getAllQuestionsForTest(testId, page, perPage);
+  }
+
+  @Transactional
+  public List<Question> getAllQuestions(int page, int perPage) {
+    return questionDao.getAllQuestions(page, perPage);
+  }
+
+  @Transactional
   public void setQuestionActive(Integer questionId) {
     Question question = questionDao.get(Question.class, questionId);
     if (question == null) {
