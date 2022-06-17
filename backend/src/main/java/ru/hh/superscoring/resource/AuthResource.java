@@ -1,5 +1,11 @@
 package ru.hh.superscoring.resource;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -13,7 +19,7 @@ import javax.ws.rs.core.Response;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.service.AuthService;
 
-
+@Tag(name = "Авторизация", description = "API отвечающие за авторизацию и аутентификацию пользователя")
 @Path("/auth")
 public class AuthResource {
 
@@ -24,6 +30,13 @@ public class AuthResource {
   }
 
   @GET
+  @Operation(summary = "Авторизация по токену", description = "Возвращает имя пользователя, которому принадлежит токен")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "200", description = "возвращает имя пользователя",
+      content = {@Content(mediaType = "application/json",
+          schema = @Schema(example = "name: Anna"))}
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "400", description = "Ошибка при получении имени")})
   @Path("/check-token")
   @Produces("application/json")
   public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) {
@@ -40,6 +53,13 @@ public class AuthResource {
   }
 
   @POST
+  @Operation(summary = "Авторизация по логину и паролю", description = "Создает и возвращает токен пользователя")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "200", description = "возвращает токен",
+      content = {@Content(mediaType = "application/json",
+          schema = @Schema(example = "token: ktuq13qll08kmg8oc49b"))}
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "400", description = "Ошибка при создании токена")})
   @Path("/token")
   @Produces("application/json")
   public Response generateToken(@FormParam("login") String login, @FormParam("password") String password) {
@@ -57,6 +77,9 @@ public class AuthResource {
   }
 
   @POST
+  @Operation(summary = "Регистрация пользователя", description = "Регистрирует пользователя не администратора")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "При успешном добавлении пользователя"
+  ), @ApiResponse(responseCode = "401", description = "Пользователь уже существует")})
   @Path("/register")
   @Produces("application/json")
   public Response addNewUser(@FormParam("login") String login, @FormParam("password") String password,
@@ -69,6 +92,11 @@ public class AuthResource {
   }
 
   @POST
+  @Operation(summary = "Выдача прав администратора", description = "Делает обычного пользователя администратором")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Указанный пользователь стал администратором"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "403", description = "Недостаточно прав"
+  ), @ApiResponse(responseCode = "400", description = "Ошибка при сохранении или указанный пользователь не найден")})
   @Path("/set-admin")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public Response setAdminRights(@FormParam("login") String login,

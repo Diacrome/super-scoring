@@ -300,6 +300,24 @@ Connection.
 - 404 и "There is no such test in the system", если вопрос добавляется в несуществующий тест.
 - 403 и "Access denied", если пользователь не является админом.
 
+### Генерация OpenAPI файла
+
+1. Генерация на этапе package.
+2. Сгенерированный файл лежит в target/classes/
+3. При описании ручки можно добавить аннотации для наполнения документации по ней в виде:
+
+`@Operation(summary = "Короткое описание", description = "Полное описание")
+@ApiResponses(value = {@ApiResponse(
+responseCode = "200", description = "Описание ответа",
+content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
+), @ApiResponse(responseCode = "401", description = "Описание другого ответа")})`
+
+где:
+- `@Operation` - описывает ручку в целом
+- `@ApiResponse` - описывает ответ (автоматом они не подгружаются)
+- `content` - описывает возвращаемые данные по схеме.
+
+По аннотациям информацию можно, например, посмотреть тут: https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Annotations#quick-annotation-overview
 
 ### Получение всех тестов
 

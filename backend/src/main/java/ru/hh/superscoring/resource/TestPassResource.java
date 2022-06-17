@@ -2,6 +2,12 @@ package ru.hh.superscoring.resource;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Set;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -13,12 +19,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
+import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;
 
+@Tag(name = "Прохождение теста", description = "API для взаимодействия с прохождениями тестов")
 @Path("/")
 public class TestPassResource {
   private final TestPassService testPassService;
@@ -32,6 +40,11 @@ public class TestPassResource {
   }
 
   @POST
+  @Operation(summary = "Начать тестирование", description = "Запускает процесс прохождения для указанного теста")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Тестирование начато"
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации или указанный тест отсутствует"
+  ), @ApiResponse(responseCode = "400", description = "Тестирование не может быть начато: другой тест начат или вопросов недостаточно")})
   @Path("/start/{testId}")
   @Produces("application/json")
   public Response startTest(@PathParam("testId") Integer testId,
@@ -60,6 +73,12 @@ public class TestPassResource {
   }
 
   @GET
+  @Operation(summary = "Получение вопросов", description = "Получение вопросов текущего прохождения")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "200", description = "возвращает id созданного теста",
+      content = {@Content(schema = @Schema(implementation = QuestionsForTestDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации или прохождение отсутствует")})
   @Path("/questions")
   @Produces("application/json")
   public Response getQuestions(@HeaderParam("authorization") String authorizationToken) throws JsonProcessingException {
@@ -78,6 +97,12 @@ public class TestPassResource {
   }
 
   @GET
+  @Operation(summary = "Получение таблицы лидеров", description = "Получение таблицы лидеров для указанного теста")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "200", description = "возвращает id созданного теста",
+      content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации или прохождение отсутствует")})
   @Path("/leaders/{testId}")
   @Produces("application/json")
   public Response startTest(@PathParam("testId") Integer testId,
