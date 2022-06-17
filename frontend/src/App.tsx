@@ -1,21 +1,27 @@
-import React from 'react';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import TestPage from "./pages/TestPage";
-import ResultPage from "./pages/ResultPage";
-import AuthPage from "./pages/AuthPage";
+import React, { useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { fetchStatus } from "./store/action-creators/status";
+import { useAppDispatch } from "./hooks/useAppDispatch";
+import "./styles/App.css";
+import AppRoutes from "./components/AppRoutes";
+import { updateDefaultToken } from "./functions/updateDefaultToken";
+
+updateDefaultToken();
 
 function App() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<HomePage/>}/>
-                <Route path="/auth" element={<AuthPage/>}/>
-                <Route path="/:testId" element={<TestPage/>}/>
-                <Route path="/:testId/:completionId" element={<ResultPage/>}/>
-            </Routes>
-        </BrowserRouter>
-    );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchStatus());
+  }, []);
+
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;

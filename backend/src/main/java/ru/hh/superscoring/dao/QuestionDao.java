@@ -18,4 +18,23 @@ public class QuestionDao extends GenericDao {
         .setParameter("id", testId)
         .getResultList();
   }
+
+  public List<Question> getAllQuestionsForTest(Integer testId, int page, int perPage) {
+    return getSession()
+        .createQuery("select q from Question q where q.testId = :id " +
+            "order by q.id asc", Question.class)
+        .setParameter("id", testId)
+        .setFirstResult(page * perPage)
+        .setMaxResults(perPage)
+        .getResultList();
+  }
+
+  public List<Question> getAllQuestions(int page, int perPage) {
+    return getSession()
+        .createQuery("select q from Question q " +
+            "order by q.testId asc", Question.class)
+        .setFirstResult(page * perPage)
+        .setMaxResults(perPage)
+        .getResultList();
+  }
 }

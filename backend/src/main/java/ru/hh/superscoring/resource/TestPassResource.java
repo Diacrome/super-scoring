@@ -19,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import ru.hh.superscoring.dto.LeaderBoardDto;
+import org.hibernate.HibernateException;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.service.AuthService;
@@ -59,11 +60,16 @@ public class TestPassResource {
     if (!testService.isExistActiveTest(testId)) {
       return Response.status(404, "There is no such test in the system ").build();
     }
-    if (testPassService.startTest(testId, userId)) {
-      return Response.status(201).build();
+    try {
+      if (testPassService.startTest(testId, userId)) {
+        return Response.status(201).build();
+      }
+      return Response.status(400, "This user has already started the test")
+          .build();
+    } catch (HibernateException he) {
+      return Response.status(400, "This test is not yet available for passing. Please try again later.")
+          .build();
     }
-    return Response.status(400, "Failure: this user has already started the test or not enough questions for the test")
-        .build();
   }
 
   @GET
@@ -106,4 +112,23 @@ public class TestPassResource {
     return Response.ok(testPassService.getLeaders(testId, page, perPage)).build();
   }
 
+  @POST
+  @Path("/cancel")
+  public Response cancelTest(@HeaderParam("authorization") String authorizationToken) {
+    if (authorizationToken == null) {
+      return Response.status(401).entity("No token found!").build();
+    }
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    try {
+      testPassService.cancelTestPassByUserId(userId);
+    } catch (HibernateException he) {
+      return Response.status(400).entity(he.getMessage()).build();
+    } catch (Exception e) {
+      return Response.status(400).entity("Unable to cancel testPass!").build();
+    }
+    return Response.status(201).entity("Canceled!").build();
+  }
 }

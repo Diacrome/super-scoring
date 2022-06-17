@@ -1,0 +1,568 @@
+{
+	"info": {
+		"_postman_id": "315b68ba-e471-4698-b578-ed957b05e51c",
+		"name": "super-scoring test requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21395888"
+	},
+	"item": [
+		{
+			"name": "begin test info request tests",
+			"item": [
+				{
+					"name": "true begin test info request tests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Begin test info' return 'Status code' is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"'Begin test info' return 'id' is 1\", function () {\r",
+									"    pm.expect(jsonData.id).to.eql(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Begin test info' return 'name' is 'Математический тест'\", function () {\r",
+									"    pm.expect(jsonData.name).to.eql(\"Математический тест\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Begin test info' return 'description' is 'Тест на знание таблицы умножения'\", function () {\r",
+									"    pm.expect(jsonData.description).to.eql(\"Тест на знание таблицы умножения\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{beginTestEndPoint}}/info/1",
+							"host": [
+								"{{server}}{{beginTestEndPoint}}"
+							],
+							"path": [
+								"info",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false begin test info request tests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Begin test info' return 'Status code' is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Begin test info' return text 'There is no such test in the system'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"There is no such test in the system\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{beginTestEndPoint}}/info/0",
+							"host": [
+								"{{server}}{{beginTestEndPoint}}"
+							],
+							"path": [
+								"info",
+								"0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "token request tests",
+			"item": [
+				{
+					"name": "true token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Token returns successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Token' request returns token\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.token).to.be.a(\"string\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "login",
+									"value": "admin",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "admin1",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}{{tokenEndPoint}}",
+							"host": [
+								"{{server}}{{tokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Token' return 'Status code' is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Token' return text 'Invalid login or password'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid login or password\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "login",
+									"value": "chicken",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "nuggets",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}{{tokenEndPoint}}",
+							"host": [
+								"{{server}}{{tokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false check token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Check token' return 'Status code' is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"'Check token' return text 'Invalid token'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid token\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "asdf123",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}{{checkTokenEndPoint}}",
+							"host": [
+								"{{server}}{{checkTokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "true check token request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Check token' return code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"'Check token' return user name\", function () {\r",
+									"    pm.expect(jsonData.name).to.eql(\"Anna\");    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "fs952j",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{checkTokenEndPoint}}",
+							"host": [
+								"{{server}}{{checkTokenEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "start request tests",
+			"item": [
+				{
+					"name": "true start request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Start' return code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "sdf543",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{startEndPoint}}/1",
+							"host": [
+								"{{server}}{{startEndPoint}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false start request test (already started)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Start' return code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"'Start' return text 'This user has already started the test'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"This user has already started the test\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "fs952j",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{startEndPoint}}/1",
+							"host": [
+								"{{server}}{{startEndPoint}}"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false start request test (no test)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Start' return code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"'Start' return text 'There is no such test in the system'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"There is no such test in the system\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "sdf543",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{startEndPoint}}/0",
+							"host": [
+								"{{server}}{{startEndPoint}}"
+							],
+							"path": [
+								"0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cancel request tests",
+			"item": [
+				{
+					"name": "true cancel request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Cancel' return code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"'Cancel' return text 'Canceled!'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Canceled!\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "sdf543",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{cancelEndPoint}}",
+							"host": [
+								"{{server}}{{cancelEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "false cancel request test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"'Cancel' return code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"'Cancel' return text 'No testPass for such user!'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"No testPass for such user!\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "sdf543",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{cancelEndPoint}}",
+							"host": [
+								"{{server}}{{cancelEndPoint}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "hello request tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"'Hello' request return 'Status code' is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"'Hello' request return true text answer \", function () {\r",
+							"    pm.expect(pm.response.text()).to.eql(\"Hello, Super-Scoring team!\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}{{helloEndPoint}}",
+					"host": [
+						"{{server}}{{helloEndPoint}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "backend:8000",
+			"type": "string"
+		},
+		{
+			"key": "helloEndPoint",
+			"value": "/hello",
+			"type": "string"
+		},
+		{
+			"key": "beginTestEndPoint",
+			"value": "/test",
+			"type": "string"
+		},
+		{
+			"key": "tokenEndPoint",
+			"value": "/auth/token",
+			"type": "default"
+		},
+		{
+			"key": "checkTokenEndPoint",
+			"value": "/auth/check-token",
+			"type": "default"
+		},
+		{
+			"key": "startEndPoint",
+			"value": "/start",
+			"type": "string"
+		},
+		{
+			"key": "cancelEndPoint",
+			"value": "/cancel",
+			"type": "string"
+		}
+	]
+}

@@ -4,6 +4,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.entity.Test;
 
+import java.util.List;
+
 public class TestDao extends GenericDao {
 
   protected TestDao(SessionFactory sessionFactory) {
@@ -37,5 +39,14 @@ public class TestDao extends GenericDao {
             "(select tp.testId from TestPass tp where tp.id = :test_pass_id)", Integer.class)
         .setParameter("test_pass_id", testPassId)
         .uniqueResult();
+  }
+
+  public List<Test> getAllTests(int page, int perPage) {
+    return getSession()
+        .createQuery("select t from Test t " +
+            "order by t.id asc", Test.class)
+        .setFirstResult(page * perPage)
+        .setMaxResults(perPage)
+        .getResultList();
   }
 }

@@ -10,12 +10,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+
 import org.hibernate.PropertyValueException;
 import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.dto.QuestionBoardDto;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.QuestionService;
 import ru.hh.superscoring.util.Role;
+import java.util.List;
 
 @Tag(name = "Вопросы", description = "API для взаимодействия с вопросами")
 @Path("/question")
@@ -48,6 +52,37 @@ public class QuestionResource {
         return Response.status(400).entity("Unable to set question is not 'active'!").build();
       }
       return Response.status(201).entity("Set question not 'active' with this QuestionId").build();
+    }
+    return response;
+  }
+
+  @GET
+  @Path("/all-questions-in-test/{testId}")
+  public Response getAllQuestionsForTest(@PathParam("testId") int testId,
+                                         @HeaderParam("authorization") String authorizationToken,
+                                         @QueryParam("page") @DefaultValue("0") Integer page,
+                                         @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
+    Response response = checkAuthorization(authorizationToken);
+    if (response.getStatus() == 201) {
+      try {
+        List<Question> questions = questionService.getAllQuestionsForTest(testId, page, perPage);
+        return Response.ok(QuestionBoardDto.map(questions, page, perPage)).build();
+      } catch (PropertyValueException pve) {
+        return Response.status(400).entity("There is no question with such a testId!").build();
+      }
+    }
+    return response;
+  }
+
+  @GET
+  @Path("/all-questions")
+  public Response getAllQuestions(@HeaderParam("authorization") String authorizationToken,
+                                  @QueryParam("page") @DefaultValue("0") Integer page,
+                                  @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
+    Response response = checkAuthorization(authorizationToken);
+    if (response.getStatus() == 201) {
+      List<Question> questions = questionService.getAllQuestions(page, perPage);
+      return Response.ok(QuestionBoardDto.map(questions, page, perPage)).build();
     }
     return response;
   }
