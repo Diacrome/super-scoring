@@ -38,6 +38,9 @@ public class Question {
   @Enumerated(EnumType.STRING)
   private QuestionAnswerType answerType;
 
+  @Column(name = "weight")
+  private Integer weight;
+
   @Column(name = "date_created")
   private LocalDateTime dateCreated;
 
@@ -100,6 +103,10 @@ public class Question {
     return answerType;
   }
 
+  public Integer getWeight() {
+    return weight;
+  }
+
   public LocalDateTime getDateCreated() {
     return dateCreated;
   }
@@ -138,6 +145,10 @@ public class Question {
 
   public void setAnswerType(QuestionAnswerType answerType) {
     this.answerType = answerType;
+  }
+
+  public void setWeight(Integer weight) {
+    this.weight = weight;
   }
 
   public void setDateCreated(LocalDateTime dateCreated) {

@@ -4,19 +4,24 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
+import ru.hh.superscoring.dao.QuestionDistributionDao;
 import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.util.JsonValidator;
 
 public class QuestionService {
   private final QuestionDao questionDao;
+  private final QuestionDistributionDao questionDistributionDao;
   private final TestService testService;
 
 
-  public QuestionService(QuestionDao questionDao, TestService testService) {
+  public QuestionService(QuestionDao questionDao, QuestionDistributionDao questionDistributionDao, TestService testService) {
     this.questionDao = questionDao;
+    this.questionDistributionDao = questionDistributionDao;
     this.testService = testService;
   }
 
@@ -48,6 +53,18 @@ public class QuestionService {
   @Transactional
   public List<Question> getAllQuestions(int page, int perPage) {
     return questionDao.getAllQuestions(page, perPage);
+  }
+
+  @Transactional
+  public List<Question> getQuestionsForTestByDistribution(Integer testId) {
+    List<QuestionDistribution> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
+    List<Question> questions = new ArrayList<Question>();
+    distributions.forEach(distribution -> {
+      List<Question> tempListQuestions = questionDao.getQuestionsByWeightForTest(testId, distribution.getWeight());
+      Collections.shuffle(tempListQuestions);
+      questions.addAll(tempListQuestions.subList(0,distribution.getQuestionCount()));
+    });
+    return questions;
   }
 
   @Transactional

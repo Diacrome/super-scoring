@@ -37,4 +37,13 @@ public class QuestionDao extends GenericDao {
         .setMaxResults(perPage)
         .getResultList();
   }
+
+  public List<Question> getQuestionsByWeightForTest(Integer testId, Integer questionWeight) {
+    return getSession()
+        .createQuery("select q from Question q where q.testId = :id and q.weight = :weight", Question.class)
+        .setParameter("id", testId)
+        .setParameter("weight", questionWeight)
+        .getResultList();
+  }
+
 }
