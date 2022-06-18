@@ -44,6 +44,23 @@
             <version>${nab.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-jaxrs2</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-jaxrs2-servlet-initializer-v2</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>2.1.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -90,6 +107,37 @@
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-maven-plugin</artifactId>
+                <version>2.2.0</version>
+                <configuration>
+                    <outputPath>
+                        ${project.build.outputDirectory}
+                    </outputPath>
+                    <prettyPrint>
+                        true
+                    </prettyPrint>
+                    <resourcePackages>
+                        ru.hh.superscoring.resource, ru.hh.superscoring.dto
+                    </resourcePackages>
+                    <openapiFilePath>
+                        src/etc/openapi.yaml
+                    </openapiFilePath>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>
+                            prepare-package
+                        </phase>
+                        <goals>
+                            <goal>
+                                resolve
+                            </goal>
                         </goals>
                     </execution>
                 </executions>
