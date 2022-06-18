@@ -79,6 +79,7 @@ public class CommonConfig {
     return new MappingConfig(Question.class,
         TestPass.class,
         Test.class,
+        QuestionDistribution.class,
         User.class,
         Token.class,
         Answer.class,

@@ -3,7 +3,6 @@ package ru.hh.superscoring.dao;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import ru.hh.superscoring.entity.QuestionDistribution;
-import ru.hh.superscoring.entity.Question;
 
 public class QuestionDistributionDao extends GenericDao {
 

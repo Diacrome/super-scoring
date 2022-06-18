@@ -29,7 +29,7 @@ public class TestPassService {
 
   @Transactional
   public boolean startTest(Integer testId, Integer userId) {
-    List<Question> questionsForStart = questionService.getQuestionsForStart(testId);
+    List<Question> questionsForStart = questionService.getQuestionsForTestByDistribution(testId);
     if (questionsForStart.isEmpty()) {
       throw new HibernateException("Not enough questions for the test");
     }
@@ -38,7 +38,7 @@ public class TestPassService {
       testPass.setTestId(testId);
       testPass.setUserId(userId);
       testPass.setStatus(TestPassStatus.PASS);
-      testPass.setQuestions(questionService.getQuestionsForStart(testId));
+      testPass.setQuestions(questionsForStart);
       testPassDao.save(testPass);
       return true;
     }
