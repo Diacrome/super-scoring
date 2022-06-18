@@ -4,10 +4,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.hh.nab.starter.NabCommonConfig;
 import ru.hh.superscoring.dao.AnswerDao;
+import ru.hh.superscoring.dao.QualificationDao;
 import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.dao.AuthDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.UserDao;
+import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.resource.AnswerResource;
 import ru.hh.superscoring.entity.Token;
@@ -47,6 +49,8 @@ import ru.hh.superscoring.service.TestService;
     TestService.class,
     QuestionService.class,
     Question.class,
+    QualificationDao.class,
+    Qualification.class,
     QuestionDao.class,
     TestPass.class,
     TestPassService.class,
@@ -74,6 +78,7 @@ public class CommonConfig {
         User.class,
         Token.class,
         Answer.class,
+        Qualification.class,
         TestPassQuestion.class);
   }
 

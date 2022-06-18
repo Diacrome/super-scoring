@@ -9,6 +9,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
@@ -33,8 +34,8 @@ public class AnswerResource {
   ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
   ), @ApiResponse(responseCode = "400", description = "Ошибка при сохранении или ответ отклонен валидатором")})
   @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
-  public Response saveAnswer(@FormParam("questionOrder") Integer question,
-                             @FormParam("answer") String answer,
+  public Response saveAnswer(@QueryParam("questionOrder") Integer question,
+                             @QueryParam("answer") String answer,
                              @HeaderParam("authorization") String authorizationToken
   ) {
     if (authorizationToken == null) {
