@@ -58,13 +58,18 @@ public class QuestionService {
   @Transactional
   public List<Question> getQuestionsForTestByDistribution(Integer testId) {
     List<QuestionDistribution> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
-    List<Question> questions = new ArrayList<Question>();
+    List<Question> questions = questionDao.getQuestionsForTest(testId);
+    List<Question> finalQuestions = new ArrayList<Question>();
     distributions.forEach(distribution -> {
-      List<Question> tempListQuestions = questionDao.getQuestionsByWeightForTest(testId, distribution.getWeight());
-      Collections.shuffle(tempListQuestions);
-      questions.addAll(tempListQuestions.subList(0,distribution.getQuestionCount()));
+      List<Question> tempListQuestions = new ArrayList<Question>();
+      questions.forEach(question -> {
+        if (question.getWeight() == distribution.getWeight())
+          tempListQuestions.add(question);
+        Collections.shuffle(tempListQuestions);
+      });
+      finalQuestions.addAll(tempListQuestions.subList(0, distribution.getQuestionCount()));
     });
-    return questions;
+    return finalQuestions;
   }
 
   @Transactional
