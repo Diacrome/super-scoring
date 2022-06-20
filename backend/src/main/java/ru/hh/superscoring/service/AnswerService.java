@@ -1,6 +1,8 @@
 package ru.hh.superscoring.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -48,8 +50,8 @@ public class AnswerService {
       TestPass testPass = testPassDao.getTestPassByTestPassId(testPassId);
       Integer finalScore = 0;
       for (TestPassQuestion testPassQuestion : testPass.getQuestions()) {
-        if (testPassQuestion.getQuestion().getAnswer().equals(
-            arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
+        if (CheckAnswer(testPassQuestion.getQuestion().getAnswer()
+            , arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
           finalScore++;
         }
       }
@@ -57,6 +59,20 @@ public class AnswerService {
       testPass.setStatus(TestPassStatus.PASSED);
       testPass.setTimeFinished(LocalDateTime.now());
       testPassDao.save(testPass);
+    }
+  }
+
+  private boolean CheckAnswer(String rightAnswer, String givenAnswer) {
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      JsonNode rightAnswerJson = mapper.readTree(rightAnswer);
+      JsonNode givenAnswerJson = mapper.readTree(givenAnswer);
+      if (rightAnswerJson.isEmpty() || givenAnswerJson.isEmpty()) {
+        return false;
+      }
+      return rightAnswerJson.equals(givenAnswerJson);
+    } catch (JsonProcessingException jpe) {
+      return false;
     }
   }
 
