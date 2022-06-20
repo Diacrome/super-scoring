@@ -68,16 +68,16 @@ public class QuestionService {
   }
 
   @Transactional
-  public Boolean addQuestion(Question newQuestion) {
+  public Boolean addQuestion(Question newQuestion) throws IllegalArgumentException{
     try {
       if (!JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
-        return false;
+        throw new IllegalArgumentException("Answer is not valid");
+      }
+      if (!JsonValidator.verifyPayload(newQuestion.getPayload(), newQuestion.getAnswerType())) {
+        throw new IllegalArgumentException("Payload is not valid");
       }
     } catch (JsonProcessingException e) {
-      return false;
-    }
-    if (!JsonValidator.verifyPayload(newQuestion.getPayload(), newQuestion.getAnswerType())) {
-      return false;
+      throw new IllegalArgumentException("Not correct JSON format");
     }
     Question question = new Question();
     question.setTestId(newQuestion.getTestId());
