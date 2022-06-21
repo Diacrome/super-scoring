@@ -68,7 +68,7 @@ public class QuestionService {
   }
 
   @Transactional
-  public Boolean addQuestion(Question newQuestion) throws IllegalArgumentException{
+  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException{
     try {
       if (!JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
         throw new IllegalArgumentException("Answer is not valid");
