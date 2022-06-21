@@ -24,6 +24,7 @@ import ru.hh.superscoring.dto.TestBoardDto;
 import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.exception.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.StatusService;
 import ru.hh.superscoring.service.TestPassService;
@@ -160,6 +161,8 @@ public class TestResource {
     }
     try {
       testService.switchOnTest(testId);
+    } catch (TestNoFilledException tnf) {
+      return Response.status(400).entity(tnf.getMessage()).build();
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }

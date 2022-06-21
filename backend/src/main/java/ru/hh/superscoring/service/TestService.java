@@ -2,18 +2,28 @@ package ru.hh.superscoring.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hh.superscoring.dao.QuestionDao;
+import ru.hh.superscoring.dao.QuestionDistributionDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.exception.TestNoFilledException;
 
 public class TestService {
 
   private final TestDao testDao;
+  private final QuestionDao questionDao;
+  private final QuestionDistributionDao questionDistributionDao;
 
-  public TestService(TestDao testDao) {
+  public TestService(TestDao testDao, QuestionDao questionDao, QuestionDistributionDao questionDistributionDao) {
     this.testDao = testDao;
+    this.questionDao = questionDao;
+    this.questionDistributionDao = questionDistributionDao;
   }
 
   public TestDto getTestById(Integer id) {
@@ -58,10 +68,29 @@ public class TestService {
   }
 
   @Transactional
-  public void switchOnTest(Integer testId) {
+  public void switchOnTest(Integer testId) throws TestNoFilledException {
     Test test = testDao.getTestById(testId);
+    validateTest(test);
     test.setIsActive(true);
     testDao.save(test);
+  }
+
+  private void validateTest(Test test) throws TestNoFilledException {
+    List<Question> activeQuestions = questionDao.getQuestionsForTest(test.getId());
+    if (activeQuestions.size() < test.getQuestionQuantity()) {
+      throw new TestNoFilledException("Not enough questions for the test");
+    }
+
+    List<QuestionDistribution> preassignedDistributions = questionDistributionDao.getAllQuestionDistributionsForTest(test.getId());
+
+    Map<Integer, Integer> realDistribution = activeQuestions.stream()
+        .collect(Collectors.toMap(Question::getWeight, value -> 1, Integer::sum));
+
+    for (QuestionDistribution questionDistribution : preassignedDistributions) {
+      if (questionDistribution.getQuestionCount() > realDistribution.getOrDefault(questionDistribution.getWeight(), 0)) {
+        throw new TestNoFilledException(questionDistribution.getWeight());
+      }
+    }
   }
 
   @Transactional(readOnly = true)
