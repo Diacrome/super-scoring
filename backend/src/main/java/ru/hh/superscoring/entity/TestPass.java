@@ -56,7 +56,29 @@ public class TestPass {
   @Enumerated(EnumType.STRING)
   private TestPassStatus status;
 
+  @Column(name = "total_score")
+  private Integer totalScore;
+
+  @Column(name = "qualification_name")
+  private String qualificationName;
+
   public TestPass() {
+  }
+
+  public Integer getTotalScore() {
+    return totalScore;
+  }
+
+  public void setTotalScore(Integer totalScore) {
+    this.totalScore = totalScore;
+  }
+
+  public String getQualificationName() {
+    return qualificationName;
+  }
+
+  public void setQualificationName(String qualificationName) {
+    this.qualificationName = qualificationName;
   }
 
   public TestPassStatus getStatus() {
