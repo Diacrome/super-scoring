@@ -9,14 +9,14 @@ public class AuthDao extends GenericDao {
     super(sessionFactory);
   }
 
-  public String getUserNameWithToken(String token) {
+  public String getUserNameByToken(String token) {
     return getSession()
         .createQuery("select u.name from User u join Token t on u.id = t.userId where t.token = :token and t.expireDate > now()", String.class)
         .setParameter("token", token)
         .getSingleResult();
   }
 
-  public Integer findUser(String login, String password) {
+  public Integer getUserIdByLoginAndPassword(String login, String password) {
     return getSession()
         .createQuery("select u.id from User u where u.login = :login and u.password = :password", Integer.class)
         .setParameter("login", login)
@@ -24,28 +24,28 @@ public class AuthDao extends GenericDao {
         .getSingleResult();
   }
 
-  public Integer getUserIdWithToken(String token) {
+  public Integer getUserIdByToken(String token) {
     return getSession()
         .createQuery("select userId from Token where token = :token", Integer.class)
         .setParameter("token", token)
         .uniqueResult();
   }
-  
-  public Integer findUserByLogin(String login) {
+  //ToDo: используется для получения id в одном случае и для проверки есть ли пользователь в другом, лучше сделать доп. метод checkUserExists, который будет возвращать true/false
+  public Integer getUserIdByLogin(String login) {
     return getSession()
         .createQuery("select u.id from User u where u.login = :login", Integer.class)
         .setParameter("login", login)
         .uniqueResult();
   }
 
-  public Role getRoleById(Integer userId){
+  public Role getUserRoleById(Integer userId){
     return getSession()
         .createQuery("select role from User where id = :userId", Role.class)
         .setParameter("userId", userId)
         .uniqueResult();
   }
 
-  public Role getRoleUserByTokenFromDataBase(String token) {
+  public Role getUserRoleByToken(String token) {
     return getSession()
         .createQuery("select u.role from User u where u.id = (select t.userId from Token t where t.token = :token)", Role.class)
         .setParameter("token",token)

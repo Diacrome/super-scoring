@@ -18,7 +18,7 @@ import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.dto.QuestionBoardDto;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.QuestionService;
-import ru.hh.superscoring.util.Role;
+import ru.hh.superscoring.util.AuthUtil;
 import java.util.List;
 
 @Tag(name = "Вопросы", description = "API для взаимодействия с вопросами")
@@ -42,10 +42,10 @@ public class QuestionResource {
   @Path("/inactive/{questionId}")
   public Response disableActiveQuestion(@PathParam("questionId") int questionId,
                                         @HeaderParam("authorization") String authorizationToken) {
-    Response response = checkAuthorization(authorizationToken);
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
     if (response.getStatus() == 201) {
       try {
-        questionService.setQuestionNotActive(questionId);
+        questionService.unactivateQuestionById(questionId);
       } catch (PropertyValueException pve) {
         return Response.status(400).entity("There is no question with such a QuestionId!").build();
       } catch (Exception e) {
@@ -62,10 +62,10 @@ public class QuestionResource {
                                          @HeaderParam("authorization") String authorizationToken,
                                          @QueryParam("page") @DefaultValue("0") Integer page,
                                          @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
-    Response response = checkAuthorization(authorizationToken);
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
     if (response.getStatus() == 201) {
       try {
-        List<Question> questions = questionService.getAllQuestionsForTest(testId, page, perPage);
+        List<Question> questions = questionService.getAllQuestionsByTestId(testId, page, perPage);
         return Response.ok(QuestionBoardDto.map(questions, page, perPage)).build();
       } catch (PropertyValueException pve) {
         return Response.status(400).entity("There is no question with such a testId!").build();
@@ -79,7 +79,7 @@ public class QuestionResource {
   public Response getAllQuestions(@HeaderParam("authorization") String authorizationToken,
                                   @QueryParam("page") @DefaultValue("0") Integer page,
                                   @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
-    Response response = checkAuthorization(authorizationToken);
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
     if (response.getStatus() == 201) {
       List<Question> questions = questionService.getAllQuestions(page, perPage);
       return Response.ok(QuestionBoardDto.map(questions, page, perPage)).build();
@@ -95,12 +95,12 @@ public class QuestionResource {
   ), @ApiResponse(responseCode = "403", description = "Недостаточно прав"
   ), @ApiResponse(responseCode = "400", description = "Ошибка при сохранении или указанный вопрос не найден")})
   @Path("/active/{questionId}")
-  public Response enableInactiveQuestion(@PathParam("questionId") int questionId,
-                                         @HeaderParam("authorization") String authorizationToken) {
-    Response response = checkAuthorization(authorizationToken);
+  public Response inactiveQuestionByQuestionId(@PathParam("questionId") int questionId,
+                                               @HeaderParam("authorization") String authorizationToken) {
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
     if (response.getStatus() == 201) {
       try {
-        questionService.setQuestionActive(questionId);
+        questionService.activateQuestionById(questionId);
       } catch (PropertyValueException pve) {
         return Response.status(400).entity("There is no question with such a QuestionId!").build();
       } catch (Exception e) {
@@ -111,19 +111,6 @@ public class QuestionResource {
     return response;
   }
 
-  private Response checkAuthorization(String authorizationToken) {
-    if (authorizationToken == null) {
-      return Response.status(401).entity("No token found!").build();
-    }
-    Role userRole = authService.getRoleByToken(authorizationToken);
-    if (userRole == null) {
-      return Response.status(404, "Invalid token!").build();
-    }
-    if (userRole != Role.ADMIN) {
-      return Response.status(403, "Role user is not ADMIN. Access denied!").build();
-    }
-    return Response.status(201).build();
-  }
 
   @POST
   @Operation(summary = "Добавление вопроса", description = "Создает новый вопрос")
@@ -133,15 +120,14 @@ public class QuestionResource {
   @Path("/add")
   @Consumes("application/json")
   public Response addQuestionToTest(Question question, @HeaderParam("authorization") String authorizationToken) {
-    Role role;
-    role = authService.getRoleByToken(authorizationToken);
-    if (role == Role.ADMIN) {
-      if (questionService.ifExistsTestFromQuestion(question) && questionService.addQuestion(question)) {
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      if (questionService.ifExistsTestFromQuestion(question) && questionService.addNewQuestion(question)) {
         return Response.status(201, "Question added").build();
       }
       return Response.status(404, "There is no such test in the system").build();
     }
-    return Response.status(403, "Access denied").build();
+    return response;
   }
 
 }

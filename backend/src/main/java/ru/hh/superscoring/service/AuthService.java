@@ -23,13 +23,13 @@ public class AuthService {
   }
 
   @Transactional(readOnly = true)
-  public String getUserWithToken(String token) {
-    return authDao.getUserNameWithToken(token);
+  public String getUserNameByToken(String token) {
+    return authDao.getUserNameByToken(token);
   }
 
   @Transactional(readOnly = true)
   public Integer checkAuthentication(String login, String password) {
-    return authDao.findUser(login, Hasher.hash(password));
+    return authDao.getUserIdByLoginAndPassword(login, Hasher.hash(password));
   }
 
   @Transactional(readOnly = true)
@@ -45,22 +45,22 @@ public class AuthService {
   }
 
   @Transactional(readOnly = true)
-  public Integer getUserIdWithToken(String token) {
-    return authDao.getUserIdWithToken(token);
+  public Integer getUserIdByToken(String token) {
+    return authDao.getUserIdByToken(token);
   }
 
   @Transactional(readOnly = true)
   public boolean isAdmin(Integer userId) {
-    return (authDao.getRoleById(userId) == Role.ADMIN);
+    return (authDao.getUserRoleById(userId) == Role.ADMIN);
   }
 
   @Transactional(readOnly = true)
-  public Integer checkAuthenticationByLogin(String login) {
-    return authDao.findUserByLogin(login);
+  public Integer getUserIdByLogin(String login) {
+    return authDao.getUserIdByLogin(login);
   }
 
   @Transactional(readOnly = true)
-  public void addUser(String login, String password, String name) {
+  public void addNewUser(String login, String password, String name) {
     User user = new User();
     user.setLogin(login);
     user.setPassword(Hasher.hash(password));
@@ -71,7 +71,7 @@ public class AuthService {
 
   @Transactional(readOnly = true)
   public Role getRoleByToken(String token) {
-    return authDao.getRoleUserByTokenFromDataBase(token);
+    return authDao.getUserRoleByToken(token);
   }
 
   @Transactional

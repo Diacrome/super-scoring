@@ -18,13 +18,13 @@ public class TestPassDao extends GenericDao {
     super(sessionFactory);
   }
 
-  public boolean isExistUnfinishedRecord(Integer userId) {
+  public boolean isThereUnfinishedTestPassRecord(Integer userId) {
     return getSession()
         .createQuery("select tp.id from TestPass tp where tp.userId = :user_id and tp.timeFinished is null and tp.status = 'PASS'", Integer.class)
         .setParameter("user_id", userId).setMaxResults(1).uniqueResult() != null;
   }
 
-  public Set<TestPassQuestion> getTestPassQuestionsByUser(Integer userId) {
+  public Set<TestPassQuestion> getTestPassUnansweredQuestionsByUserId(Integer userId) {
     return getSession()
         .createQuery("select q from TestPass tp join tp.questions q where tp.userId = :user_id and tp.timeFinished is null and tp.status = 'PASS' ", TestPassQuestion.class)
         .setParameter("user_id", userId)
@@ -32,7 +32,7 @@ public class TestPassDao extends GenericDao {
         .collect(Collectors.toSet());
   }
 
-  public List<LeaderDto> getLeaders(Integer testId, Integer page, Integer perPage) {
+  public List<LeaderDto> getLeadersByTestId(Integer testId, Integer page, Integer perPage) {
     return getSession()
         .createQuery("select new ru.hh.superscoring.dto.LeaderDto(u.name, max(tp.finalScore)) " +
             "from TestPass as tp join User as u ON tp.userId = u.id " +
@@ -45,14 +45,14 @@ public class TestPassDao extends GenericDao {
         .getResultList();
   }
 
-  public Long countLeadersForTest(Integer testId) {
+  public Long countUsersWhoPassedTest(Integer testId) {
     return getSession()
         .createQuery("select count(distinct tp.userId)  from TestPass as tp where tp.testId = :test_id and tp.finalScore is not null ", Long.class)
         .setParameter("test_id", testId)
         .getSingleResult();
   }
 
-  public Integer getTestPassByUserId(Integer userId) {
+  public Integer getUnfinishedTestPassIdByUserId(Integer userId) {
     return getSession()
         .createQuery("select r.id from TestPass r where r.userId = :user_id and r.timeFinished is null and r.status = 'PASS'", Integer.class)
         .setParameter("user_id", userId)
@@ -67,14 +67,14 @@ public class TestPassDao extends GenericDao {
         .uniqueResult();
   }
 
-  public LocalDateTime getStartTime(Integer testPassId) {
+  public LocalDateTime getTestPassStartTimeByTestPassId(Integer testPassId) {
     return getSession()
         .createQuery("SELECT t.timeStarted FROM TestPass t WHERE t.id = :id", LocalDateTime.class)
         .setParameter("id", testPassId)
         .getSingleResult();
   }
 
-  public int getTestId(Integer testPassId) {
+  public int getTestIdByTestPassId(Integer testPassId) {
     return getSession()
         .createQuery("SELECT testId FROM TestPass WHERE id = :id", Integer.class)
         .setParameter("id", testPassId)
@@ -95,7 +95,7 @@ public class TestPassDao extends GenericDao {
     getSession().createQuery(query).executeUpdate();
   }
 
-  public TestPassStatus getStatus(Integer testPassId) {
+  public TestPassStatus getTestPassStatusByTestPassId(Integer testPassId) {
     return getSession()
         .createQuery("SELECT status FROM TestPass WHERE id = :id", TestPassStatus.class)
         .setParameter("id", testPassId)

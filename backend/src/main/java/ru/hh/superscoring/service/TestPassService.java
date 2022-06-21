@@ -24,16 +24,16 @@ public class TestPassService {
 
   @Transactional
   public boolean startTest(Integer testId, Integer userId) {
-    List<Question> questionsForStart = questionService.getQuestionsForStart(testId);
+    List<Question> questionsForStart = questionService.getGeneratedQuestionsForTest(testId);
     if (questionsForStart.isEmpty()) {
       throw new HibernateException("Not enough questions for the test");
     }
-    if (!testPassDao.isExistUnfinishedRecord(userId)) {
+    if (!testPassDao.isThereUnfinishedTestPassRecord(userId)) {
       TestPass testPass = new TestPass();
       testPass.setTestId(testId);
       testPass.setUserId(userId);
       testPass.setStatus(TestPassStatus.PASS);
-      testPass.setQuestions(questionService.getQuestionsForStart(testId));
+      testPass.setQuestions(questionService.getGeneratedQuestionsForTest(testId));
       testPassDao.save(testPass);
       return true;
     }
@@ -41,21 +41,21 @@ public class TestPassService {
   }
 
   @Transactional(readOnly = true)
-  public Set<TestPassQuestion> getUnfinishedPassQuestions(Integer userId) {
-    if (testPassDao.isExistUnfinishedRecord(userId)) {
-      return testPassDao.getTestPassQuestionsByUser(userId);
+  public Set<TestPassQuestion> getUnfinishedTestPassQuestions(Integer userId) {
+    if (testPassDao.isThereUnfinishedTestPassRecord(userId)) {
+      return testPassDao.getTestPassUnansweredQuestionsByUserId(userId);
     }
     return Set.of();
   }
 
   @Transactional(readOnly = true)
-  public LeaderBoardDto getLeaders(Integer testId, Integer page, Integer perPage) {
-    return LeaderBoardDto.map(testPassDao.getLeaders(testId, page, perPage), page, perPage, testPassDao.countLeadersForTest(testId));
+  public LeaderBoardDto getLeadersByTestId(Integer testId, Integer page, Integer perPage) {
+    return LeaderBoardDto.map(testPassDao.getLeadersByTestId(testId, page, perPage), page, perPage, testPassDao.countUsersWhoPassedTest(testId));
   }
 
   @Transactional
-  public void cancelTestPassByUserId(Integer userId) {
-    Integer testPassId = testPassDao.getTestPassByUserId(userId);
+  public void cancelUnfinishedTestPassByUserId(Integer userId) {
+    Integer testPassId = testPassDao.getUnfinishedTestPassIdByUserId(userId);
     if (testPassId == null) {
       throw (new PropertyValueException("No testPass for such user!", "testPassDao", "userId"));
     }

@@ -26,11 +26,11 @@ public class TestService {
 
 
   public Integer getTestSizeById(Integer testId) {
-    return testDao.getTestSize(testId);
+    return testDao.getTestSizeById(testId);
   }
 
   @Transactional
-  public Integer saveTest(String name, String description, Integer creatorId, Integer questionCount) {
+  public Integer saveNewTest(String name, String description, Integer creatorId, Integer questionCount) {
     Test test = new Test();
     test.setName(name);
     test.setDescription(description);
@@ -45,20 +45,20 @@ public class TestService {
   }
 
   @Transactional(readOnly = true)
-  public boolean isExistActiveTest(Integer testId) {
-    Boolean testState = testDao.isExistActiveTest(testId);
+  public boolean isTestActive(Integer testId) {
+    Boolean testState = testDao.isTestActive(testId);
     return testState != null && testState;
   }
 
   @Transactional
-  public void switchOffTest(Integer testId) {
+  public void inactivateTestById(Integer testId) {
     Test test = testDao.getTestById(testId);
     test.setIsActive(false);
     testDao.save(test);
   }
 
   @Transactional
-  public void switchOnTest(Integer testId) {
+  public void activateTestById(Integer testId) {
     Test test = testDao.getTestById(testId);
     test.setIsActive(true);
     testDao.save(test);

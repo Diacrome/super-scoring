@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
 import ru.hh.superscoring.service.AnswerService;
 import ru.hh.superscoring.service.AuthService;
+import ru.hh.superscoring.util.AuthUtil;
 
 @Tag(name = "Ответы", description = "API для взаимодействия с ответами")
 @Path("/answer")
@@ -37,23 +38,21 @@ public class AnswerResource {
                              @FormParam("answer") String answer,
                              @HeaderParam("authorization") String authorizationToken
   ) {
-    if (authorizationToken == null) {
-      return Response.status(401).entity("No token found!").build();
-    }
-    Integer userId = authService.getUserIdWithToken(authorizationToken);
-    if (userId == null) {
-      return Response.status(404, "Invalid token!").build();
-    }
-    try {
-      if (!answerService.validateAnswer(answer, userId, question)) {
-        return Response.status(400).entity("Answer format does not match the question").build();
+    Response response = AuthUtil.checkForUserRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      Integer userId = authService.getUserIdByToken(authorizationToken);
+      try {
+        if (!answerService.validateAnswer(answer, userId, question)) {
+          return Response.status(400).entity("Answer format does not match the question").build();
+        }
+        answerService.saveAnswer(userId, question, answer);
+      } catch (HibernateException he) {
+        return Response.status(400).entity(he.getMessage()).build();
+      } catch (Exception e) {
+        return Response.status(400).entity("Unable to save answer!").build();
       }
-      answerService.saveAnswer(userId, question, answer);
-    } catch (HibernateException he) {
-      return Response.status(400).entity(he.getMessage()).build();
-    } catch (Exception e) {
-      return Response.status(400).entity("Unable to save answer!").build();
+      return Response.status(201).entity("Created").build();
     }
-    return Response.status(201).entity("Created").build();
+    return response;
   }
 }

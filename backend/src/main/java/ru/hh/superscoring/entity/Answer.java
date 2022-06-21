@@ -21,7 +21,7 @@ public class Answer {
   private Integer testPass;
 
   @Column(name = "question_order")
-  private Integer question;
+  private Integer questionOrder;
 
   @Column(name = "answer")
   private String answer;
@@ -41,12 +41,12 @@ public class Answer {
     this.testPass = testPassRecord;
   }
 
-  public Integer getQuestion(){
-    return question;
+  public Integer getQuestionOrder(){
+    return questionOrder;
   }
 
-  public void setQuestion(Integer question){
-    this.question = question;
+  public void setQuestionOrder(Integer question){
+    this.questionOrder = question;
   }
 
   public String getAnswer(){

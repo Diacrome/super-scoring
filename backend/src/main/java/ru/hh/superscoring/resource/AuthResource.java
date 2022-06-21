@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.service.AuthService;
+import ru.hh.superscoring.util.AuthUtil;
 
 @Tag(name = "Авторизация", description = "API отвечающие за авторизацию и аутентификацию пользователя")
 @Path("/auth")
@@ -42,7 +43,7 @@ public class AuthResource {
   public Response getUserByToken(@HeaderParam("authorization") String authorizationToken) {
     String userName;
     try {
-      userName = authService.getUserWithToken(authorizationToken);
+      userName = authService.getUserNameByToken(authorizationToken);
     } catch (NoResultException e) {
       return Response.status(404, "Invalid token").build();
     } catch (Exception e) {
@@ -84,8 +85,8 @@ public class AuthResource {
   @Produces("application/json")
   public Response addNewUser(@FormParam("login") String login, @FormParam("password") String password,
                              @FormParam("name") String name) {
-    if (authService.checkAuthenticationByLogin(login) == null) {
-      authService.addUser(login, password, name);
+    if (authService.getUserIdByLogin(login) == null) {
+      authService.addNewUser(login, password, name);
       return Response.status(201, "User added").build();
     }
     return Response.status(401, "User already exists in the system").build();
@@ -100,27 +101,20 @@ public class AuthResource {
   @Path("/set-admin")
   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
   public Response setAdminRights(@FormParam("login") String login,
-                                 @HeaderParam("authorization") String token) {
-    if (token == null) {
-      return Response.status(404, "Invalid token!").build();
+                                 @HeaderParam("authorization") String authorizationToken) {
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      Integer newAdminId = authService.getUserIdByLogin(login);
+      if (newAdminId == null) {
+        return Response.status(400).build();
+      }
+      try {
+        authService.setAdmin(newAdminId);
+      } catch (Exception e) {
+        return Response.status(400).build();
+      }
+      return Response.status(201, "created").build();
     }
-    Integer currentUserId = authService.getUserIdWithToken(token);
-    if (currentUserId == null) {
-      return Response.status(404, "Invalid token!").build();
-    }
-    boolean isUserAdmin = authService.isAdmin(currentUserId);
-    if (!isUserAdmin) {
-      return Response.status(403, "Admin rights required").build();
-    }
-    Integer newAdminId = authService.checkAuthenticationByLogin(login);
-    if (newAdminId == null) {
-      return Response.status(400).build();
-    }
-    try {
-      authService.setAdmin(newAdminId);
-    } catch (Exception e) {
-      return Response.status(400).build();
-    }
-    return Response.status(201, "created").build();
+    return response;
   }
 }

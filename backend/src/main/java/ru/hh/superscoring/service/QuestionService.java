@@ -19,9 +19,9 @@ public class QuestionService {
     this.questionDao = questionDao;
     this.testService = testService;
   }
-
-  public List<Question> getQuestionsForStart(Integer testId) {
-    List<Question> allQuestions = questionDao.getQuestionsForTest(testId);
+  //ToDo: @Transactional?
+  public List<Question> getGeneratedQuestionsForTest(Integer testId) {
+    List<Question> allQuestions = questionDao.getAllActiveQuestionsByTestId(testId);
     Integer testSize = testService.getTestSizeById(testId);
     if (allQuestions.size() < testSize) {
       return List.of();
@@ -31,7 +31,7 @@ public class QuestionService {
   }
 
   @Transactional
-  public void setQuestionNotActive(Integer questionId) {
+  public void unactivateQuestionById(Integer questionId) {
     Question question = questionDao.get(Question.class, questionId);
     if (question == null) {
       throw (new PropertyValueException("There is no question with such a QuestionId", "QuestionDao", "questionId"));
@@ -41,8 +41,8 @@ public class QuestionService {
   }
 
   @Transactional
-  public List<Question> getAllQuestionsForTest(Integer testId, int page, int perPage) {
-    return questionDao.getAllQuestionsForTest(testId, page, perPage);
+  public List<Question> getAllQuestionsByTestId(Integer testId, int page, int perPage) {
+    return questionDao.getAllQuestionsByTestId(testId, page, perPage);
   }
 
   @Transactional
@@ -51,7 +51,7 @@ public class QuestionService {
   }
 
   @Transactional
-  public void setQuestionActive(Integer questionId) {
+  public void activateQuestionById(Integer questionId) {
     Question question = questionDao.get(Question.class, questionId);
     if (question == null) {
       throw (new PropertyValueException("There is no question with such a QuestionId", "QuestionDao", "questionId"));
@@ -60,15 +60,16 @@ public class QuestionService {
     questionDao.save(question);
   }
 
+  //ToDo: возможно лучше просто проверять существует ли тест с таким id, достаточно специфичный метод
   @Transactional(readOnly = true)
   public Boolean ifExistsTestFromQuestion(Question question) {
-    if (testService.isExistActiveTest(question.getTestId()))
+    if (testService.isTestActive(question.getTestId()))
       return true;
     return false;
   }
 
   @Transactional
-  public Boolean addQuestion(Question newQuestion) {
+  public Boolean addNewQuestion(Question newQuestion) {
     try {
       if (JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
         return false;

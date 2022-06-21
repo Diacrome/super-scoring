@@ -26,6 +26,7 @@ import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.StatusService;
 import ru.hh.superscoring.service.TestService;
+import ru.hh.superscoring.util.AuthUtil;
 
 @Tag(name = "Тесты", description = "API для взаимодействия с тестами")
 @Path("/test")
@@ -41,6 +42,7 @@ public class TestResource {
     this.authService = authService;
   }
 
+  //ToDo: кто угодно может сделать запрос?
   @GET
   @Operation(summary = "Информация о тесте по id",
       description = "Получение начальных сведений о тесте по id")
@@ -71,11 +73,12 @@ public class TestResource {
   )})
   @Path("/status")
   @Produces("application/json")
-  public Response getStatus(@HeaderParam("authorization") String token) {
-    if (token == null) {
-      return Response.status(401).entity("No token found").build();
+  public Response getStatus(@HeaderParam("authorization") String authorizationToken) {
+    Response response = AuthUtil.checkForUserRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      return Response.status(200).entity(statusService.getStatusByToken(authorizationToken)).build();
     }
-    return Response.status(200).entity(statusService.getStatus(token)).build();
+    return response;
   }
 
   @POST
@@ -93,21 +96,18 @@ public class TestResource {
                              @FormParam("description") String description,
                              @FormParam("questionCount") Integer questionCount,
                              @HeaderParam("authorization") String authorizationToken) {
-    Integer userId = authService.getUserIdWithToken(authorizationToken);
-    if (userId == null) {
-      return Response.status(404, "Invalid token!").build();
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      Integer userId = authService.getUserIdByToken(authorizationToken);
+      Integer savedId;
+      try {
+        savedId = testService.saveNewTest(name, description, userId, questionCount);
+      } catch (Exception e) {
+        return Response.status(400).entity("Unable to save test!").build();
+      }
+      return Response.status(201).entity(savedId).build();
     }
-    boolean isUserAdmin = authService.isAdmin(userId);
-    if (!isUserAdmin) {
-      return Response.status(403, "Admin rights required").build();
-    }
-    Integer savedId;
-    try {
-      savedId = testService.saveTest(name, description, userId, questionCount);
-    } catch (Exception e) {
-      return Response.status(400).entity("Unable to save test!").build();
-    }
-    return Response.status(201).entity(savedId).build();
+    return response;
   }
 
   @POST
@@ -120,20 +120,16 @@ public class TestResource {
   @Produces("application/json")
   public Response inactivateTest(@PathParam("id") Integer testId,
                                  @HeaderParam("authorization") String authorizationToken) {
-    Integer userId = authService.getUserIdWithToken(authorizationToken);
-    if (userId == null) {
-      return Response.status(404, "Invalid token!").build();
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      try {
+        testService.inactivateTestById(testId);
+      } catch (Exception e) {
+        return Response.status(400).entity("Unable to save test!").build();
+      }
+      return Response.status(201).build(); //ToDo: Без сообщения
     }
-    boolean isUserAdmin = authService.isAdmin(userId);
-    if (!isUserAdmin) {
-      return Response.status(403, "Admin rights required").build();
-    }
-    try {
-      testService.switchOffTest(testId);
-    } catch (Exception e) {
-      return Response.status(400).entity("Unable to save test!").build();
-    }
-    return Response.status(201).build();
+    return response;
   }
 
   @POST
@@ -146,20 +142,16 @@ public class TestResource {
   @Produces("application/json")
   public Response activateTest(@PathParam("id") Integer testId,
                                @HeaderParam("authorization") String authorizationToken) {
-    Integer userId = authService.getUserIdWithToken(authorizationToken);
-    if (userId == null) {
-      return Response.status(404, "Invalid token!").build();
+    Response response = AuthUtil.checkForAdminRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      try {
+        testService.activateTestById(testId);
+      } catch (Exception e) {
+        return Response.status(400).entity("Unable to save test!").build();
+      }
+      return Response.status(201).build();
     }
-    boolean isUserAdmin = authService.isAdmin(userId);
-    if (!isUserAdmin) {
-      return Response.status(403, "Admin rights required").build();
-    }
-    try {
-      testService.switchOnTest(testId);
-    } catch (Exception e) {
-      return Response.status(400).entity("Unable to save test!").build();
-    }
-    return Response.status(201).build();
+    return response;
   }
 
   @GET
@@ -168,18 +160,11 @@ public class TestResource {
   public Response getAllTests(@HeaderParam("authorization") String authorizationToken,
                               @QueryParam("page") @DefaultValue("0") Integer page,
                               @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
-    if (authorizationToken == null) {
-      return Response.status(401).entity("No token found!").build();
+    Response response = AuthUtil.checkForUserRightsByToken(authService, authorizationToken);
+    if (response.getStatus() == 201) {
+      List<Test> tests = testService.getAllTests(page, perPage);
+      return Response.ok(TestBoardDto.map(tests, page, perPage)).build();
     }
-    Integer userId = authService.getUserIdWithToken(authorizationToken);
-    if (userId == null) {
-      return Response.status(404, "Invalid token!").build();
-    }
-    boolean isUserAdmin = authService.isAdmin(userId);
-    if (!isUserAdmin) {
-      return Response.status(403, "Admin rights required!").build();
-    }
-    List<Test> tests = testService.getAllTests(page, perPage);
-    return Response.ok(TestBoardDto.map(tests, page, perPage)).build();
+    return response;
   }
 }

@@ -13,8 +13,8 @@ public class AnswerDao extends GenericDao {
     super(sessionFactory);
   }
 
-  public List<Integer> getSequenceNumbersOfAnsweredQuestions(int testPassId) {
-    String sqlQuery = "SELECT question " +
+  public List<Integer> getAnsweredQuestionOrderList(int testPassId) {
+    String sqlQuery = "SELECT questionOrder " +
         "FROM Answer                   " +
         "WHERE testPass = :id ";
     return getSession()
@@ -23,9 +23,9 @@ public class AnswerDao extends GenericDao {
         .getResultList();
   }
 
-  public List<Answer> getListAnswerByTestPassId(Integer testPassId) {
+  public List<Answer> getAnswerListByTestPassId(Integer testPassId) {
     return new ArrayList<>(getSession()
-        .createQuery("select a from Answer a where a.testPass = :test_pass_id order by a.question", Answer.class)
+        .createQuery("select a from Answer a where a.testPass = :test_pass_id order by a.questionOrder", Answer.class)
         .setParameter("test_pass_id", testPassId)
         .getResultList());
   }

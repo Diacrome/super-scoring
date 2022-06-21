@@ -26,16 +26,16 @@ public class AnswerService {
     this.testPassDao = testPassDao;
     this.testDao = testDao;
   }
-
+  //ToDo: Теоретически сюда могут передать не существующий Id пользователя
   @Transactional
   public void saveAnswer(Integer userId, Integer questionOrder, String answerText) {
-    Integer testPassId = testPassDao.getTestPassByUserId(userId);
+    Integer testPassId = testPassDao.getUnfinishedTestPassIdByUserId(userId);
     if (testPassId == null) {
       throw (new PropertyValueException("No testPass for such user!", "AnswerDao", "userId"));
     }
     Answer answer = new Answer();
     answer.setTestPass(testPassId);
-    answer.setQuestion(questionOrder);
+    answer.setQuestionOrder(questionOrder);
     answer.setAnswer(answerText);
     answer.setTimeAnswer(LocalDateTime.now());
     answerDao.save(answer);
@@ -43,7 +43,7 @@ public class AnswerService {
   }
 
   private void checkAndSetResultForTestPass(Integer testPassId) {
-    List<Answer> arrayAnswerByTestPass = answerDao.getListAnswerByTestPassId(testPassId);
+    List<Answer> arrayAnswerByTestPass = answerDao.getAnswerListByTestPassId(testPassId);
     if (testDao.getTestSizeByTestPassId(testPassId) == arrayAnswerByTestPass.size()) {
       TestPass testPass = testPassDao.getTestPassByTestPassId(testPassId);
       Integer finalScore = 0;
@@ -59,7 +59,7 @@ public class AnswerService {
       testPassDao.save(testPass);
     }
   }
-
+  //ToDo: нужно ли доп. обрабатывать случай, когда такого пользователя не существует?
   @Transactional(readOnly = true)
   public boolean validateAnswer(String answer, Integer userId, Integer questionIdOrder) throws JsonProcessingException, PropertyValueException {
     Question question = testPassDao.getQuestionByQuestionIdOrderForUser(userId, questionIdOrder);

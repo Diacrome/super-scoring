@@ -10,16 +10,16 @@ public class QuestionDao extends GenericDao {
   protected QuestionDao(SessionFactory sessionFactory) {
     super(sessionFactory);
   }
-
+  //ToDo: баг убрать transactional?
   @Transactional(readOnly = true)
-  public List<Question> getQuestionsForTest(Integer testId) {
+  public List<Question> getAllActiveQuestionsByTestId(Integer testId) {
     return getSession()
         .createQuery("select q from Question q where q.testId = :id and q.active = true", Question.class)
         .setParameter("id", testId)
         .getResultList();
   }
 
-  public List<Question> getAllQuestionsForTest(Integer testId, int page, int perPage) {
+  public List<Question> getAllQuestionsByTestId(Integer testId, int page, int perPage) {
     return getSession()
         .createQuery("select q from Question q where q.testId = :id " +
             "order by q.id asc", Question.class)

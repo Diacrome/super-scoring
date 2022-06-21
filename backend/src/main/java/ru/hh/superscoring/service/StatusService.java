@@ -25,9 +25,9 @@ public class StatusService {
   }
 
   @Transactional(readOnly = true)
-  public StatusDto getStatus(String token) {
+  public StatusDto getStatusByToken(String token) {
     boolean authorized = true;
-    Integer userId = authService.getUserIdWithToken(token);
+    Integer userId = authService.getUserIdByToken(token);
     if (userId == null) {
       authorized = false;
     }
@@ -36,18 +36,18 @@ public class StatusService {
     if (!authorized) {
       statusDto.setCurrentPass(null);
     } else {
-      statusDto.setCurrentPass(getCurrentPass(userId));
+      statusDto.setCurrentPass(getCurrentTestPass(userId));
     }
     return statusDto;
   }
 
   @Transactional(readOnly = true)
-  public StatusDto.CurrentPass getCurrentPass(int userId) {
-    Integer testPassId = testPassDao.getTestPassByUserId(userId);
+  public StatusDto.CurrentPass getCurrentTestPass(int userId) {
+    Integer testPassId = testPassDao.getUnfinishedTestPassIdByUserId(userId);
     if (testPassId == null) {
       return null;
     }
-    List<Integer> answeredQuestions = answerDao.getSequenceNumbersOfAnsweredQuestions(testPassId);
+    List<Integer> answeredQuestions = answerDao.getAnsweredQuestionOrderList(testPassId);
     Map<Integer, Boolean> questions = new HashMap<>();
     final Integer NumberOfQuestions = testDao.getTestSizeByTestPassId(testPassId);
     for (int i = 1; i <= NumberOfQuestions; i++) {
@@ -55,9 +55,9 @@ public class StatusService {
     }
     StatusDto.CurrentPass currentPass = new StatusDto.CurrentPass();
     currentPass.setAnsweredQuestions(questions);
-    currentPass.setStatus(testPassDao.getStatus(testPassId));
-    currentPass.setTestId(testPassDao.getTestId(testPassId));
-    currentPass.setStartTime(testPassDao.getStartTime(testPassId));
+    currentPass.setStatus(testPassDao.getTestPassStatusByTestPassId(testPassId));
+    currentPass.setTestId(testPassDao.getTestIdByTestPassId(testPassId));
+    currentPass.setStartTime(testPassDao.getTestPassStartTimeByTestPassId(testPassId));
     return currentPass;
   }
 }
