@@ -53,19 +53,19 @@ public class AnswerService {
     if (testDao.getTestSizeByTestPassId(testPassId) == arrayAnswerByTestPass.size()) {
       TestPass testPass = testPassDao.getTestPassByTestPassId(testPassId);
       Integer finalScore = 0;
-      Integer totalScore = 0;
+      Integer maxPossible = 0;
       for (TestPassQuestion testPassQuestion : testPass.getQuestions()) {
         if (testPassQuestion.getQuestion().getAnswer().equals(
             arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
           finalScore++;
         }
-        totalScore += testPassQuestion.getQuestion().getWeight();
+        maxPossible += testPassQuestion.getQuestion().getWeight();
       }
       testPass.setFinalScore(finalScore);
       testPass.setStatus(TestPassStatus.PASSED);
       testPass.setTimeFinished(LocalDateTime.now());
-      testPass.setTotalScore(totalScore);
-      testPass.setQualificationName(qualificationCalculation(finalScore, totalScore, testPass.getTestId()));
+      testPass.setTotalScore(maxPossible);
+      testPass.setQualificationName(qualificationCalculation(finalScore, maxPossible, testPass.getTestId()));
       testPassDao.save(testPass);
     }
   }
@@ -79,18 +79,18 @@ public class AnswerService {
     return JsonValidator.verifyAnswer(answer, question.getPayload(), question.getAnswerType());
   }
 
-  private String qualificationCalculation(Integer finalScore, Integer totalScore, Integer testId) {
+  private String qualificationCalculation(Integer finalScore, Integer maxPossible, Integer testId) {
     List<String> qualificationNames = qualificationDao.getTestQualification(testId);
-    double step = (double) ONE_HUNDRED_PERCENT / (qualificationNames.size() + 1);
-    double result = (double) finalScore / totalScore;
-    if (result < step) {
+    double percentStep = (double) ONE_HUNDRED_PERCENT / (qualificationNames.size() + 1);
+    double percentResult = (double) finalScore / maxPossible;
+    if (percentResult < percentStep) {
       return "No qualification";
     }
-    if ((result <= 1.0) && (result > 1.0 - step)) {
+    if ((percentResult <= 1.0) && (percentResult > 1.0 - percentStep)) {
       return qualificationNames.get(0);
     }
     int index = 0;
-    for (double stepNumber = step; stepNumber <= result; stepNumber += step) {
+    for (double stepNumber = percentStep; stepNumber <= percentResult; stepNumber += percentStep) {
       index++;
     }
     return qualificationNames.get(qualificationNames.size() - index);
