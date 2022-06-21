@@ -84,9 +84,9 @@ public class AnswerService {
     double percentStep = (double) ONE_HUNDRED_PERCENT / (qualificationNames.size() + 1);
     double percentResult = (double) finalScore / maxPossible;
     if (percentResult < percentStep) {
-      return "No qualification";
+      return "Not qualified";
     }
-    if ((percentResult <= 1.0) && (percentResult > 1.0 - percentStep)) {
+    if ((percentResult <= 1.0) && (percentResult > (1.0 - percentStep))) {
       return qualificationNames.get(0);
     }
     int index = 0;
