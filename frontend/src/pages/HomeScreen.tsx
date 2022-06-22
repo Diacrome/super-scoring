@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button/Button";
 import { useAppDispatch } from "../hooks/useAppDispatch";
 import { updateDefaultToken } from "../functions/updateDefaultToken";
+import { useAppSelector } from "../hooks/useAppSelector";
+import { Role } from "../types/status";
 
 const HomeScreen: FC = () => {
+  const { role } = useAppSelector((state) => state.status);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -17,11 +20,24 @@ const HomeScreen: FC = () => {
     dispatch(fetchStatus());
   };
 
+  const goToAdminScreen = () => {
+    const token = localStorage.getItem("Authorization");
+    document.cookie = `Authorization=${token}`;
+    window.location.href = "http://localhost:8000/admin";
+  };
+
   return (
     <>
       <div className="navbar">
-        <div className="navbar-logout">
-          <Button onClick={logout}>Выйти</Button>
+        <div className="navbar-buttons">
+          {role === Role.Admin && (
+            <div className="navbar-btn">
+              <Button onClick={goToAdminScreen}>Админка</Button>
+            </div>
+          )}
+          <div className="navbar-btn">
+            <Button onClick={logout}>Выйти</Button>
+          </div>
         </div>
       </div>
       <div className="test-catalog">

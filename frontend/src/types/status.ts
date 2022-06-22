@@ -1,7 +1,13 @@
 export interface StatusState {
   loading: boolean;
   authorized: boolean;
+  role: Role | null;
   currentPass: CurrentPass | null;
+}
+
+export enum Role {
+  Admin = "ADMIN",
+  User = "USER",
 }
 
 export interface CurrentPass {
@@ -32,6 +38,7 @@ interface FetchStatusSuccessAction {
   type: StatusActionType.FetchStatusSuccess;
   payload: {
     authorized: boolean;
+    role: Role;
     currentPass: CurrentPass | null;
   };
 }
