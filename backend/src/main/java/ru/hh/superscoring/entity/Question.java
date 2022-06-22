@@ -53,7 +53,18 @@ public class Question {
   @Column(name = "active")
   private Boolean active;
 
+  @Column(name = "weight")
+  private Integer weight;
+
   public Question() {
+  }
+
+  public Integer getWeight() {
+    return weight;
+  }
+
+  public void setWeight(Integer weight) {
+    this.weight = weight;
   }
 
   public Boolean getActive() {

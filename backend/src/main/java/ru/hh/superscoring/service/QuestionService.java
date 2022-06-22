@@ -62,20 +62,17 @@ public class QuestionService {
     List<Question> finalQuestions = new ArrayList<Question>();
 
     for (QuestionDistribution distribution : distributions) {
-      int distributionQuestionCountLeft = distribution.getQuestionCount();
-      int checkEndOfQuestions = 0;
-      while (distributionQuestionCountLeft > 0) {
-        Question question = questions.get((int) (Math.random() * distribution.getQuestionCount()));
-        if (question.getWeight() == distribution.getWeight() && !finalQuestions.contains(question)) {
-          finalQuestions.add(question);
-          distributionQuestionCountLeft--;
-        } else {
-          checkEndOfQuestions++;
-        }
-        if (checkEndOfQuestions > questions.size() * 2) {
-          return List.of();
+      List<Question> tempListQuestions = new ArrayList<Question>();
+      for (Question question : questions) {
+        if (question.getWeight() == distribution.getWeight()) {
+          tempListQuestions.add(question);
         }
       }
+      if (tempListQuestions.size() < distribution.getQuestionCount()) {
+        return List.of();
+      }
+      Collections.shuffle(tempListQuestions);
+      finalQuestions.addAll(tempListQuestions.subList(0, distribution.getQuestionCount()));
     }
     return finalQuestions;
   }
