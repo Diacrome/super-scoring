@@ -255,6 +255,7 @@ Connection.
 ```json
 {
   "authorized": true,
+  "role": "ADMIN",
   "currentPass": {
     "answeredQuestions": {
       "1": true,
