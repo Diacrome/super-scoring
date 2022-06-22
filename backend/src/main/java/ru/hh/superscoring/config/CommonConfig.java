@@ -20,6 +20,8 @@ import ru.hh.superscoring.resource.HelloResource;
 import ru.hh.superscoring.resource.QuestionResource;
 import ru.hh.superscoring.resource.TestResource;
 import ru.hh.superscoring.dao.QuestionDao;
+import ru.hh.superscoring.dao.QuestionDistributionDao;
+import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
@@ -52,6 +54,8 @@ import ru.hh.superscoring.service.TestService;
     QualificationDao.class,
     Qualification.class,
     QuestionDao.class,
+    QuestionDistribution.class,
+    QuestionDistributionDao.class,
     TestPass.class,
     TestPassService.class,
     TestPassDao.class,
@@ -75,6 +79,7 @@ public class CommonConfig {
     return new MappingConfig(Question.class,
         TestPass.class,
         Test.class,
+        QuestionDistribution.class,
         User.class,
         Token.class,
         Answer.class,
