@@ -22,9 +22,11 @@ import javax.ws.rs.core.Response;
 import ru.hh.superscoring.dto.StatusDto;
 import ru.hh.superscoring.dto.TestBoardDto;
 import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.StatusService;
+import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;
 
 @Tag(name = "Тесты", description = "API для взаимодействия с тестами")
@@ -34,11 +36,13 @@ public class TestResource {
   private final TestService testService;
   private final StatusService statusService;
   private final AuthService authService;
+  private final TestPassService testPassService;
 
-  public TestResource(TestService testService, StatusService statusService, AuthService authService) {
+  public TestResource(TestService testService, StatusService statusService, AuthService authService, TestPassService testPassService) {
     this.testService = testService;
     this.statusService = statusService;
     this.authService = authService;
+    this.testPassService = testPassService;
   }
 
   @GET
@@ -181,5 +185,17 @@ public class TestResource {
     }
     List<Test> tests = testService.getAllTests(page, perPage);
     return Response.ok(TestBoardDto.map(tests, page, perPage)).build();
+  }
+
+  @GET
+  @Path("/results/{pass_id}")
+  @Produces("application/json")
+  public Response getTestPassResults(@PathParam("pass_id") int testPassId) {
+    TestPassDto testPassDto = testPassService.getTestPassById(testPassId);
+    if (testPassDto != null) {
+      return Response.status(201).entity(testPassDto).build();
+    } else {
+      return Response.status(404, "There is no such 'TestPass' in the system").build();
+    }
   }
 }

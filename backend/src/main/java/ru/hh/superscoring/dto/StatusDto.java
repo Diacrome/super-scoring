@@ -32,6 +32,15 @@ public class StatusDto {
     private LocalDateTime startTime;
     private int testId;
     private TestPassStatus status;
+    private int testPassId;
+
+    public int getTestPassId() {
+      return testPassId;
+    }
+
+    public void setTestPassId(int testPassId) {
+      this.testPassId = testPassId;
+    }
 
     public TestPassStatus getStatus() {
       return status;
