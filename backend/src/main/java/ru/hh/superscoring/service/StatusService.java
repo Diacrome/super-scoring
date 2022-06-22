@@ -37,6 +37,7 @@ public class StatusService {
       statusDto.setCurrentPass(null);
     } else {
       statusDto.setCurrentPass(getCurrentPass(userId));
+      statusDto.setRole(authService.getRoleByToken(token));
     }
     return statusDto;
   }
