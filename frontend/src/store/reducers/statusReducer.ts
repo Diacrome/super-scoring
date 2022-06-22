@@ -4,11 +4,10 @@ import {
   StatusState,
 } from "../../types/status";
 
-const authLocalStorage = Boolean(localStorage.getItem("authorized"));
-
 const initialState: StatusState = {
   loading: true,
-  authorized: authLocalStorage,
+  authorized: false,
+  role: null,
   currentPass: null,
 };
 
@@ -23,6 +22,7 @@ export const statusReducer = (
       return {
         ...state,
         loading: false,
+        role: action.payload.role,
         authorized: action.payload.authorized,
         currentPass: action.payload.currentPass,
       };

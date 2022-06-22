@@ -83,8 +83,13 @@ label {
     padding-bottom: 50px;
 }
 
-.navbar-logout {
+.navbar-buttons {
     margin-left: auto;
+    display: flex;
+}
+
+.navbar-btn {
+    margin-left: 20px
 }
 
 .test-catalog {
