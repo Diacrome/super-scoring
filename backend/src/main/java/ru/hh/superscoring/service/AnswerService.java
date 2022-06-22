@@ -64,7 +64,7 @@ public class AnswerService {
       testPass.setFinalScore(finalScore);
       testPass.setStatus(TestPassStatus.PASSED);
       testPass.setTimeFinished(LocalDateTime.now());
-      testPass.setTotalScore(maxPossible);
+      testPass.setMaxPossible(maxPossible);
       testPass.setQualificationName(qualificationCalculation(finalScore, maxPossible, testPass.getTestId()));
       testPassDao.save(testPass);
     }

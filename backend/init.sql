@@ -45,7 +45,7 @@ create table test_pass
     time_finished timestamp without time zone,
     final_score smallint,
     status        varchar(10),
-    total_score   smallint,
+    max_possible   smallint,
     qualification_name  varchar(50)
 );
 
