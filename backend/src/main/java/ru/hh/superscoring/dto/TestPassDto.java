@@ -19,20 +19,19 @@ public class TestPassDto {
   private String testName;
 
   public static TestPassDto map(TestPass testPass) {
-    if (testPass != null) {
-      TestPassDto testPassDto = new TestPassDto();
-      testPassDto.setTestPassId(testPass.getId());
-      testPassDto.setStatus(testPass.getStatus());
-      testPassDto.setFinalScore(testPass.getFinalScore());
-      testPassDto.setMaxPossible(testPass.getMaxPossible());
-      testPassDto.setQualificationName(testPass.getQualificationName());
-      testPassDto.setEndDateTime(testPass.getTimeFinished());
-      testPassDto.setStartDateTime(testPass.getTimeStarted());
-      testPassDto.setTestId(testPass.getTestId());
-      return testPassDto;
-    } else {
+    if (testPass == null) {
       return null;
     }
+    TestPassDto testPassDto = new TestPassDto();
+    testPassDto.setTestPassId(testPass.getId());
+    testPassDto.setStatus(testPass.getStatus());
+    testPassDto.setFinalScore(testPass.getFinalScore());
+    testPassDto.setMaxPossible(testPass.getMaxPossible());
+    testPassDto.setQualificationName(testPass.getQualificationName());
+    testPassDto.setEndDateTime(testPass.getTimeFinished());
+    testPassDto.setStartDateTime(testPass.getTimeStarted());
+    testPassDto.setTestId(testPass.getTestId());
+    return testPassDto;
   }
 
   public TestPassDto() {
