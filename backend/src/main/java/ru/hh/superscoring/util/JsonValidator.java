@@ -127,7 +127,7 @@ public class JsonValidator {
     Iterator<String> fieldNames = root.fieldNames();
     Integer currentVariant = 1;
     while (fieldNames.hasNext()) {
-      if (fieldNames.next().equals(currentVariant.toString())) {
+      if (!fieldNames.next().equals(currentVariant.toString())) {
         return false;
       }
       currentVariant++;
@@ -146,7 +146,7 @@ public class JsonValidator {
       if (!currentAnswer.startsWith("answer")) {
         return false;
       }
-      if (!JsonValidator.verifySinglePayload(root.path(currentAnswer).asText())) {
+      if (!JsonValidator.verifySinglePayload(root.get(currentAnswer).toString())) {
         return false;
       }
     }
