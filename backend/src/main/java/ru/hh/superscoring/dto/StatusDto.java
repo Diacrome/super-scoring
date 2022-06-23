@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import ru.hh.superscoring.util.Role;
 import ru.hh.superscoring.util.TestPassStatus;
 
 public class StatusDto {
   private boolean authorized;
   private CurrentPass currentPass;
+  private Role role;
 
   public boolean isAuthorized() {
     return authorized;
@@ -26,12 +28,29 @@ public class StatusDto {
     this.currentPass = currentPass;
   }
 
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    this.role = role;
+  }
+
   public static class CurrentPass {
     private Map<Integer, Boolean> answeredQuestions;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
     private int testId;
     private TestPassStatus status;
+    private int testPassId;
+
+    public int getTestPassId() {
+      return testPassId;
+    }
+
+    public void setTestPassId(int testPassId) {
+      this.testPassId = testPassId;
+    }
 
     public TestPassStatus getStatus() {
       return status;

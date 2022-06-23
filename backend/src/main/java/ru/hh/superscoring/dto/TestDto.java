@@ -8,16 +8,14 @@ public class TestDto {
   private String description;
 
   public static TestDto map(Test test) {
-    if (test != null) {
-      TestDto testDto = new TestDto();
-      testDto.setId(test.getId());
-      testDto.setName(test.getName());
-      testDto.setDescription(test.getDescription());
-
-      return testDto;
-    } else {
+    if (test == null) {
       return null;
     }
+    TestDto testDto = new TestDto();
+    testDto.setId(test.getId());
+    testDto.setName(test.getName());
+    testDto.setDescription(test.getDescription());
+    return testDto;
   }
 
   public TestDto() {

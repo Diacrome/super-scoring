@@ -4,10 +4,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.hh.nab.starter.NabCommonConfig;
 import ru.hh.superscoring.dao.AnswerDao;
+import ru.hh.superscoring.dao.QualificationDao;
 import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.dao.AuthDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.UserDao;
+import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.resource.AnswerResource;
 import ru.hh.superscoring.entity.Token;
@@ -18,6 +20,8 @@ import ru.hh.superscoring.resource.HelloResource;
 import ru.hh.superscoring.resource.QuestionResource;
 import ru.hh.superscoring.resource.TestResource;
 import ru.hh.superscoring.dao.QuestionDao;
+import ru.hh.superscoring.dao.QuestionDistributionDao;
+import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
@@ -47,7 +51,11 @@ import ru.hh.superscoring.service.TestService;
     TestService.class,
     QuestionService.class,
     Question.class,
+    QualificationDao.class,
+    Qualification.class,
     QuestionDao.class,
+    QuestionDistribution.class,
+    QuestionDistributionDao.class,
     TestPass.class,
     TestPassService.class,
     TestPassDao.class,
@@ -71,9 +79,11 @@ public class CommonConfig {
     return new MappingConfig(Question.class,
         TestPass.class,
         Test.class,
+        QuestionDistribution.class,
         User.class,
         Token.class,
         Answer.class,
+        Qualification.class,
         TestPassQuestion.class);
   }
 

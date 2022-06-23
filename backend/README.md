@@ -255,6 +255,7 @@ Connection.
 ```json
 {
   "authorized": true,
+  "role": "ADMIN",
   "currentPass": {
     "answeredQuestions": {
       "1": true,
@@ -414,3 +415,34 @@ content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
 - 401 и "No token found", если токен не передан.
 - 404 и "Invalid token!" если токен не связан с пользователем / не валиден
 - 400 и "Unable to cancel testPass!", если запись об отмене теста не удалось произвести корректно.
+
+### Получение результатов прохождения теста по pass_id без авторизации пользователя
+
+`GET /test/results/{pass_id}`
+
+Возвращает JSON объект с полями:
+
+* **testPassId** - Id прохождения теста
+* **status** - статус, в котором находится прохождение теста
+* **finalScore** - результат, который набран после прохождения теста
+* **maxPossible** - максимально возможный результат, который можно было набрать при прохождении теста
+* **qualificationName** - название уровня квалификации, которому соответствует набранный результат после прохождения теста
+* **endDateTime** - дата и время окончания прохождения теста
+* **startDateTime** - дата и время начала прохождения теста
+* **testId** - id теста, который был пройден
+* **testName** - название теста
+
+
+Пример возвращаемого объекта:
+{
+    "testPassId": 1,
+    "status": "PASSED",
+    "finalScore": 6,
+    "maxPossible": null,
+    "qualificationName": null,
+    "endDateTime": "2022-06-22 11:58:20",
+    "startDateTime": "2022-06-22 11:56:40",
+    "testId": 1,
+    "testName": "Математический тест"
+}
+
