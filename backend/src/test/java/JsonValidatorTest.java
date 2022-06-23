@@ -1,9 +1,9 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import ru.hh.superscoring.service.AnswerService;
 import ru.hh.superscoring.util.JsonValidator;
 
 public class JsonValidatorTest {
@@ -125,6 +125,58 @@ public class JsonValidatorTest {
     );
     for (String badJson : badJsons) {
       assertFalse(JsonValidator.verifyMultipleQuestionsSingleChoice(badJson, multipleQuestionsSingleChoiceQuestionPayload));
+    }
+  }
+
+  @Test
+  public void verifyAnswerCheckTrueTest() {
+    String rightSingleAnswer = "{\"answer\": \"2\"}";
+    String rightMultipleAnswer = "{\"multiple_answer1\": \"2\", \"multiple_answer2\": \"4\"}";
+    String rightMultipleFillAnswer = "{\"answer1\": \"2\", \"answer2\" : \"3\"}";
+    String rightRankingAnswer = "{\"1\": \"4\", \"2\": \"3\", \"3\": \"2\", \"4\": \"1\"}";
+    String givenSingleAnswer = "{\"answer\": \"2\"}";
+    List<String> givenMultipleAnswers = List.of("{\"multiple_answer1\": \"2\", \"multiple_answer2\": \"4\"}",
+        "{\"multiple_answer2\": \"4\", \"multiple_answer1\": \"2\"}");
+    List<String> givenFillAnswers = List.of("{\"answer1\": \"2\", \"answer2\" : \"3\"}",
+        "{\"answer2\": \"3\", \"answer1\" : \"2\"}");
+    List<String> givenRankingAnswers = List.of("{\"1\": \"4\", \"2\": \"3\", \"3\": \"2\", \"4\": \"1\"}",
+        "{\"2\": \"3\", \"3\": \"2\", \"1\": \"4\", \"4\": \"1\"}");
+    assertTrue(AnswerService.CheckAnswer(rightSingleAnswer, givenSingleAnswer));
+    for (String givenMultipleAnswer : givenMultipleAnswers) {
+      assertTrue(AnswerService.CheckAnswer(rightMultipleAnswer, givenMultipleAnswer));
+    }
+    for (String givenMultipleFillAnswer : givenFillAnswers) {
+      assertTrue(AnswerService.CheckAnswer(rightMultipleFillAnswer, givenMultipleFillAnswer));
+    }
+    for (String givenRankingAnswer : givenRankingAnswers) {
+      assertTrue(AnswerService.CheckAnswer(rightRankingAnswer, givenRankingAnswer));
+    }
+  }
+
+  @Test
+  public void verifyAnswerCheckFalseTest() {
+    String rightSingleAnswer = "{\"answer\": \"2\"}";
+    String rightMultipleAnswer = "{\"multiple_answer1\": \"2\", \"multiple_answer2\": \"4\"}";
+    String rightMultipleFillAnswer = "{\"answer1\": \"2\", \"answer2\" : \"3\"}";
+    String rightRankingAnswer = "{\"1\": \"4\", \"2\": \"3\", \"3\": \"2\", \"4\": \"1\"}";
+    List<String> givenSingleAnswers = List.of("{\"answer\": \"3\"}", rightMultipleAnswer);
+    List<String> givenMultipleAnswers = List.of("{\"multiple_answer1\": \"2\", \"multiple_answer2\": \"5\"}",
+        "{\"multiple_answer1\": \"2\", \"multiple_answer3\": \"4\"}", rightSingleAnswer, rightMultipleFillAnswer);
+    List<String> givenFillAnswers = List.of("{\"answer1\": \"3\", \"answer2\" : \"3\"}",
+        "{\"answer1\": \"2\", \"answer2\" : \"3\", \"answer3\" : \"4\"}", rightMultipleAnswer, rightRankingAnswer);
+    List<String> givenRankingAnswers = List.of("{\"1\": \"3\", \"2\": \"4\", \"3\": \"2\", \"4\": \"1\"}",
+        "{\"2\": \"3\", \"3\": \"2\", \"1\": \"4\"}", rightMultipleAnswer, rightMultipleFillAnswer);
+    for (String givenSingleAnswer : givenSingleAnswers) {
+      assertFalse(AnswerService.CheckAnswer(rightSingleAnswer, givenSingleAnswer));
+    }
+    for (String givenMultipleAnswer : givenMultipleAnswers) {
+      assertFalse(AnswerService.CheckAnswer(rightMultipleAnswer, givenMultipleAnswer));
+    }
+    for (String givenMultipleFillAnswer : givenFillAnswers) {
+      assertFalse(AnswerService.CheckAnswer(rightMultipleFillAnswer, givenMultipleFillAnswer));
+    }
+    for (String givenRankingAnswer : givenRankingAnswers) {
+      assertFalse(AnswerService.CheckAnswer(rightRankingAnswer, givenRankingAnswer));
     }
   }
 }

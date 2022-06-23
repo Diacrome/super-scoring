@@ -62,7 +62,7 @@ public class AnswerService {
     }
   }
 
-  private boolean CheckAnswer(String rightAnswer, String givenAnswer) {
+  public static boolean CheckAnswer(String rightAnswer, String givenAnswer) {
     ObjectMapper mapper = new ObjectMapper();
     try {
       JsonNode rightAnswerJson = mapper.readTree(rightAnswer);
