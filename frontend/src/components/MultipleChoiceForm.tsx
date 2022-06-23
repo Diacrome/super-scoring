@@ -28,7 +28,7 @@ const MultipleChoiceForm: FC<SingleQuestionFormProps> = ({
             checked={!!selectedOption[+number]}
             onChange={handleOptionChange}
           />
-          <label className="label-option" htmlFor={"option-" + number}>
+          <label className="label-option" htmlFor={`option-${number}`}>
             {answer}
           </label>
         </div>

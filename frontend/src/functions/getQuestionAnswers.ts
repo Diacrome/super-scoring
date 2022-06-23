@@ -5,9 +5,11 @@ export const getQuestionAnswers = (
   question: Question
 ): QuestionAnswers => {
   if (
-    answerType === AnswerType.SingleChoice ||
-    answerType === AnswerType.MultipleChoice ||
-    answerType === AnswerType.Ranking
+    [
+      AnswerType.SingleChoice,
+      AnswerType.MultipleChoice,
+      AnswerType.Ranking,
+    ].includes(answerType)
   ) {
     return Object.values(question.payload);
   }

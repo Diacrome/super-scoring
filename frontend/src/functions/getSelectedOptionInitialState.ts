@@ -4,7 +4,7 @@ import {
   SelectedOption,
 } from "../types/questions";
 
-export const getSelectedOptionInititialState = (
+export const getSelectedOptionInitialState = (
   answerType: AnswerType,
   questionAnswers: QuestionAnswers
 ): SelectedOption => {

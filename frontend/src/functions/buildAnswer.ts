@@ -13,13 +13,13 @@ export const buildAnswer = (
       let answerNum = 1;
       selectedOption.forEach((option, number) => {
         if (option) {
-          answer[`multiple_answer${answerNum++}`] = number + 1 + "";
+          answer[`multiple_answer${answerNum++}`] = `${number + 1}`;
         }
       });
       break;
     case AnswerType.MultipleQuestionsSingleChoice:
       selectedOption.forEach((option, number) => {
-        answer[`answer${number + 1}`] = option + "";
+        answer[`answer${number + 1}`] = `${option}`;
       });
       break;
     case AnswerType.Ranking:
