@@ -14,7 +14,7 @@ export const useSendAnswer = () => {
   ) => {
     let answer = buildAnswer(selectedOption, answerType);
     const params = new URLSearchParams({
-      questionOrder: questionOrder + "",
+      questionOrder: `${questionOrder}`,
       answer,
     });
     axios

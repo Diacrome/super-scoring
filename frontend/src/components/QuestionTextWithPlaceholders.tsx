@@ -15,30 +15,28 @@ const QuestionTextWithPlaceholders: FC<QuestionTextWithPlaceholdersProps> = ({
   handleOptionChange,
 }) => {
   const textParts = text.split(ANSWER_PLH);
+
+  // Вставляем select перед каждой частью текста, кроме первой
   return (
     <>
-      {textParts.map((part, number) => {
-        if (number) {
-          return (
-            <Fragment key={number}>
-              <select
-                name={number - 1 + ""}
-                value={selectedOption[number - 1]}
-                onChange={handleOptionChange}
-              >
-                <option value={0} disabled></option>
-                {questionAnswers[number - 1].map((answer, number) => (
-                  <option key={number} value={number + 1}>
-                    {answer}
-                  </option>
-                ))}
-              </select>
-              {part}
-            </Fragment>
-          );
-        }
-        return part;
-      })}
+      {textParts.map((part, number) => (
+        <Fragment key={number}>
+          number &&
+          <select
+            name={`${number - 1}`}
+            value={selectedOption[number - 1]}
+            onChange={handleOptionChange}
+          >
+            <option value={0} disabled></option>
+            {questionAnswers[number - 1].map((answer, number) => (
+              <option key={number} value={number + 1}>
+                {answer}
+              </option>
+            ))}
+          </select>
+          {part}
+        </Fragment>
+      ))}
     </>
   );
 };

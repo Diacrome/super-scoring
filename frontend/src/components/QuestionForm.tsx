@@ -10,7 +10,7 @@ import SingleChoiceForm from "./SingleChoiceForm";
 import MultipleChoiceForm from "./MultipleChoiceForm";
 import MultipleQuestionsSingleChoiceForm from "./MultipleQuestionsSingleChoiceForm";
 import TestAnswerButton from "./TestAnswerButton";
-import { getSelectedOptionInititialState } from "../functions/getSelectedOptionInitialState";
+import { getSelectedOptionInitialState } from "../functions/getSelectedOptionInitialState";
 
 const QuestionForm: FC<QuestionFormProps> = ({
   questionText,
@@ -20,7 +20,7 @@ const QuestionForm: FC<QuestionFormProps> = ({
   questionCount,
 }) => {
   const [selectedOption, setSelectedOption] = useState<SelectedOption>(
-    getSelectedOptionInititialState(answerType, questionAnswers)
+    getSelectedOptionInitialState(answerType, questionAnswers)
   );
 
   const changeSelectedOption = (state: SelectedOption) => {
