@@ -37,6 +37,7 @@ public class StatusService {
       statusDto.setCurrentPass(null);
     } else {
       statusDto.setCurrentPass(getCurrentPass(userId));
+      statusDto.setRole(authService.getRoleByToken(token));
     }
     return statusDto;
   }
@@ -55,6 +56,7 @@ public class StatusService {
     }
     StatusDto.CurrentPass currentPass = new StatusDto.CurrentPass();
     currentPass.setAnsweredQuestions(questions);
+    currentPass.setTestPassId(testPassId);
     currentPass.setStatus(testPassDao.getStatus(testPassId));
     currentPass.setTestId(testPassDao.getTestId(testPassId));
     currentPass.setStartTime(testPassDao.getStartTime(testPassId));

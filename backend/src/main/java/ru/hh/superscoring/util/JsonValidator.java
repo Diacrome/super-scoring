@@ -119,4 +119,51 @@ public class JsonValidator {
     return false;
   }
 
+  public static boolean verifySinglePayload(String payload) throws JsonProcessingException {
+    JsonNode root = mapper.readTree(payload);
+    if (root.isEmpty()) {
+      return false;
+    }
+    Iterator<String> fieldNames = root.fieldNames();
+    Integer currentVariant = 1;
+    while (fieldNames.hasNext()) {
+      if (!fieldNames.next().equals(currentVariant.toString())) {
+        return false;
+      }
+      currentVariant++;
+    }
+    return true;
+  }
+
+  public static boolean verifyMultiplePayload(String payload) throws JsonProcessingException {
+    JsonNode root = mapper.readTree(payload);
+    if (root.isEmpty()) {
+      return false;
+    }
+    Iterator<String> fieldNames = root.fieldNames();
+    while (fieldNames.hasNext()) {
+      String currentAnswer = fieldNames.next();
+      if (!currentAnswer.startsWith("answer")) {
+        return false;
+      }
+      if (!JsonValidator.verifySinglePayload(root.get(currentAnswer).toString())) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static boolean verifyPayload(String payload, QuestionAnswerType answerType) throws JsonProcessingException {
+    if (answerType == QuestionAnswerType.SINGLE_CHOICE
+        || answerType == QuestionAnswerType.MULTIPLE_CHOICE
+        || answerType == QuestionAnswerType.RANKING) {
+      return JsonValidator.verifySinglePayload(payload);
+    }
+    if (answerType == QuestionAnswerType.MULTIPLE_QUESTIONS_SINGLE_CHOICE) {
+      return JsonValidator.verifyMultiplePayload(payload);
+    }
+    return false;
+  }
+
+
 }

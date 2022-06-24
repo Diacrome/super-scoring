@@ -9,9 +9,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.AnswerDao;
+import ru.hh.superscoring.dao.QualificationDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Answer;
+import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
@@ -22,11 +24,15 @@ public class AnswerService {
   private final AnswerDao answerDao;
   private final TestPassDao testPassDao;
   private final TestDao testDao;
+  private final QualificationDao qualificationDao;
+  private final Integer ONE_HUNDRED_PERCENT = 1;
 
-  public AnswerService(AnswerDao answerDao, TestPassDao testPassDao, TestDao testDao) {
+
+  public AnswerService(AnswerDao answerDao, TestPassDao testPassDao, TestDao testDao, QualificationDao qualificationDao) {
     this.answerDao = answerDao;
     this.testPassDao = testPassDao;
     this.testDao = testDao;
+    this.qualificationDao = qualificationDao;
   }
 
   @Transactional
@@ -49,15 +55,19 @@ public class AnswerService {
     if (testDao.getTestSizeByTestPassId(testPassId) == arrayAnswerByTestPass.size()) {
       TestPass testPass = testPassDao.getTestPassByTestPassId(testPassId);
       Integer finalScore = 0;
+      Integer maxPossible = 0;
       for (TestPassQuestion testPassQuestion : testPass.getQuestions()) {
         if (CheckAnswer(testPassQuestion.getQuestion().getAnswer()
             , arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
           finalScore++;
         }
+        maxPossible += testPassQuestion.getQuestion().getWeight();
       }
       testPass.setFinalScore(finalScore);
       testPass.setStatus(TestPassStatus.PASSED);
       testPass.setTimeFinished(LocalDateTime.now());
+      testPass.setMaxPossible(maxPossible);
+      testPass.setQualificationName(qualificationCalculation(finalScore, maxPossible, testPass.getTestId()));
       testPassDao.save(testPass);
     }
   }
@@ -85,4 +95,20 @@ public class AnswerService {
     return JsonValidator.verifyAnswer(answer, question.getPayload(), question.getAnswerType());
   }
 
+  private String qualificationCalculation(Integer finalScore, Integer maxPossible, Integer testId) {
+    List<String> qualificationNames = qualificationDao.getTestQualification(testId);
+    double percentStep = (double) ONE_HUNDRED_PERCENT / (qualificationNames.size() + 1);
+    double percentResult = (double) finalScore / maxPossible;
+    if (percentResult < percentStep) {
+      return "Not qualified";
+    }
+    if ((percentResult <= 1.0) && (percentResult > (1.0 - percentStep))) {
+      return qualificationNames.get(0);
+    }
+    int index = 0;
+    for (double stepNumber = percentStep; stepNumber <= percentResult; stepNumber += percentStep) {
+      index++;
+    }
+    return qualificationNames.get(qualificationNames.size() - index);
+  }
 }

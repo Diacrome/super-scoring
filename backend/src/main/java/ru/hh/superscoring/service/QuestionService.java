@@ -4,19 +4,24 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
+import ru.hh.superscoring.dao.QuestionDistributionDao;
 import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.util.JsonValidator;
 
 public class QuestionService {
   private final QuestionDao questionDao;
+  private final QuestionDistributionDao questionDistributionDao;
   private final TestService testService;
 
 
-  public QuestionService(QuestionDao questionDao, TestService testService) {
+  public QuestionService(QuestionDao questionDao, QuestionDistributionDao questionDistributionDao, TestService testService) {
     this.questionDao = questionDao;
+    this.questionDistributionDao = questionDistributionDao;
     this.testService = testService;
   }
 
@@ -51,6 +56,28 @@ public class QuestionService {
   }
 
   @Transactional
+  public List<Question> getQuestionsForTestByDistribution(Integer testId) {
+    List<QuestionDistribution> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
+    List<Question> questions = questionDao.getQuestionsForTest(testId);
+    List<Question> finalQuestions = new ArrayList<Question>();
+
+    for (QuestionDistribution distribution : distributions) {
+      List<Question> tempListQuestions = new ArrayList<Question>();
+      for (Question question : questions) {
+        if (question.getWeight() == distribution.getWeight()) {
+          tempListQuestions.add(question);
+        }
+      }
+      if (tempListQuestions.size() < distribution.getQuestionCount()) {
+        return List.of();
+      }
+      Collections.shuffle(tempListQuestions);
+      finalQuestions.addAll(tempListQuestions.subList(0, distribution.getQuestionCount()));
+    }
+    return finalQuestions;
+  }
+
+  @Transactional
   public void setQuestionActive(Integer questionId) {
     Question question = questionDao.get(Question.class, questionId);
     if (question == null) {
@@ -68,13 +95,16 @@ public class QuestionService {
   }
 
   @Transactional
-  public Boolean addQuestion(Question newQuestion) {
+  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException{
     try {
-      if (JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
-        return false;
+      if (!JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
+        throw new IllegalArgumentException("Answer is not valid");
+      }
+      if (!JsonValidator.verifyPayload(newQuestion.getPayload(), newQuestion.getAnswerType())) {
+        throw new IllegalArgumentException("Payload is not valid");
       }
     } catch (JsonProcessingException e) {
-      return false;
+      throw new IllegalArgumentException("Not correct JSON format");
     }
     Question question = new Question();
     question.setTestId(newQuestion.getTestId());

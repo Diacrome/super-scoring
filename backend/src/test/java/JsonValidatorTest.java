@@ -179,4 +179,50 @@ public class JsonValidatorTest {
       assertFalse(AnswerService.CheckAnswer(rightRankingAnswer, givenRankingAnswer));
     }
   }
+  
+  public void verifySinglePayloadTrueTest() throws JsonProcessingException {
+    List<String> goodPayloads = List.of(
+        multipleChoiceQuestionPayload,
+        singleChoiceQuestionPayload,
+        rankingPayload1,
+        rankingPayload2,
+        rankingPayload3);
+    for (String payload : goodPayloads) {
+      assertTrue(payload, JsonValidator.verifySinglePayload(payload));
+    }
+  }
+
+  public void verifySinglePayloadFalseTest() throws JsonProcessingException {
+    List<String> goodPayloads = List.of(
+        multipleQuestionsSingleChoiceQuestionPayload,
+        "{\"2\": 3, \"3\": 4, \"4\": 6}",
+        "{\"1\": 1, \"2\": 3, \"4\": 6}",
+        "111111");
+    for (String payload : goodPayloads) {
+      assertFalse(payload, JsonValidator.verifySinglePayload(payload));
+    }
+  }
+
+  @Test
+  public void verifyMultiplePayloadTrueTest() throws JsonProcessingException {
+    List<String> goodPayloads = List.of(
+        multipleQuestionsSingleChoiceQuestionPayload,
+        "{\"answer1\":{\"1\": \"1\", \"2\": \"2\"},\"answer2\": {\"1\": \"1\", \"2\": \"2\", \"3\": \"3\"}}");
+    for (String goodPayload : goodPayloads) {
+      assertTrue(JsonValidator.verifyMultiplePayload(goodPayload));
+    }
+  }
+
+  @Test
+  public void verifyMultiplePayloadFalseTest() throws JsonProcessingException {
+    List<String> badPayloads = List.of(
+        multipleChoiceQuestionPayload,
+        singleChoiceQuestionPayload,
+        rankingPayload1,
+        rankingPayload2,
+        rankingPayload3);
+    for (String badPayload : badPayloads) {
+      assertFalse(JsonValidator.verifyMultipleQuestionsSingleChoice(badPayload, multipleQuestionsSingleChoiceQuestionPayload));
+    }
+  }
 }

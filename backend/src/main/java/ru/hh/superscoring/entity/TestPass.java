@@ -56,7 +56,21 @@ public class TestPass {
   @Enumerated(EnumType.STRING)
   private TestPassStatus status;
 
+  @Column(name = "max_possible")
+  private Integer maxPossible;
+
+  @Column(name = "qualification_name")
+  private String qualificationName;
+
   public TestPass() {
+  }
+
+  public String getQualificationName() {
+    return qualificationName;
+  }
+
+  public void setQualificationName(String qualificationName) {
+    this.qualificationName = qualificationName;
   }
 
   public TestPassStatus getStatus() {
@@ -73,6 +87,14 @@ public class TestPass {
 
   public void setFinalScore(Integer finalScore) {
     this.finalScore = finalScore;
+  }
+
+  public Integer getMaxPossible() {
+    return maxPossible;
+  }
+
+  public void setMaxPossible(Integer maxPossible) {
+    this.maxPossible = maxPossible;
   }
 
   public Integer getId() {
