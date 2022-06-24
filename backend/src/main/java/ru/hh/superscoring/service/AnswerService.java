@@ -1,6 +1,8 @@
 package ru.hh.superscoring.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.hibernate.HibernateException;
@@ -55,8 +57,8 @@ public class AnswerService {
       Integer finalScore = 0;
       Integer maxPossible = 0;
       for (TestPassQuestion testPassQuestion : testPass.getQuestions()) {
-        if (testPassQuestion.getQuestion().getAnswer().equals(
-            arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
+        if (CheckAnswer(testPassQuestion.getQuestion().getAnswer()
+            , arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
           finalScore += testPassQuestion.getQuestion().getWeight();
         }
         maxPossible += testPassQuestion.getQuestion().getWeight();
@@ -67,6 +69,20 @@ public class AnswerService {
       testPass.setMaxPossible(maxPossible);
       testPass.setQualificationName(qualificationCalculation(finalScore, maxPossible, testPass.getTestId()));
       testPassDao.save(testPass);
+    }
+  }
+
+  public static boolean CheckAnswer(String rightAnswer, String givenAnswer) {
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      JsonNode rightAnswerJson = mapper.readTree(rightAnswer);
+      JsonNode givenAnswerJson = mapper.readTree(givenAnswer);
+      if (rightAnswerJson.isEmpty() || givenAnswerJson.isEmpty()) {
+        return false;
+      }
+      return rightAnswerJson.equals(givenAnswerJson);
+    } catch (JsonProcessingException jpe) {
+      return false;
     }
   }
 
