@@ -57,7 +57,7 @@ public class AnswerService {
       for (TestPassQuestion testPassQuestion : testPass.getQuestions()) {
         if (testPassQuestion.getQuestion().getAnswer().equals(
             arrayAnswerByTestPass.get(testPassQuestion.getQuestionIdOrder() - 1).getAnswer())) {
-          finalScore++;
+          finalScore += testPassQuestion.getQuestion().getWeight();
         }
         maxPossible += testPassQuestion.getQuestion().getWeight();
       }
