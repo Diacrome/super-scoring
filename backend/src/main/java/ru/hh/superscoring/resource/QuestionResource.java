@@ -136,8 +136,12 @@ public class QuestionResource {
     Role role;
     role = authService.getRoleByToken(authorizationToken);
     if (role == Role.ADMIN) {
-      if (questionService.ifExistsTestFromQuestion(question) && questionService.addQuestion(question)) {
-        return Response.status(201, "Question added").build();
+      try {
+        if (questionService.ifExistsTestFromQuestion(question) && questionService.addQuestion(question)) {
+          return Response.status(201, "Question added").build();
+        }
+      }catch (IllegalArgumentException exception){
+        return Response.status(400, exception.getMessage()).build();
       }
       return Response.status(404, "There is no such test in the system").build();
     }
