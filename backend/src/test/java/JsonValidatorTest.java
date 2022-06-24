@@ -179,7 +179,7 @@ public class JsonValidatorTest {
       assertFalse(AnswerService.CheckAnswer(rightRankingAnswer, givenRankingAnswer));
     }
   }
-  
+
   public void verifySinglePayloadTrueTest() throws JsonProcessingException {
     List<String> goodPayloads = List.of(
         multipleChoiceQuestionPayload,
