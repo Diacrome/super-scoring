@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.util.JsonValidator;
@@ -36,10 +38,16 @@ public class AnswerService {
   }
 
   @Transactional
-  public void saveAnswer(Integer userId, Integer questionOrder, String answerText) {
+  public void saveAnswer(Integer userId, Integer questionOrder, String answerText) throws TimeoutException {
     Integer testPassId = testPassDao.getTestPassByUserId(userId);
     if (testPassId == null) {
       throw (new PropertyValueException("No testPass for such user!", "AnswerDao", "userId"));
+    }
+    Test test = testDao.getTestById(testPassDao.getTestId(testPassId));
+    LocalDateTime testPassTimeDiffer = testPassDao.getTestPassByTestPassId(testPassId).getTimeStarted().plusSeconds(test.getTimeLimit());
+    if (LocalDateTime.now().isAfter(testPassTimeDiffer)) {
+      testPassDao.setTestPassStatusTimeOut(testPassId);
+      throw new TimeoutException("Test pass time limit exceeded!");
     }
     Answer answer = new Answer();
     answer.setTestPass(testPassId);

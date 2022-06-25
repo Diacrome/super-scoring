@@ -95,6 +95,13 @@ public class TestPassDao extends GenericDao {
     getSession().createQuery(query).executeUpdate();
   }
 
+  public void setTestPassStatusTimeOut(Integer testPassId) {
+    getSession()
+        .createQuery("update TestPass tp SET tp.status = 'TIMEOUT' where id = :id")
+        .setParameter("id", testPassId)
+        .executeUpdate();
+  }
+
   public TestPassStatus getStatus(Integer testPassId) {
     return getSession()
         .createQuery("SELECT status FROM TestPass WHERE id = :id", TestPassStatus.class)

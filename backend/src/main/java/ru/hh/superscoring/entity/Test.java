@@ -44,7 +44,14 @@ public class Test {
   @Column(name = "is_active")
   private Boolean isActive;
 
+  @Column(name = "time_limit")
+  private long timeLimit;
+
   public Test() {
+  }
+
+  public long getTimeLimit() {
+    return timeLimit;
   }
 
   public Integer getQuestionQuantity() {
@@ -113,6 +120,10 @@ public class Test {
 
   public void setIsActive(Boolean isActive) {
     this.isActive = isActive;
+  }
+
+  public void setTimeLimit(Short timeLimit) {
+    this.timeLimit = timeLimit;
   }
 
   public Integer getAttemptQuantity() {

@@ -19,7 +19,8 @@ create table test
     date_created      timestamp without time zone default (now() at time zone 'utc'),
     date_modified     timestamp without time zone,
     modifier_id       integer references  ss_user (id),
-    is_active         boolean default true
+    is_active         boolean default true,
+    time_limit        smallint
 );
 
 create table question_distribution
@@ -105,10 +106,10 @@ values ('admin', 'LyB7wiGICF5mCQizydjYMA', 'Ivan', 'ADMIN'),-- pass: admin1
        ('user2', 'pfH0FU_RuP4PRaTB84uFqw', 'Anna', 'USER');   --  pass: user2
 
 
-insert into test (creator_id, name, description, date_created, date_modified)
-values (1, 'Математический тест', 'Тест на знание таблицы умножения', now(), now()),
-       (2, 'Тест по английскому языку', 'Тест на знание английского языка', now(), now()),
-       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now());
+insert into test (creator_id, name, description, date_created, date_modified, time_limit)
+values (1, 'Математический тест', 'Тест на знание таблицы умножения', now(), now(), 300),
+       (2, 'Тест по английскому языку', 'Тест на знание английского языка', now(), now(), 300),
+       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now(), 300);
 
 insert into qualification (test_id,order_number,qualification_name)
 values (1,1,'Доктор математических наук'),
