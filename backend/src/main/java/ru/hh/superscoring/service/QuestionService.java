@@ -3,8 +3,11 @@ package ru.hh.superscoring.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
@@ -23,16 +26,6 @@ public class QuestionService {
     this.questionDao = questionDao;
     this.questionDistributionDao = questionDistributionDao;
     this.testService = testService;
-  }
-
-  public List<Question> getQuestionsForStart(Integer testId) {
-    List<Question> allQuestions = questionDao.getQuestionsForTest(testId);
-    Integer testSize = testService.getTestSizeById(testId);
-    if (allQuestions.size() < testSize) {
-      return List.of();
-    }
-    Collections.shuffle(allQuestions);
-    return allQuestions.subList(0, testSize);
   }
 
   @Transactional
@@ -59,21 +52,32 @@ public class QuestionService {
   public List<Question> getQuestionsForTestByDistribution(Integer testId) {
     List<QuestionDistribution> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
     List<Question> questions = questionDao.getQuestionsForTest(testId);
-    List<Question> finalQuestions = new ArrayList<Question>();
+    List<Question> finalQuestions = new ArrayList<>();
 
     for (QuestionDistribution distribution : distributions) {
-      List<Question> tempListQuestions = new ArrayList<Question>();
-      for (Question question : questions) {
-        if (question.getWeight() == distribution.getWeight()) {
-          tempListQuestions.add(question);
+      // формируем массив с вопросами определённого веса
+      List<Question> tempListQuestions = new ArrayList<>(questions.stream()
+          .filter(q -> q.getWeight().equals(distribution.getWeight()))
+          .collect(Collectors.toList()));
+      // формируем множество со всевозможными значениями индекса в массиве с вопросами определённого веса
+      Set<Integer> allIndexes = new HashSet<>();
+      for (int index = 0; index < tempListQuestions.size(); index++) {
+        allIndexes.add(index);
+      }
+      int countGeneratedIndexes = 0;
+      while (countGeneratedIndexes < distribution.getQuestionCount()) {
+        int currentIndex = (int) (Math.random() * tempListQuestions.size());
+        if (allIndexes.contains(currentIndex)) {
+          // если случайный индекс массива ещё не использовался, то используем его и удаляем из множества
+          // всевозможных значений индекса массива,чтобы он уже не повторялся,
+          // так делаем до тех пор, пока не наберём нужно количество вопросов
+          countGeneratedIndexes++;
+          allIndexes.remove(currentIndex);
+          finalQuestions.add(tempListQuestions.get(currentIndex));
         }
       }
-      if (tempListQuestions.size() < distribution.getQuestionCount()) {
-        return List.of();
-      }
-      Collections.shuffle(tempListQuestions);
-      finalQuestions.addAll(tempListQuestions.subList(0, distribution.getQuestionCount()));
     }
+    Collections.shuffle(finalQuestions);
     return finalQuestions;
   }
 
@@ -95,7 +99,7 @@ public class QuestionService {
   }
 
   @Transactional
-  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException{
+  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException {
     try {
       if (!JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
         throw new IllegalArgumentException("Answer is not valid");
