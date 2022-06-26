@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.hibernate.PropertyValueException;
@@ -50,36 +51,28 @@ public class QuestionService {
 
   @Transactional
   public List<Question> getQuestionsForTestByDistribution(Integer testId) {
-    List<QuestionDistribution> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
+    Map<Integer,Integer> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId)
+        .stream().collect(Collectors.toMap(
+            distribution -> distribution.getWeight(),
+            distribution -> distribution.getQuestionCount()
+        ));
     List<Question> questions = questionDao.getQuestionsForTest(testId);
     List<Question> finalQuestions = new ArrayList<>();
+    Integer questionsNumberOfTest = distributions.values().stream().reduce(0,Integer::sum);
 
-    for (QuestionDistribution distribution : distributions) {
-      // формируем массив с вопросами определённого веса
-      List<Question> tempListQuestions = new ArrayList<>(questions.stream()
-          .filter(q -> q.getWeight().equals(distribution.getWeight()))
-          .collect(Collectors.toList()));
-      // формируем множество со всевозможными значениями индекса в массиве с вопросами определённого веса
-      Set<Integer> allIndexes = new HashSet<>();
-      for (int index = 0; index < tempListQuestions.size(); index++) {
-        allIndexes.add(index);
+    while(questionsNumberOfTest > 0) {
+      int currentIndex = (int) (Math.random() * questions.size());
+      if (distributions.get(questions.get(currentIndex).getWeight()) > 0 ) {
+        distributions.put(questions.get(currentIndex).getWeight(),distributions.get(questions.get(currentIndex).getWeight())-1);
+        finalQuestions.add(questions.get(currentIndex));
+        questionsNumberOfTest--;
       }
-      int countGeneratedIndexes = 0;
-      while (countGeneratedIndexes < distribution.getQuestionCount()) {
-        int currentIndex = (int) (Math.random() * tempListQuestions.size());
-        if (allIndexes.contains(currentIndex)) {
-          // если случайный индекс массива ещё не использовался, то используем его и удаляем из множества
-          // всевозможных значений индекса массива,чтобы он уже не повторялся,
-          // так делаем до тех пор, пока не наберём нужно количество вопросов
-          countGeneratedIndexes++;
-          allIndexes.remove(currentIndex);
-          finalQuestions.add(tempListQuestions.get(currentIndex));
-        }
-      }
+      Collections.swap(questions,currentIndex,questions.size()-1);
+      questions.remove(questions.size()-1);
     }
-    Collections.shuffle(finalQuestions);
     return finalQuestions;
   }
+
 
   @Transactional
   public void setQuestionActive(Integer questionId) {
