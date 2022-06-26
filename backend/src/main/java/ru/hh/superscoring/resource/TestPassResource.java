@@ -140,4 +140,25 @@ public class TestPassResource {
     }
     return Response.status(201).entity("Canceled!").build();
   }
+
+  @POST
+  @Path("/earlycancel")
+  public Response earlyCancelTest(@HeaderParam("authorization") String authorizationToken) {
+    if (authorizationToken == null) {
+      return Response.status(401).entity("No token found!").build();
+    }
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    try {
+      testPassService.earlyCancelTestPassByUserId(userId);
+    } catch (HibernateException he) {
+      return Response.status(400).entity(he.getMessage()).build();
+    } catch (Exception e) {
+      return Response.status(400).entity("Unable to cancel testPass!").build();
+    }
+    return Response.status(201).entity("Canceled!").build();
+  }
+
 }

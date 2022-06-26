@@ -4,5 +4,6 @@ public enum TestPassStatus {
   PASS,
   PASSED,
   CANCELED,
-  TIMEOUT
+  TIMEOUT,
+  EARLY_CANCELED
 }
