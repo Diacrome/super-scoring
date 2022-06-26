@@ -3,8 +3,12 @@ package ru.hh.superscoring.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
@@ -23,16 +27,6 @@ public class QuestionService {
     this.questionDao = questionDao;
     this.questionDistributionDao = questionDistributionDao;
     this.testService = testService;
-  }
-
-  public List<Question> getQuestionsForStart(Integer testId) {
-    List<Question> allQuestions = questionDao.getQuestionsForTest(testId);
-    Integer testSize = testService.getTestSizeById(testId);
-    if (allQuestions.size() < testSize) {
-      return List.of();
-    }
-    Collections.shuffle(allQuestions);
-    return allQuestions.subList(0, testSize);
   }
 
   @Transactional
@@ -57,25 +51,28 @@ public class QuestionService {
 
   @Transactional
   public List<Question> getQuestionsForTestByDistribution(Integer testId) {
-    List<QuestionDistribution> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
+    Map<Integer,Integer> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId)
+        .stream().collect(Collectors.toMap(
+            distribution -> distribution.getWeight(),
+            distribution -> distribution.getQuestionCount()
+        ));
     List<Question> questions = questionDao.getQuestionsForTest(testId);
-    List<Question> finalQuestions = new ArrayList<Question>();
+    List<Question> finalQuestions = new ArrayList<>();
+    Integer questionsNumberOfTest = distributions.values().stream().reduce(0,Integer::sum);
 
-    for (QuestionDistribution distribution : distributions) {
-      List<Question> tempListQuestions = new ArrayList<Question>();
-      for (Question question : questions) {
-        if (question.getWeight() == distribution.getWeight()) {
-          tempListQuestions.add(question);
-        }
+    while(questionsNumberOfTest > 0) {
+      int currentIndex = (int) (Math.random() * questions.size());
+      if (distributions.get(questions.get(currentIndex).getWeight()) > 0 ) {
+        distributions.put(questions.get(currentIndex).getWeight(),distributions.get(questions.get(currentIndex).getWeight())-1);
+        finalQuestions.add(questions.get(currentIndex));
+        questionsNumberOfTest--;
       }
-      if (tempListQuestions.size() < distribution.getQuestionCount()) {
-        return List.of();
-      }
-      Collections.shuffle(tempListQuestions);
-      finalQuestions.addAll(tempListQuestions.subList(0, distribution.getQuestionCount()));
+      Collections.swap(questions,currentIndex,questions.size()-1);
+      questions.remove(questions.size()-1);
     }
     return finalQuestions;
   }
+
 
   @Transactional
   public void setQuestionActive(Integer questionId) {
@@ -95,7 +92,7 @@ public class QuestionService {
   }
 
   @Transactional
-  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException{
+  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException {
     try {
       if (!JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
         throw new IllegalArgumentException("Answer is not valid");
