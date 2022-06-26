@@ -2,6 +2,7 @@ package ru.hh.superscoring.dao;
 
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.entity.Test;
 
 import java.util.List;
@@ -49,4 +50,14 @@ public class TestDao extends GenericDao {
         .setMaxResults(perPage)
         .getResultList();
   }
+
+  public List<TestDto> getAllTestsForUser(int page, int perPage) {
+    return getSession()
+        .createQuery("select new ru.hh.superscoring.dto.TestDto(t.id,t.name,t.description) from Test t " +
+            "where t.isActive = true order by t.id asc", TestDto.class)
+        .setFirstResult(page * perPage)
+        .setMaxResults(perPage)
+        .getResultList();
+  }
+
 }
