@@ -348,7 +348,7 @@ content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
 
 ### Получение всех тестов
 
-`GET /test/get-tests-for-user`
+`GET /test/all-tests-for-user`
 
 Доступно для всех типов пользователей <br>
 Поддерживает пагинацию (можно в параметрах указать page=N&perPage=M;

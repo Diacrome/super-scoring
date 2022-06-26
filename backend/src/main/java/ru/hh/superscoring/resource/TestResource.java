@@ -192,7 +192,7 @@ public class TestResource {
   }
 
   @GET
-  @Path("/get-tests-for-user")
+  @Path("/all-tests-for-user")
   @Produces("application/json")
   public Response getAllTestsForUser(@HeaderParam("authorization") String authorizationToken,
                               @QueryParam("page") @DefaultValue("0") Integer page,
