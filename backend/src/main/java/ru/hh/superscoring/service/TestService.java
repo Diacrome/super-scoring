@@ -97,4 +97,10 @@ public class TestService {
   public List<Test> getAllTests(int page, int perPage) {
     return testDao.getAllTests(page, perPage);
   }
+
+  @Transactional(readOnly = true)
+  public List<TestDto> getAllTestsForUser(int page, int perPage) {
+    return testDao.getAllTestsForUser(page, perPage);
+  }
+
 }
