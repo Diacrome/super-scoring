@@ -65,18 +65,18 @@ public class TestService {
   @Transactional
   public void switchOnTest(Integer testId) throws TestNoFilledException {
     Test test = testDao.getTestById(testId);
-    validateTest(test.getId());
+    validateTest(test);
     test.setIsActive(true);
     testDao.save(test);
   }
 
-  public void validateTest(Integer testId) throws TestNoFilledException {
-    List<Question> activeQuestions = questionDao.getQuestionsForTest(testId);
-    if (activeQuestions.size() < testDao.getTestSize(testId)) {
+  private void validateTest(Test test) throws TestNoFilledException {
+    List<Question> activeQuestions = questionDao.getQuestionsForTest(test.getId());
+    if (activeQuestions.size() < test.getQuestionQuantity()) {
       throw new TestNoFilledException("Not enough questions for the test");
     }
 
-    List<QuestionDistribution> preassignedDistributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
+    List<QuestionDistribution> preassignedDistributions = questionDistributionDao.getAllQuestionDistributionsForTest(test.getId());
 
     Map<Integer, Integer> realDistribution = activeQuestions.stream()
         .collect(Collectors.toMap(Question::getWeight, value -> 1, Integer::sum));
