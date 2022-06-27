@@ -119,4 +119,9 @@ public class TestPassService {
     testPassDto.setTestName(test.getName());
     return testPassDto;
   }
+
+  @Transactional
+  public void setTestPassStatusTimeoutByTestPassId(Integer testPassId) {
+    testPassDao.get(TestPass.class, testPassId).setStatus(TestPassStatus.TIMEOUT);
+  }
 }

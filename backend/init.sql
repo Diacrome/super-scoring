@@ -20,7 +20,7 @@ create table test
     date_modified     timestamp without time zone,
     modifier_id       integer references  ss_user (id),
     is_active         boolean default true,
-    time_limit        smallint
+    time_limit        bigint
 );
 
 create table question_distribution

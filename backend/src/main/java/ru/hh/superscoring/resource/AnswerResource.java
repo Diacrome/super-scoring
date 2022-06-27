@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
 import ru.hh.superscoring.service.AnswerService;
 import ru.hh.superscoring.service.AuthService;
+import ru.hh.superscoring.util.Exceptions.TestPassTimeoutException;
 
 @Tag(name = "Ответы", description = "API для взаимодействия с ответами")
 @Path("/answer")
@@ -51,6 +52,8 @@ public class AnswerResource {
       answerService.saveAnswer(userId, question, answer);
     } catch (HibernateException he) {
       return Response.status(400).entity(he.getMessage()).build();
+    } catch (TestPassTimeoutException e) {
+      return Response.status(400).entity("Time limit for test exceeded!").build();
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save answer!").build();
     }
