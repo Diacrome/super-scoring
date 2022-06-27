@@ -52,7 +52,7 @@ public class QuestionService {
     return questionDao.getAllQuestions(page, perPage);
   }
 
-  @Transactional
+  @Transactional(readOnly = true)
   public List<Question> getQuestionsForTestByDistribution(Integer testId) throws TestNoFilledException {
     List<QuestionDistribution> preassignedDistributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
     List<Question> questions = questionDao.getQuestionsForTest(testId);
