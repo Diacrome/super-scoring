@@ -15,6 +15,7 @@ import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.dao.QuestionDistributionDao;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
+import ru.hh.superscoring.exception.TestNoFilledException;
 import ru.hh.superscoring.util.JsonValidator;
 
 public class QuestionService {
@@ -50,7 +51,8 @@ public class QuestionService {
   }
 
   @Transactional
-  public List<Question> getQuestionsForTestByDistribution(Integer testId) {
+  public List<Question> getQuestionsForTestByDistribution(Integer testId) throws TestNoFilledException {
+    testService.validateTest(testId);
     Map<Integer,Integer> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId)
         .stream().collect(Collectors.toMap(
             distribution -> distribution.getWeight(),

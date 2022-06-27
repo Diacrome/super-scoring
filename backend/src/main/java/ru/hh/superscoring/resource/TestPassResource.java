@@ -22,6 +22,7 @@ import org.hibernate.HibernateException;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
+import ru.hh.superscoring.exception.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;
@@ -66,6 +67,8 @@ public class TestPassResource {
       }
       return Response.status(400, "This user has already started the test")
           .build();
+    } catch (TestNoFilledException tnf) {
+      return Response.status(400).entity(tnf.getMessage()).build();
     } catch (HibernateException he) {
       return Response.status(400, "This test is not yet available for passing. Please try again later.")
           .build();

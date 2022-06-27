@@ -34,11 +34,6 @@ public class TestService {
     return TestDto.map(test);
   }
 
-
-  public Integer getTestSizeById(Integer testId) {
-    return testDao.getTestSize(testId);
-  }
-
   @Transactional
   public Integer saveTest(String name, String description, Integer creatorId, Integer questionCount) {
     Test test = new Test();
@@ -70,18 +65,18 @@ public class TestService {
   @Transactional
   public void switchOnTest(Integer testId) throws TestNoFilledException {
     Test test = testDao.getTestById(testId);
-    validateTest(test);
+    validateTest(test.getId());
     test.setIsActive(true);
     testDao.save(test);
   }
 
-  private void validateTest(Test test) throws TestNoFilledException {
-    List<Question> activeQuestions = questionDao.getQuestionsForTest(test.getId());
-    if (activeQuestions.size() < test.getQuestionQuantity()) {
+  public void validateTest(Integer testId) throws TestNoFilledException {
+    List<Question> activeQuestions = questionDao.getQuestionsForTest(testId);
+    if (activeQuestions.size() < testDao.getTestSize(testId)) {
       throw new TestNoFilledException("Not enough questions for the test");
     }
 
-    List<QuestionDistribution> preassignedDistributions = questionDistributionDao.getAllQuestionDistributionsForTest(test.getId());
+    List<QuestionDistribution> preassignedDistributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
 
     Map<Integer, Integer> realDistribution = activeQuestions.stream()
         .collect(Collectors.toMap(Question::getWeight, value -> 1, Integer::sum));
