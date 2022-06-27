@@ -34,11 +34,6 @@ public class TestService {
     return TestDto.map(test);
   }
 
-
-  public Integer getTestSizeById(Integer testId) {
-    return testDao.getTestSize(testId);
-  }
-
   @Transactional
   public Integer saveTest(String name, String description, Integer creatorId, Integer questionCount) {
     Test test = new Test();

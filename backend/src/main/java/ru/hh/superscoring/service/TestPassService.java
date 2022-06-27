@@ -14,6 +14,7 @@ import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
+import ru.hh.superscoring.exception.TestNoFilledException;
 import ru.hh.superscoring.util.TestPassStatus;
 
 public class TestPassService {
@@ -28,12 +29,9 @@ public class TestPassService {
   }
 
   @Transactional
-  public boolean startTest(Integer testId, Integer userId) {
-    List<Question> questionsForStart = questionService.getQuestionsForTestByDistribution(testId);
-    if (questionsForStart.isEmpty()) {
-      throw new HibernateException("Not enough questions for the test");
-    }
+  public boolean startTest(Integer testId, Integer userId) throws TestNoFilledException {
     if (!testPassDao.isExistUnfinishedRecord(userId)) {
+      List<Question> questionsForStart = questionService.getQuestionsForTestByDistribution(testId);
       TestPass testPass = new TestPass();
       testPass.setTestId(testId);
       testPass.setUserId(userId);
