@@ -110,11 +110,4 @@ public class TestPassDao extends GenericDao {
         .getResultList();
   }
 
-  public void setTestPassStatusEarlyCanceled(Integer testPassId) {
-    getSession().
-        createQuery("update TestPass tp set tp.status = 'EARLY_CANCELED' where id = :id")
-        .setParameter("id", testPassId)
-        .executeUpdate();
-  }
-
 }

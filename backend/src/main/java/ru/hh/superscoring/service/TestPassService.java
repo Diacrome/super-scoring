@@ -131,6 +131,6 @@ public class TestPassService {
     if (testPassId == null) {
       throw (new PropertyValueException("No testPass for such user!", "testPassDao", "userId"));
     }
-    testPassDao.setTestPassStatusEarlyCanceled(testPassId);
+    testPassDao.get(TestPass.class, testPassId).setStatus(TestPassStatus.EARLY_CANCELED);
   }
 }

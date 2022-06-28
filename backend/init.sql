@@ -195,7 +195,7 @@ values (1, 1, 5),
        (3, 1, 5),
        (3, 2, 5);
 
-insert into test_pass (test_id, user_id, time_started, time_finished, final_score,status)
+insert into test_pass (test_id, user_id, time_started, time_finished, final_score, status)
 values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED'),
        (1, 4, now() - interval '200 seconds', null, null,'PASS'),
        (2, 1, now() - interval '200 seconds', null, null,'PASS'),
