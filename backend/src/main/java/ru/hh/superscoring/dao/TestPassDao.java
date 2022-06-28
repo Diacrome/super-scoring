@@ -91,7 +91,7 @@ public class TestPassDao extends GenericDao {
   }
 
   public void setTestPassStatusCanceled(Integer testPassId) {
-    String query = "UPDATE TestPass tp SET tp.status = 'CANCELED' WHERE id = "+testPassId;
+    String query = "UPDATE TestPass tp SET tp.status = 'CANCELED' WHERE id = " + testPassId;
     getSession().createQuery(query).executeUpdate();
   }
 
@@ -100,5 +100,13 @@ public class TestPassDao extends GenericDao {
         .createQuery("SELECT status FROM TestPass WHERE id = :id", TestPassStatus.class)
         .setParameter("id", testPassId)
         .getSingleResult();
+  }
+
+  public List<TestPass> getTestPassByUserAndTestId(Integer userId, Integer testId) {
+    return getSession()
+        .createQuery("select tp from TestPass tp where tp.userId = :user_id and tp.testId = :test_id", TestPass.class)
+        .setParameter("user_id", userId)
+        .setParameter("test_id", testId)
+        .getResultList();
   }
 }

@@ -14,6 +14,8 @@ create table test
     name              text     not null,
     description       text,
     question_quantity smallint not null           default 10,
+    attempt_quantity  smallint not null           default 3,
+    repeat_interval   integer  not null           default 20,
     date_created      timestamp without time zone default (now() at time zone 'utc'),
     date_modified     timestamp without time zone,
     modifier_id       integer references  ss_user (id),

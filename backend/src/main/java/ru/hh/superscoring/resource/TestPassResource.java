@@ -21,11 +21,13 @@ import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
+import ru.hh.superscoring.dto.StartResultDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.exception.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;
+import ru.hh.superscoring.util.StartResult;
 
 @Tag(name = "Прохождение теста", description = "API для взаимодействия с прохождениями тестов")
 @Path("/")
@@ -62,11 +64,15 @@ public class TestPassResource {
       return Response.status(404, "There is no such test in the system ").build();
     }
     try {
-      if (testPassService.startTest(testId, userId)) {
-        return Response.status(201).build();
+      StartResultDto startResultDto = testPassService.startTest(testId, userId);
+      if (startResultDto.getStartResult() == StartResult.ALREADY_STARTED) {
+        return Response.status(400, "This user has already started the test")
+            .build();
       }
-      return Response.status(400, "This user has already started the test")
-          .build();
+      if (startResultDto.getStartResult() == StartResult.SPENT || startResultDto.getStartResult() == StartResult.PASSED) {
+        return Response.status(400).entity(startResultDto).build();
+      }
+      return Response.status(201).build();
     } catch (TestNoFilledException tnf) {
       return Response.status(400).entity(tnf.getMessage()).build();
     } catch (HibernateException he) {
