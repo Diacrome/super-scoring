@@ -5,6 +5,7 @@ import Loader from "../components/Loader/Loader";
 import QuestionForm from "../components/QuestionForm";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { getQuestionAnswers } from "../functions/getQuestionAnswers";
+import QuestionContent from "../components/QuestionContent";
 
 const TestScreen: FC = () => {
   const { currentPass } = useAppSelector((state) => state.status);
@@ -27,6 +28,7 @@ const TestScreen: FC = () => {
 
   const question = questions[questionOrder];
   const answerType = question.answerType;
+  const questionContent = question.content;
   const questionText = question.question.split("\\n");
   const questionAnswers = getQuestionAnswers(answerType, question);
   const questionsCount = Object.keys(questions).length;
@@ -34,6 +36,7 @@ const TestScreen: FC = () => {
   return (
     <div className="test">
       <div>Вопрос {questionOrder}:</div>
+      {questionContent && <QuestionContent content={questionContent} />}
       <QuestionForm
         questionText={questionText}
         questionAnswers={questionAnswers}
