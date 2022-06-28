@@ -15,31 +15,41 @@ import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Question;
+import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.util.JsonValidator;
 import ru.hh.superscoring.util.TestPassStatus;
+import ru.hh.superscoring.util.Exceptions.TestPassTimeoutException;
 
 public class AnswerService {
   private final AnswerDao answerDao;
   private final TestPassDao testPassDao;
   private final TestDao testDao;
   private final QualificationDao qualificationDao;
+  private final TestPassService testPassService;
   private final Integer ONE_HUNDRED_PERCENT = 1;
 
 
-  public AnswerService(AnswerDao answerDao, TestPassDao testPassDao, TestDao testDao, QualificationDao qualificationDao) {
+  public AnswerService(AnswerDao answerDao, TestPassDao testPassDao, TestDao testDao, QualificationDao qualificationDao, TestPassService testPassService) {
     this.answerDao = answerDao;
     this.testPassDao = testPassDao;
     this.testDao = testDao;
     this.qualificationDao = qualificationDao;
+    this.testPassService = testPassService;
   }
 
   @Transactional
-  public void saveAnswer(Integer userId, Integer questionOrder, String answerText) {
+  public void saveAnswer(Integer userId, Integer questionOrder, String answerText) throws TestPassTimeoutException {
     Integer testPassId = testPassDao.getTestPassByUserId(userId);
     if (testPassId == null) {
       throw (new PropertyValueException("No testPass for such user!", "AnswerDao", "userId"));
+    }
+    Test test = testDao.getTestById(testPassDao.getTestId(testPassId));
+    LocalDateTime testPassTimeDiffer = testPassDao.getTestPassByTestPassId(testPassId).getTimeStarted().plusSeconds(test.getTimeLimit());
+    if (LocalDateTime.now().isAfter(testPassTimeDiffer)) {
+      testPassService.setTestPassStatusTimeoutByTestPassId(userId);
+      throw new TestPassTimeoutException("Test pass time limit exceeded!");
     }
     Answer answer = new Answer();
     answer.setTestPass(testPassId);
