@@ -3,7 +3,6 @@ package ru.hh.superscoring.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,7 +17,7 @@ import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
-import ru.hh.superscoring.exception.TestNoFilledException;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.util.StartResult;
 import ru.hh.superscoring.util.TestPassStatus;
 

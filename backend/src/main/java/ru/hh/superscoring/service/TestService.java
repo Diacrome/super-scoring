@@ -12,7 +12,7 @@ import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.entity.Test;
-import ru.hh.superscoring.exception.TestNoFilledException;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 
 public class TestService {
 

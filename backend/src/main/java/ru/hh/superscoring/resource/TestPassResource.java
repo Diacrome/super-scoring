@@ -23,7 +23,7 @@ import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.dto.StartResultDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
-import ru.hh.superscoring.exception.TestNoFilledException;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;

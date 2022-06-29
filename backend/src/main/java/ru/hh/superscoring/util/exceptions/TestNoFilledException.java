@@ -1,4 +1,4 @@
-package ru.hh.superscoring.exception;
+package ru.hh.superscoring.util.exceptions;
 
 public class TestNoFilledException extends Exception {
 

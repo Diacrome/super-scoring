@@ -14,8 +14,7 @@ import ru.hh.superscoring.dao.QuestionDistributionDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
-import ru.hh.superscoring.entity.Test;
-import ru.hh.superscoring.exception.TestNoFilledException;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.util.JsonValidator;
 
 public class QuestionService {
