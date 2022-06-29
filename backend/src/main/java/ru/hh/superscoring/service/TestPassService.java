@@ -124,4 +124,13 @@ public class TestPassService {
   public void setTestPassStatusTimeoutByTestPassId(Integer testPassId) {
     testPassDao.get(TestPass.class, testPassId).setStatus(TestPassStatus.TIMEOUT);
   }
+
+  @Transactional
+  public void earlyCancelTestPassByUserId(Integer userId) {
+    Integer testPassId = testPassDao.getTestPassByUserId(userId);
+    if (testPassId == null) {
+      throw (new PropertyValueException("No testPass for such user!", "testPassDao", "userId"));
+    }
+    testPassDao.get(TestPass.class, testPassId).setStatus(TestPassStatus.CANCELED);
+  }
 }

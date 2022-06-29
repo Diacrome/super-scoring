@@ -34,11 +34,11 @@ public class TestPassDao extends GenericDao {
 
   public List<LeaderDto> getLeaders(Integer testId, Integer page, Integer perPage) {
     return getSession()
-        .createQuery("select new ru.hh.superscoring.dto.LeaderDto(u.name, max(tp.finalScore)) " +
+        .createQuery("select new ru.hh.superscoring.dto.LeaderDto(u.name, max(tp.finalScore), count(tp.userId)) " +
             "from TestPass as tp join User as u ON tp.userId = u.id " +
             "where tp.testId = :test_id and tp.finalScore is not null " +
             "group by tp.userId, u.name " +
-            "order by max(tp.finalScore) desc")
+            "order by max(tp.finalScore) desc, count(tp.userId) asc")
         .setParameter("test_id", testId)
         .setFirstResult(page * perPage)
         .setMaxResults(perPage)
