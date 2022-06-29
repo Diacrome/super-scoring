@@ -13,14 +13,13 @@ import ru.hh.superscoring.dao.QualificationDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Answer;
-import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.util.JsonValidator;
 import ru.hh.superscoring.util.TestPassStatus;
-import ru.hh.superscoring.util.Exceptions.TestPassTimeoutException;
+import ru.hh.superscoring.util.exceptions.TestPassTimeoutException;
 
 public class AnswerService {
   private final AnswerDao answerDao;

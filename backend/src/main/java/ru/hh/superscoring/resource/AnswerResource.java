@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
 import ru.hh.superscoring.service.AnswerService;
 import ru.hh.superscoring.service.AuthService;
-import ru.hh.superscoring.util.Exceptions.TestPassTimeoutException;
+import ru.hh.superscoring.util.exceptions.TestPassTimeoutException;
 
 @Tag(name = "Ответы", description = "API для взаимодействия с ответами")
 @Path("/answer")
