@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import java.util.Set;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -22,6 +23,10 @@ import org.hibernate.HibernateException;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.dto.StartResultDto;
+import ru.hh.superscoring.dto.TestBoardForUserDto;
+import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.dto.TestPassBoardDto;
+import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
@@ -140,4 +145,25 @@ public class TestPassResource {
     }
     return Response.status(201).entity("Canceled!").build();
   }
+
+  @GET
+  @Path("/all-passes-for-user")
+  @Produces("application/json")
+  public Response getAllTestPassesForUser(@HeaderParam("authorization") String authorizationToken,
+                                          @QueryParam("page") @DefaultValue("0") int page,
+                                          @QueryParam("perPage") @DefaultValue("10") int perPage,
+                                          @QueryParam("testId") int testId) {
+    if (authorizationToken == null) {
+      return Response.status(401).entity("No token found!").build();
+    }
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    List<TestPassDto> testPasses = testPassService.getAllTestPassesForUser(page, perPage, testId,userId);
+    return Response.ok(TestPassBoardDto.map(testPasses, page, perPage)).build();
+  }
+
 }
+
+

@@ -37,6 +37,18 @@ public class TestPassDto {
   public TestPassDto() {
   }
 
+  public TestPassDto(Integer testPassId, TestPassStatus status, Integer finalScore, Integer maxPossible, String qualificationName, LocalDateTime endDateTime, LocalDateTime startDateTime, Integer testId, String testName) {
+    this.testPassId = testPassId;
+    this.status = status;
+    this.finalScore = finalScore;
+    this.maxPossible = maxPossible;
+    this.qualificationName = qualificationName;
+    this.endDateTime = endDateTime;
+    this.startDateTime = startDateTime;
+    this.testId = testId;
+    this.testName = testName;
+  }
+
   public String getTestName() {
     return testName;
   }
