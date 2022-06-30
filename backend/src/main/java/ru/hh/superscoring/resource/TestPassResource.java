@@ -147,6 +147,12 @@ public class TestPassResource {
   }
 
   @GET
+  @Operation(summary = "Получение истории прохождений пользователя", description = "Получение истории прохождения пользователем указанного теста")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "200", description = "возвращает JSON объект с отображением порядкового номера на TestPassDTO",
+      content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации или прохождение отсутствует")})
   @Path("/all-passes-for-user")
   @Produces("application/json")
   public Response getAllTestPassesForUser(@HeaderParam("authorization") String authorizationToken,
