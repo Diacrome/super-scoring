@@ -2,6 +2,8 @@ package ru.hh.superscoring.dao;
 
 import org.hibernate.SessionFactory;
 import ru.hh.superscoring.dto.LeaderDto;
+import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
@@ -109,4 +111,18 @@ public class TestPassDao extends GenericDao {
         .setParameter("test_id", testId)
         .getResultList();
   }
+
+  public List<TestPassDto> getAllTestPassesForUser(int page, int perPage, int testId, int userId) {
+    return getSession()
+        .createQuery("select new ru.hh.superscoring.dto" +
+            ".TestPassDto(tp.id,tp.status,tp.finalScore,tp.maxPossible,tp.qualificationName,tp.timeFinished,tp.timeStarted,tp.testId,t.name) " +
+            "from TestPass tp inner join Test t on tp.testId = t.id " +
+            "where tp.testId = :testId and tp.userId = :userId order by tp.id asc", TestPassDto.class)
+        .setParameter("testId",testId)
+        .setParameter("userId",userId)
+        .setFirstResult(page * perPage)
+        .setMaxResults(perPage)
+        .getResultList();
+  }
+
 }

@@ -12,6 +12,7 @@ import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.StartResultDto;
+import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.Test;
@@ -132,4 +133,10 @@ public class TestPassService {
     }
     testPassDao.get(TestPass.class, testPassId).setStatus(TestPassStatus.CANCELED);
   }
+
+  @Transactional(readOnly = true)
+  public List<TestPassDto> getAllTestPassesForUser(int page, int perPage, int testId, int userId) {
+    return testPassDao.getAllTestPassesForUser(page, perPage, testId, userId);
+  }
+
 }
