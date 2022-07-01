@@ -21,9 +21,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ru.hh.superscoring.dto.StatusDto;
 import ru.hh.superscoring.dto.TestBoardDto;
+import ru.hh.superscoring.dto.TestBoardForUserDto;
 import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.StatusService;
 import ru.hh.superscoring.service.TestPassService;
@@ -160,6 +162,8 @@ public class TestResource {
     }
     try {
       testService.switchOnTest(testId);
+    } catch (TestNoFilledException tnf) {
+      return Response.status(400).entity(tnf.getMessage()).build();
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
@@ -185,6 +189,23 @@ public class TestResource {
     }
     List<Test> tests = testService.getAllTests(page, perPage);
     return Response.ok(TestBoardDto.map(tests, page, perPage)).build();
+  }
+
+  @GET
+  @Path("/all-tests-for-user")
+  @Produces("application/json")
+  public Response getAllTestsForUser(@HeaderParam("authorization") String authorizationToken,
+                              @QueryParam("page") @DefaultValue("0") Integer page,
+                              @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
+    if (authorizationToken == null) {
+      return Response.status(401).entity("No token found!").build();
+    }
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    List<TestDto> tests = testService.getAllTestsForUser(page, perPage);
+    return Response.ok(TestBoardForUserDto.map(tests, page, perPage)).build();
   }
 
   @GET

@@ -12,14 +12,14 @@ export const notAuthorizedRoutes: IRoutes = [
   { path: "*", element: <Navigate replace to="/auth" /> },
 ];
 
-export const authorizedRoutes = [
+export const authorizedRoutes: IRoutes = [
   { path: "/", element: <HomeScreen /> },
   { path: "/auth", element: <Navigate replace to="/" /> },
   { path: "/:testId", element: <TestInfo /> },
   { path: "/:testId/:completionId", element: <Results /> },
 ];
 
-export const passingRoutes = [
+export const passingRoutes: IRoutes = [
   { path: "/:testId/:completionId", element: <Results /> },
   { path: "*", element: <TestScreen /> },
 ];

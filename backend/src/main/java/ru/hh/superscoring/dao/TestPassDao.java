@@ -2,6 +2,8 @@ package ru.hh.superscoring.dao;
 
 import org.hibernate.SessionFactory;
 import ru.hh.superscoring.dto.LeaderDto;
+import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
@@ -34,11 +36,11 @@ public class TestPassDao extends GenericDao {
 
   public List<LeaderDto> getLeaders(Integer testId, Integer page, Integer perPage) {
     return getSession()
-        .createQuery("select new ru.hh.superscoring.dto.LeaderDto(u.name, max(tp.finalScore)) " +
+        .createQuery("select new ru.hh.superscoring.dto.LeaderDto(u.name, max(tp.finalScore), count(tp.userId)) " +
             "from TestPass as tp join User as u ON tp.userId = u.id " +
             "where tp.testId = :test_id and tp.finalScore is not null " +
             "group by tp.userId, u.name " +
-            "order by max(tp.finalScore) desc")
+            "order by max(tp.finalScore) desc, count(tp.userId) asc")
         .setParameter("test_id", testId)
         .setFirstResult(page * perPage)
         .setMaxResults(perPage)
@@ -91,7 +93,7 @@ public class TestPassDao extends GenericDao {
   }
 
   public void setTestPassStatusCanceled(Integer testPassId) {
-    String query = "UPDATE TestPass tp SET tp.status = 'CANCELED' WHERE id = "+testPassId;
+    String query = "UPDATE TestPass tp SET tp.status = 'CANCELED' WHERE id = " + testPassId;
     getSession().createQuery(query).executeUpdate();
   }
 
@@ -101,4 +103,26 @@ public class TestPassDao extends GenericDao {
         .setParameter("id", testPassId)
         .getSingleResult();
   }
+
+  public List<TestPass> getTestPassByUserAndTestId(Integer userId, Integer testId) {
+    return getSession()
+        .createQuery("select tp from TestPass tp where tp.userId = :user_id and tp.testId = :test_id", TestPass.class)
+        .setParameter("user_id", userId)
+        .setParameter("test_id", testId)
+        .getResultList();
+  }
+
+  public List<TestPassDto> getAllTestPassesForUser(int page, int perPage, int testId, int userId) {
+    return getSession()
+        .createQuery("select new ru.hh.superscoring.dto" +
+            ".TestPassDto(tp.id,tp.status,tp.finalScore,tp.maxPossible,tp.qualificationName,tp.timeFinished,tp.timeStarted,tp.testId,t.name) " +
+            "from TestPass tp inner join Test t on tp.testId = t.id " +
+            "where tp.testId = :testId and tp.userId = :userId order by tp.id asc", TestPassDto.class)
+        .setParameter("testId",testId)
+        .setParameter("userId",userId)
+        .setFirstResult(page * perPage)
+        .setMaxResults(perPage)
+        .getResultList();
+  }
+
 }

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import java.util.Set;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -21,10 +22,17 @@ import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
+import ru.hh.superscoring.dto.StartResultDto;
+import ru.hh.superscoring.dto.TestBoardForUserDto;
+import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.dto.TestPassBoardDto;
+import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestPassService;
 import ru.hh.superscoring.service.TestService;
+import ru.hh.superscoring.util.StartResult;
 
 @Tag(name = "Прохождение теста", description = "API для взаимодействия с прохождениями тестов")
 @Path("/")
@@ -61,11 +69,17 @@ public class TestPassResource {
       return Response.status(404, "There is no such test in the system ").build();
     }
     try {
-      if (testPassService.startTest(testId, userId)) {
-        return Response.status(201).build();
+      StartResultDto startResultDto = testPassService.startTest(testId, userId);
+      if (startResultDto.getStartResult() == StartResult.ALREADY_STARTED) {
+        return Response.status(400, "This user has already started the test")
+            .build();
       }
-      return Response.status(400, "This user has already started the test")
-          .build();
+      if (startResultDto.getStartResult() == StartResult.SPENT || startResultDto.getStartResult() == StartResult.PASSED) {
+        return Response.status(400).entity(startResultDto).build();
+      }
+      return Response.status(201).build();
+    } catch (TestNoFilledException tnf) {
+      return Response.status(400).entity(tnf.getMessage()).build();
     } catch (HibernateException he) {
       return Response.status(400, "This test is not yet available for passing. Please try again later.")
           .build();
@@ -131,4 +145,31 @@ public class TestPassResource {
     }
     return Response.status(201).entity("Canceled!").build();
   }
+
+  @GET
+  @Operation(summary = "Получение истории прохождений пользователя", description = "Получение истории прохождения пользователем указанного теста")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "200", description = "возвращает JSON объект с отображением порядкового номера на TestPassDTO",
+      content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации или прохождение отсутствует")})
+  @Path("/all-passes-for-user")
+  @Produces("application/json")
+  public Response getAllTestPassesForUser(@HeaderParam("authorization") String authorizationToken,
+                                          @QueryParam("page") @DefaultValue("0") int page,
+                                          @QueryParam("perPage") @DefaultValue("10") int perPage,
+                                          @QueryParam("testId") int testId) {
+    if (authorizationToken == null) {
+      return Response.status(401).entity("No token found!").build();
+    }
+    Integer userId = authService.getUserIdWithToken(authorizationToken);
+    if (userId == null) {
+      return Response.status(404, "Invalid token!").build();
+    }
+    List<TestPassDto> testPasses = testPassService.getAllTestPassesForUser(page, perPage, testId,userId);
+    return Response.ok(TestPassBoardDto.map(testPasses, page, perPage)).build();
+  }
+
 }
+
+

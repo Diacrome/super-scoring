@@ -5,34 +5,30 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.dao.QuestionDistributionDao;
+import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.util.JsonValidator;
 
 public class QuestionService {
   private final QuestionDao questionDao;
   private final QuestionDistributionDao questionDistributionDao;
   private final TestService testService;
+  private final TestDao testDao;
 
 
-  public QuestionService(QuestionDao questionDao, QuestionDistributionDao questionDistributionDao, TestService testService) {
+  public QuestionService(QuestionDao questionDao, QuestionDistributionDao questionDistributionDao, TestService testService, TestDao testDao) {
     this.questionDao = questionDao;
     this.questionDistributionDao = questionDistributionDao;
     this.testService = testService;
-  }
-
-  public List<Question> getQuestionsForStart(Integer testId) {
-    List<Question> allQuestions = questionDao.getQuestionsForTest(testId);
-    Integer testSize = testService.getTestSizeById(testId);
-    if (allQuestions.size() < testSize) {
-      return List.of();
-    }
-    Collections.shuffle(allQuestions);
-    return allQuestions.subList(0, testSize);
+    this.testDao = testDao;
   }
 
   @Transactional
@@ -55,26 +51,46 @@ public class QuestionService {
     return questionDao.getAllQuestions(page, perPage);
   }
 
-  @Transactional
-  public List<Question> getQuestionsForTestByDistribution(Integer testId) {
-    List<QuestionDistribution> distributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
+  @Transactional(readOnly = true)
+  public List<Question> getQuestionsForTestByDistribution(Integer testId) throws TestNoFilledException {
+    List<QuestionDistribution> preassignedDistributions = questionDistributionDao.getAllQuestionDistributionsForTest(testId);
     List<Question> questions = questionDao.getQuestionsForTest(testId);
-    List<Question> finalQuestions = new ArrayList<Question>();
+    validateTest(testDao.getTestSize(testId), preassignedDistributions, questions);
+    Map<Integer, Integer> distributions = preassignedDistributions
+        .stream().collect(Collectors.toMap(
+            distribution -> distribution.getWeight(),
+            distribution -> distribution.getQuestionCount()
+        ));
 
-    for (QuestionDistribution distribution : distributions) {
-      List<Question> tempListQuestions = new ArrayList<Question>();
-      for (Question question : questions) {
-        if (question.getWeight() == distribution.getWeight()) {
-          tempListQuestions.add(question);
-        }
+    List<Question> finalQuestions = new ArrayList<>();
+    Integer questionsNumberOfTest = distributions.values().stream().reduce(0, Integer::sum);
+
+    while (questionsNumberOfTest > 0) {
+      int currentIndex = (int) (Math.random() * questions.size());
+      if (distributions.get(questions.get(currentIndex).getWeight()) > 0) {
+        distributions.put(questions.get(currentIndex).getWeight(), distributions.get(questions.get(currentIndex).getWeight()) - 1);
+        finalQuestions.add(questions.get(currentIndex));
+        questionsNumberOfTest--;
       }
-      if (tempListQuestions.size() < distribution.getQuestionCount()) {
-        return List.of();
-      }
-      Collections.shuffle(tempListQuestions);
-      finalQuestions.addAll(tempListQuestions.subList(0, distribution.getQuestionCount()));
+      Collections.swap(questions, currentIndex, questions.size() - 1);
+      questions.remove(questions.size() - 1);
     }
     return finalQuestions;
+  }
+
+  private void validateTest(Integer testQuantity, List<QuestionDistribution> preassignedDistributions, List<Question> activeQuestions) throws TestNoFilledException {
+    if (activeQuestions.size() < testQuantity) {
+      throw new TestNoFilledException("Not enough questions for the test");
+    }
+
+    Map<Integer, Integer> realDistribution = activeQuestions.stream()
+        .collect(Collectors.toMap(Question::getWeight, value -> 1, Integer::sum));
+
+    for (QuestionDistribution questionDistribution : preassignedDistributions) {
+      if (questionDistribution.getQuestionCount() > realDistribution.getOrDefault(questionDistribution.getWeight(), 0)) {
+        throw new TestNoFilledException(questionDistribution.getWeight());
+      }
+    }
   }
 
   @Transactional
@@ -95,7 +111,7 @@ public class QuestionService {
   }
 
   @Transactional
-  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException{
+  public boolean addQuestion(Question newQuestion) throws IllegalArgumentException {
     try {
       if (!JsonValidator.verifyAnswer(newQuestion.getAnswer(), newQuestion.getPayload(), newQuestion.getAnswerType())) {
         throw new IllegalArgumentException("Answer is not valid");

@@ -35,10 +35,23 @@ public class Test {
   @Column(name = "question_quantity")
   private Integer questionQuantity;
 
+  @Column(name = "attempt_quantity")
+  private Integer attemptQuantity;
+
+  @Column(name = "repeat_interval")
+  private Integer repeatInterval;
+
   @Column(name = "is_active")
   private Boolean isActive;
 
+  @Column(name = "time_limit")
+  private long timeLimit;
+
   public Test() {
+  }
+
+  public long getTimeLimit() {
+    return timeLimit;
   }
 
   public Integer getQuestionQuantity() {
@@ -107,5 +120,25 @@ public class Test {
 
   public void setIsActive(Boolean isActive) {
     this.isActive = isActive;
+  }
+
+  public void setTimeLimit(Short timeLimit) {
+    this.timeLimit = timeLimit;
+  }
+
+  public Integer getAttemptQuantity() {
+    return attemptQuantity;
+  }
+
+  public Integer getRepeatInterval() {
+    return repeatInterval;
+  }
+
+  public void setAttemptQuantity(Integer attemptQuantity) {
+    this.attemptQuantity = attemptQuantity;
+  }
+
+  public void setRepeatInterval(Integer repeatInterval) {
+    this.repeatInterval = repeatInterval;
   }
 }

@@ -14,10 +14,13 @@ create table test
     name              text     not null,
     description       text,
     question_quantity smallint not null           default 10,
+    attempt_quantity  smallint not null           default 3,
+    repeat_interval   integer  not null           default 20,
     date_created      timestamp without time zone default (now() at time zone 'utc'),
     date_modified     timestamp without time zone,
     modifier_id       integer references  ss_user (id),
-    is_active         boolean default true
+    is_active         boolean default true,
+    time_limit        bigint
 );
 
 create table question_distribution
@@ -103,10 +106,10 @@ values ('admin', 'LyB7wiGICF5mCQizydjYMA', 'Ivan', 'ADMIN'),-- pass: admin1
        ('user2', 'pfH0FU_RuP4PRaTB84uFqw', 'Anna', 'USER');   --  pass: user2
 
 
-insert into test (creator_id, name, description, date_created, date_modified)
-values (1, 'Математический тест', 'Тест на знание таблицы умножения', now(), now()),
-       (2, 'Тест по английскому языку', 'Тест на знание английского языка', now(), now()),
-       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now());
+insert into test (creator_id, name, description, date_created, date_modified, time_limit)
+values (1, 'Математический тест', 'Тест на знание таблицы умножения', now(), now(), 300),
+       (2, 'Тест по английскому языку', 'Тест на знание английского языка', now(), now(), 300),
+       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now(), 300);
 
 insert into qualification (test_id,order_number,qualification_name)
 values (1,1,'Доктор математических наук'),
@@ -140,12 +143,12 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
        (1, '9*9 = ', '{"1": 81, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
        (1, '10*10 = ', '{"1": 100, "2": 1000, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
        (1, '6*5 = ', '{"1": 1, "2": 30, "3": 35, "4": 1}', '{"answer": "2"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
-       (1, '7*6 = ', '{"1": 1, "2": 3, "3": 42, "4": 44}', '{"answer": "3"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
-       (1, '7*8 = ', '{"1": 1, "2": 3, "3": 4, "4": 56}', '{"answer": "4"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
-       (1, '8*9 = ', '{"1": 72, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
-       (1, '6*4 = ', '{"1": 1, "2": 24, "3": 4, "4": 1}', '{"answer": "2"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
-       (1, '2*3 = ', '{"1": 1, "2": 3, "3": 6, "4": 1}', '{"answer": "3"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
-       (1, '5*4 = ', '{"1": 1, "2": 3, "3": 4, "4": 20}', '{"answer": "4"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
+       (1, '7*6 = ', '{"1": 1, "2": 3, "3": 42, "4": 44}', '{"answer": "3"}', null,'SINGLE_CHOICE', 2, now(), now(), 30),
+       (1, '7*8 = ', '{"1": 1, "2": 3, "3": 4, "4": 56}', '{"answer": "4"}', null,'SINGLE_CHOICE', 2, now(), now(), 30),
+       (1, '8*9 = ', '{"1": 72, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null,'SINGLE_CHOICE', 2, now(), now(), 30),
+       (1, '6*4 = ', '{"1": 1, "2": 24, "3": 4, "4": 1}', '{"answer": "2"}', null,'SINGLE_CHOICE', 2, now(), now(), 30),
+       (1, '2*3 = ', '{"1": 1, "2": 3, "3": 6, "4": 1}', '{"answer": "3"}', null,'SINGLE_CHOICE', 2, now(), now(), 30),
+       (1, '5*4 = ', '{"1": 1, "2": 3, "3": 4, "4": 20}', '{"answer": "4"}', null,'SINGLE_CHOICE', 2, now(), now(), 30),
        (1, '5*4 = ', '{"1": 1, "2": 20, "3": 4, "4": 20}', '{"multiple_answer1": "2", "multiple_answer2": "4"}', null,'MULTIPLE_CHOICE', 1, now(), now(), 30),
        (2, 'Kang thought the spicy tofu dish was %answer tasty, so he ordered it again.', '{"1": "mainly", "2": "fairy", "3": "especially", "4": "slightly"}', '{"answer": "3"}', null, 'SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'They’ve been married for over fifty years, but she still remembers the day she first %answer.', '{"1": "keen on him", "2": "stuck on him", "3": "fell for him", "4": "wed him"}', '{"answer": "3"}', null, 'SINGLE_CHOICE', 1, now(), now(), 30),
@@ -155,10 +158,17 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
        (2, 'For the questions below, please choose the best option to complete the sentence or conversation. \n Can I park here?', '{"1": "Sorry, I did that.", "2": "It''s the same place.", "3": "Only for half an hour."}', '{"answer": "3"}', null, 'SINGLE_CHOICE', 1, now(), now(), 30),
        (2, ' I''m sorry - I didn''t %answer to disturb you.', '{"1": "hope", "2": "think", "3": "mean", "4": "suppose"}', '{"answer": "3"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
        (2, '%answer tired Melissa is when she gets home from work, she always makes time to say goodnight to the children.', '{"1": "Whatever", "2": "No matter how", "3": "However much", "4": "Although"}', '{"answer": "2"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
-       (2, 'How old is your %answer?” – “She''s thirteen.”', '{"1": "brother", "2": "son", "3": "boyfriend", "4": "sister"}', '{"answer": "4"}', '[{ "url": "image/smile.jpg", "type": "image" }]','SINGLE_CHOICE', 1, now(), now(), 30),
-       (2, 'Do you like horror movies?', '{"1": "Yes, I am", "2": "Yes, I like", "3": "Yes, I do", "4": "Yes, it is"}', '{"answer": "3"}', '[{ "url": "image/balloon.jpg", "type": "image" }]','SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'How old is your %answer?” – “She''s thirteen.”', '{"1": "brother", "2": "son", "3": "boyfriend", "4": "sister"}', '{"answer": "4"}', '[{ "url": "image/smile.png", "type": "image" }]','SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Do you like horror movies?', '{"1": "Yes, I am", "2": "Yes, I like", "3": "Yes, I do", "4": "Yes, it is"}', '{"answer": "3"}', '[{ "url": "image/balloon.png", "type": "image" }]','SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'Jane Smith – cacti gardener. Many people are fond %answer1 gardening but Jane is different from them – she %answer2 only cacti. As a young girl she liked watching how her mother took care of plants, trees, and bushes in their garden and Jane helped her a lot. Jane’s collection of cacti from all over the world reminds her of her mother and childhood.', '{"answer1":{"1": "plants", "2": "is planting", "3": "has planted"}, "answer2": {"1": "plants", "2": "is planting", "3": "has planted"}}', '{"answer1": "2", "answer2" : "3"}', null, 'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'Что произносится на видео?', '{"1": "Это мои предложения", "2": "Это мой офис", "3": "Это в моём офисе", "4": "Я у себя в офисе"}', '{"answer": "2"}', '[{ "url": "video/6246068703.mp4", "type": "video" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Everybody hold on %answer the tree.  (нужно понять, что произносят на видео)', '{"1": "in", "2": "out", "3": "to", "4": "at"}','{"answer": "3"}', '[{ "url": "video/09a67c515c.mp4", "type": "video" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Что произносится на видео?', '{"1": "Когда это?", "2": "Где это?", "3": "Что это?", "4": "Откуда это?"}', '{"answer": "2"}', '[{ "url": "video/48162aaadc.mp4", "type": "video" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Какое высказывание соответствует озвученной информации?', '{"1": "Prices in Ikea depend on what people purchase more often", "2": "Ikea offers a wide range of products", "3": "Ikea mostly sells affordable goods", "4": "Ikea’s furniture is out of most people’s price range"}', '{"answer": "3"}', '[{ "url": "video/c37e7077c0.mp4", "type": "video" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Вставьте правильный артикль, если он необходим:', '{"1": "an", "2": "–", "3": "a", "4": "the"}', '{"answer": "4"}', '[{ "url": "image/submorina.png", "type": "image" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'When do you play tennis? - %answer Fridays.', '{"1": "On", "2": "By", "3": "In", "4": "At"}', '{"answer": "1"}', '[{ "url": "image/racket.png", "type": "image" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Выберите правильный вариант:', '{"1": "don''t, understands", "2": "don''t, understand", "3": "doesn''t, understand", "4": "doesn''t, understands"}', '{"answer": "4"}', '[{ "url": "image/coffee.png", "type": "image" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Выберите правильный вариант перевода: \n Ему следует убрать свою комнату', '{"1": "He should clean up his room", "2": "He needs to remove his room", "3": "He must clean up his room", "4": "He has to remove his room"}', '{"answer": "1"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
        (3, 'Отопление: О наличии протечки в системе отопления могут сигнализировать:', '{"1": "неработающий отопитель салона транспортного средства", "2": "лужицы охлаждающей жидкости", "3": "ошибка запуска жидкостного подогревателя", "4": "характерный запах в салоне", "5": "непривычные шумы в работе штатного насоса"}', '{"multiple_answer1": "2", "multiple_answer2": "4"}', null,'MULTIPLE_CHOICE', 2, now(), now(), 30),
        (3, 'Отопление: Какое устройство системы отопления может работать автономно при неработающем двигателе?', '{"1": "Водяной насос", "2": "Конвекторный отопитель", "3": "Электровентилятор", "4": "Предпусковой подогреватель"}', '{"answer": "4"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
        (3, 'Кондиционеры: Заполните пробел: в устройстве кондиционера можно выделить %answer контура/контуров давлени', '{"1": 2, "2": 3, "3": 4, "4": 5}', '{"answer": "1"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
@@ -179,12 +189,13 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
        (3, 'Топливная система: Топливный насос — это..', '{"1": "резервуар для хранения топлива, с которым может сообщаться система улавливания паров топлива", "2": "элемент, который управляет впрыском и обеспечивает необходимый состав топливно-воздушной смеси", "3": "устройство, которое обеспечивает очистку топлива от разнообразных загрязнений, пыли и посторонних твердых частиц", "4": "устройство, которое подает топливо из бака к двигателю и создает высокое давление"}', '{"answer": "4"}', null,'SINGLE_CHOICE', 1, now(), now(), 30);
 
 insert into question_distribution (test_id, weight, question_count)
-values (1, 1, 6),
+values (1, 1, 5),
        (1, 2, 5),
-       (3, 1, 6),
+       (2, 1, 10),
+       (3, 1, 5),
        (3, 2, 5);
 
-insert into test_pass (test_id, user_id, time_started, time_finished, final_score,status)
+insert into test_pass (test_id, user_id, time_started, time_finished, final_score, status)
 values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED'),
        (1, 4, now() - interval '200 seconds', null, null,'PASS'),
        (2, 1, now() - interval '200 seconds', null, null,'PASS'),
@@ -196,7 +207,9 @@ values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED'),
        (1,4,'2022-05-20 17:44:59.791','2022-05-20 23:02:35.601',8,'PASSED'),
        (1,4,'2022-05-20 18:03:21.564','2022-05-20 23:03:35.265',3,'PASSED'),
        (2,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',5,'PASSED'),
-       (1,2,'2022-05-20 18:03:45.554',NULL,NULL,'PASS');
+       (1,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',10,'PASSED'),
+       (1,2,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',8,'PASSED'),
+       (1,2,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',10,'PASSED');
 
 
 insert into test_pass_question_id (test_pass_id, question_id_order, question_id)

@@ -83,8 +83,13 @@ label {
     padding-bottom: 50px;
 }
 
-.navbar-logout {
+.navbar-buttons {
     margin-left: auto;
+    display: flex;
+}
+
+.navbar-btn {
+    margin-left: 20px
 }
 
 .test-catalog {
@@ -105,6 +110,11 @@ label {
     max-width: 800px;
 }
 
+.test_content {
+    display: block;
+    margin-top: 15px;
+    width: 100%;
+}
 
 .test__question-text {
     margin: 15px 0;

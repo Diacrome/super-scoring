@@ -301,12 +301,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{server}}{{startEndPoint}}/1",
+							"raw": "{{server}}{{startEndPoint}}/3",
 							"host": [
 								"{{server}}{{startEndPoint}}"
 							],
 							"path": [
-								"1"
+								"3"
 							]
 						}
 					},
@@ -341,12 +341,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{server}}{{startEndPoint}}/1",
+							"raw": "{{server}}{{startEndPoint}}/3",
 							"host": [
 								"{{server}}{{startEndPoint}}"
 							],
 							"path": [
-								"1"
+								"3"
 							]
 						}
 					},
