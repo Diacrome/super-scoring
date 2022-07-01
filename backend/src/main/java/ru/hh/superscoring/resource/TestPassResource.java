@@ -52,7 +52,9 @@ public class TestPassResource {
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Тестирование начато"
   ), @ApiResponse(responseCode = "401", description = "Токен не передан"
   ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации или указанный тест отсутствует"
-  ), @ApiResponse(responseCode = "400", description = "Тестирование не может быть начато: другой тест начат или вопросов недостаточно")})
+  ), @ApiResponse(responseCode = "400",
+      description = "Тестирование не может быть начато: другой тест начат, превышено допустимое количество попыток, " +
+          "тест успешно пройден недавно или вопросов недостаточно")})
   @Path("/start/{testId}")
   @Produces("application/json")
   public Response startTest(@PathParam("testId") Integer testId,
@@ -119,7 +121,7 @@ public class TestPassResource {
   ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации или прохождение отсутствует")})
   @Path("/leaders/{testId}")
   @Produces("application/json")
-  public Response startTest(@PathParam("testId") Integer testId,
+  public Response getLeaderBoard(@PathParam("testId") Integer testId,
                             @QueryParam("page") @DefaultValue("0") Integer page,
                             @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
 
@@ -127,6 +129,12 @@ public class TestPassResource {
   }
 
   @POST
+  @Operation(summary = "Отмена тестирования", description = "Завершает досрочно процесс прохождения теста")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Тестирование отменено"
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "400",
+      description = "Прохождение отсутствует или запись об отмене тестирования не удалось произвести корректно")})
   @Path("/cancel")
   public Response cancelTest(@HeaderParam("authorization") String authorizationToken) {
     if (authorizationToken == null) {

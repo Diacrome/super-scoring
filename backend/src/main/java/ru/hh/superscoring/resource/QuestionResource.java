@@ -1,6 +1,8 @@
 package ru.hh.superscoring.resource;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,7 +59,18 @@ public class QuestionResource {
   }
 
   @GET
+  @Operation(summary = "Получение вопросов",
+      description = "Получение вопросов относящихся к данному тесту по id теста. Доступно только с правами администратора")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении списка вопросов",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = QuestionBoardDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "403", description = "Недостаточно прав"
+  ), @ApiResponse(responseCode = "400", description = "Вопросов для указанного теста не найдено")})
   @Path("/all-questions-in-test/{testId}")
+  @Produces("application/json")
   public Response getAllQuestionsForTest(@PathParam("testId") int testId,
                                          @HeaderParam("authorization") String authorizationToken,
                                          @QueryParam("page") @DefaultValue("0") Integer page,
@@ -75,7 +88,17 @@ public class QuestionResource {
   }
 
   @GET
+  @Operation(summary = "Получение вопросов",
+      description = "Получение всех вопросов. Доступно только с правами администратора")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении списка вопросов",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = QuestionBoardDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "403", description = "Недостаточно прав")})
   @Path("/all-questions")
+  @Produces("application/json")
   public Response getAllQuestions(@HeaderParam("authorization") String authorizationToken,
                                   @QueryParam("page") @DefaultValue("0") Integer page,
                                   @QueryParam("perPage") @DefaultValue("10") Integer perPage) {

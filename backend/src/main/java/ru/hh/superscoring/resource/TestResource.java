@@ -171,6 +171,14 @@ public class TestResource {
   }
 
   @GET
+  @Operation(summary = "Получение тестов", description = "Получение всех тестов. Доступно только с правами администратора")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении списка тестов",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TestBoardDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "403", description = "Недостаточно прав")})
   @Path("/get-tests")
   @Produces("application/json")
   public Response getAllTests(@HeaderParam("authorization") String authorizationToken,
@@ -192,6 +200,13 @@ public class TestResource {
   }
 
   @GET
+  @Operation(summary = "Получение тестов", description = "Получение всех тестов. Доступно для всех типов пользователей")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении списка тестов",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TestBoardForUserDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации")})
   @Path("/all-tests-for-user")
   @Produces("application/json")
   public Response getAllTestsForUser(@HeaderParam("authorization") String authorizationToken,
@@ -209,6 +224,13 @@ public class TestResource {
   }
 
   @GET
+  @Operation(summary = "Получение результатов прохождения теста",
+      description = "Получение результатов прохождения теста по id прохождения теста")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении результатов прохождения теста",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TestPassDto.class))}
+  ), @ApiResponse(responseCode = "404", description = "Отсутствует прохождение теста с таким id")})
   @Path("/results/{pass_id}")
   @Produces("application/json")
   public Response getTestPassResults(@PathParam("pass_id") int testPassId) {
