@@ -2,7 +2,6 @@ package ru.hh.superscoring.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
-import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.util.TestPassStatus;
 
 public class TestPassDto {
@@ -17,22 +16,6 @@ public class TestPassDto {
   private LocalDateTime startDateTime;
   private Integer testId;
   private String testName;
-
-  public static TestPassDto map(TestPass testPass) {
-    if (testPass == null) {
-      return null;
-    }
-    TestPassDto testPassDto = new TestPassDto();
-    testPassDto.setTestPassId(testPass.getId());
-    testPassDto.setStatus(testPass.getStatus());
-    testPassDto.setFinalScore(testPass.getFinalScore());
-    testPassDto.setMaxPossible(testPass.getMaxPossible());
-    testPassDto.setQualificationName(testPass.getQualificationName());
-    testPassDto.setEndDateTime(testPass.getTimeFinished());
-    testPassDto.setStartDateTime(testPass.getTimeStarted());
-    testPassDto.setTestId(testPass.getTestId());
-    return testPassDto;
-  }
 
   public TestPassDto() {
   }

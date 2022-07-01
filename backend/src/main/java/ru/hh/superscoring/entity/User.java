@@ -29,11 +29,33 @@ public class User {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "surname")
+  private String surname;
+
+  @Column(name = "patronymic")
+  private String patronymic;
+
   @Column(name = "role")
   @Enumerated(EnumType.STRING)
   private Role role;
 
   public User() {
+  }
+
+  public String getSurname() {
+    return surname;
+  }
+
+  public void setSurname(String surname) {
+    this.surname = surname;
+  }
+
+  public String getPatronymic() {
+    return patronymic;
+  }
+
+  public void setPatronymic(String patronymic) {
+    this.patronymic = patronymic;
   }
 
   public Integer getId() {

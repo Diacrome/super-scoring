@@ -24,6 +24,7 @@ import ru.hh.superscoring.dto.TestBoardDto;
 import ru.hh.superscoring.dto.TestBoardForUserDto;
 import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassDto;
+import ru.hh.superscoring.dto.UserPassDto;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
@@ -210,8 +211,8 @@ public class TestResource {
   @Path("/all-tests-for-user")
   @Produces("application/json")
   public Response getAllTestsForUser(@HeaderParam("authorization") String authorizationToken,
-                              @QueryParam("page") @DefaultValue("0") Integer page,
-                              @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
+                                     @QueryParam("page") @DefaultValue("0") Integer page,
+                                     @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
     if (authorizationToken == null) {
       return Response.status(401).entity("No token found!").build();
     }
@@ -234,9 +235,9 @@ public class TestResource {
   @Path("/results/{pass_id}")
   @Produces("application/json")
   public Response getTestPassResults(@PathParam("pass_id") int testPassId) {
-    TestPassDto testPassDto = testPassService.getTestPassById(testPassId);
-    if (testPassDto != null) {
-      return Response.status(201).entity(testPassDto).build();
+    UserPassDto userPassDto = (UserPassDto) testPassService.getTestPassById(testPassId);
+    if (userPassDto != null) {
+      return Response.status(201).entity(userPassDto).build();
     } else {
       return Response.status(404, "There is no such 'TestPass' in the system").build();
     }
