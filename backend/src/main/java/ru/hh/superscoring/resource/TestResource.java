@@ -99,6 +99,9 @@ public class TestResource {
   public Response createTest(@FormParam("name") String name,
                              @FormParam("description") String description,
                              @FormParam("questionCount") Integer questionCount,
+                             @FormParam("attemptQuantity") Integer attemptQuantity,
+                             @FormParam("repeatInterval") Integer repeatInterval,
+                             @FormParam("timeLimit") short timeLimit,
                              @HeaderParam("authorization") String authorizationToken) {
     Integer userId = authService.getUserIdWithToken(authorizationToken);
     if (userId == null) {
@@ -110,7 +113,7 @@ public class TestResource {
     }
     Integer savedId;
     try {
-      savedId = testService.saveTest(name, description, userId, questionCount);
+      savedId = testService.saveTest(name, description, userId, questionCount, attemptQuantity, repeatInterval, timeLimit);
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
@@ -140,7 +143,7 @@ public class TestResource {
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
-    return Response.status(201).build();
+    return Response.status(201).entity("Test disabled").build();
   }
 
   @POST
@@ -168,7 +171,7 @@ public class TestResource {
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
-    return Response.status(201).build();
+    return Response.status(201).entity("Test enabled").build();
   }
 
   @GET
