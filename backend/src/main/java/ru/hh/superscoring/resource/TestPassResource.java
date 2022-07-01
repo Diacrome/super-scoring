@@ -38,13 +38,11 @@ public class TestPassResource {
   private final TestPassService testPassService;
   private final TestService testService;
   private final AuthService authService;
-  private final UserDao userDao;
 
-  public TestPassResource(TestPassService testPassService, TestService testService, AuthService authService, UserDao userDao) {
+  public TestPassResource(TestPassService testPassService, TestService testService, AuthService authService) {
     this.testPassService = testPassService;
     this.testService = testService;
     this.authService = authService;
-    this.userDao = userDao;
   }
 
   @POST
