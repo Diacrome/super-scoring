@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import java.util.Set;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -20,14 +19,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
+import ru.hh.superscoring.dao.UserDao;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.dto.StartResultDto;
-import ru.hh.superscoring.dto.TestBoardForUserDto;
-import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassBoardDto;
-import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
+import ru.hh.superscoring.entity.User;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestPassService;
@@ -122,8 +120,8 @@ public class TestPassResource {
   @Path("/leaders/{testId}")
   @Produces("application/json")
   public Response getLeaderBoard(@PathParam("testId") Integer testId,
-                            @QueryParam("page") @DefaultValue("0") Integer page,
-                            @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
+                                 @QueryParam("page") @DefaultValue("0") Integer page,
+                                 @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
 
     return Response.ok(testPassService.getLeaders(testId, page, perPage)).build();
   }
@@ -174,10 +172,7 @@ public class TestPassResource {
     if (userId == null) {
       return Response.status(404, "Invalid token!").build();
     }
-    List<TestPassDto> testPasses = testPassService.getAllTestPassesForUser(page, perPage, testId,userId);
-    return Response.ok(TestPassBoardDto.map(testPasses, page, perPage)).build();
+    return Response.ok(testPassService.getAllTestPassesForUser(page, perPage, testId, userId)).build();
   }
 
 }
-
-

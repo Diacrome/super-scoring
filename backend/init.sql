@@ -4,6 +4,8 @@ create table ss_user
     login    varchar(64)  not null,
     password varchar(128) not null,
     name     varchar(64)  not null,
+    surname  varchar(64),
+    patronymic varchar(64),
     role     varchar(16)  not null
 );
 
