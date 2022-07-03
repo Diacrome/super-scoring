@@ -66,7 +66,7 @@ create table qualification
 (
     id           serial  primary key,
     test_id      integer not null references test (id),
-    order_number smallint not null,
+    qualification_score smallint not null,
     qualification_name varchar(50)
 
 );
@@ -111,26 +111,33 @@ values ('admin', 'LyB7wiGICF5mCQizydjYMA', 'Ivan', 'ADMIN'),-- pass: admin1
 insert into test (creator_id, name, description, date_created, date_modified, time_limit)
 values (1, 'Математический тест', 'Тест на знание таблицы умножения', now(), now(), 300),
        (2, 'Тест по английскому языку', 'Тест на знание английского языка', now(), now(), 300),
-       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now(), 300);
+       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now(), 300),
+       (4, 'Деловой английский язык','Тест на знание делового английского языка',now(),now(),300);
 
-insert into qualification (test_id,order_number,qualification_name)
-values (1,1,'Доктор математических наук'),
-       (1,2,'Кандидат математических наук'),
+insert into qualification (test_id,qualification_score,qualification_name)
+values (1,5,'Доктор математических наук'),
+       (1,4,'Кандидат математических наук'),
        (1,3,'Преподаватель высшей математики'),
-       (1,4,'Преподаватель арифметики в школе'),
-       (1,5,'Выпускник школы'),
-       (2,1,'Proficiency'),
-       (2,2,'Advanced'),
-       (2,3,'Upper-Intermediate'),
-       (2,4,'Intermediate'),
-       (2,5,'Pre-Intermediate'),
-       (2,6,'Elementary'),
-       (3,1,'6 разряд'),
-       (3,2,'5 разряд'),
-       (3,3,'4 разряд'),
-       (3,4,'3 разряд'),
-       (3,5,'2 разряд'),
-       (3,6,'1 разряд');
+       (1,2,'Преподаватель арифметики в школе'),
+       (1,1,'Выпускник школы'),
+       (2,6,'Proficiency'),
+       (2,5,'Advanced'),
+       (2,4,'Upper-Intermediate'),
+       (2,3,'Intermediate'),
+       (2,2,'Pre-Intermediate'),
+       (2,1,'Elementary'),
+       (3,6,'6 разряд'),
+       (3,5,'5 разряд'),
+       (3,4,'4 разряд'),
+       (3,3,'3 разряд'),
+       (3,2,'2 разряд'),
+       (3,1,'1 разряд'),
+       (4,18,'Elementary'),
+       (4,36,'Pre-Intermediate'),
+       (4,54,'Intermediate'),
+       (4,72,'Upper-Intermediate'),
+       (4,90,'Advanced');
+
 
 insert into question(test_id, question_wording, payload, answer, question_content, answer_type, weight, date_created, date_modified,
                      time_limit)
@@ -162,7 +169,7 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
        (2, '%answer tired Melissa is when she gets home from work, she always makes time to say goodnight to the children.', '{"1": "Whatever", "2": "No matter how", "3": "However much", "4": "Although"}', '{"answer": "2"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'How old is your %answer?” – “She''s thirteen.”', '{"1": "brother", "2": "son", "3": "boyfriend", "4": "sister"}', '{"answer": "4"}', '[{ "url": "image/smile.png", "type": "image" }]','SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'Do you like horror movies?', '{"1": "Yes, I am", "2": "Yes, I like", "3": "Yes, I do", "4": "Yes, it is"}', '{"answer": "3"}', '[{ "url": "image/balloon.png", "type": "image" }]','SINGLE_CHOICE', 1, now(), now(), 30),
-       (2, 'Jane Smith – cacti gardener. Many people are fond %answer1 gardening but Jane is different from them – she %answer2 only cacti. As a young girl she liked watching how her mother took care of plants, trees, and bushes in their garden and Jane helped her a lot. Jane’s collection of cacti from all over the world reminds her of her mother and childhood.', '{"answer1":{"1": "plants", "2": "is planting", "3": "has planted"}, "answer2": {"1": "plants", "2": "is planting", "3": "has planted"}}', '{"answer1": "2", "answer2" : "3"}', null, 'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 1, now(), now(), 30),
+       (2, 'Jane Smith – cacti gardener. Many people are fond %answer1 gardening but Jane is different from them – she %answer2 only cacti. As a young girl she liked watching how her mother took care of plants, trees, and bushes in their garden and Jane helped her a lot. Jane’s collection of cacti from all over the world reminds her of her mother and childhood.', '{"answer1": {"1": "plants", "2": "is planting", "3": "has planted"}, "answer2": {"1": "plants", "2": "is planting", "3": "has planted"}}', '{"answer1": "2", "answer2": "3"}', null, 'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'Что произносится на видео?', '{"1": "Это мои предложения", "2": "Это мой офис", "3": "Это в моём офисе", "4": "Я у себя в офисе"}', '{"answer": "2"}', '[{ "url": "video/6246068703.mp4", "type": "video" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'Everybody hold on %answer the tree.  (нужно понять, что произносят на видео)', '{"1": "in", "2": "out", "3": "to", "4": "at"}','{"answer": "3"}', '[{ "url": "video/09a67c515c.mp4", "type": "video" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
        (2, 'Что произносится на видео?', '{"1": "Когда это?", "2": "Где это?", "3": "Что это?", "4": "Откуда это?"}', '{"answer": "2"}', '[{ "url": "video/48162aaadc.mp4", "type": "video" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
@@ -188,14 +195,44 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
        (3, 'Электрика: Оцените корректность утверждений:\nТермоусадочная изоляция применяется при электроремонте:\nА) для изоляции токоведущих частей\nБ) для защиты от окисления кислородом', '{"1": "Вариант Б верный, А неверный", "2": "А и Б неверны", "3": "А и Б верны", "4": "Вариант А верный, Б неверный"}', '{"answer": "3"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
        (3, 'Электрика: В чем заключаются особенности измерения величины тока мультиметром?', '{"1": "Выключатель измерительного прибора прерывает электрическую цепь", "2": "Мультиметр используется в качестве амперметра", "3": "Для предотвращения разрушения прибора от перегрузок может использоваться предохранитель ", "4": "Мультиметр подключается параллельно в электрическую цепь"}', '{"multiple_answer1": "2", "multiple_answer2": "3"}', null,'MULTIPLE_CHOICE', 2, now(), now(), 30),
        (3, 'Топливная система: Оцените корректность утверждений:\nА) Инжекторные системы подачи топлива, по сравнению с карбюраторными,  более точно дозируют топливо и обеспечивают более экономный его расход\nБ) В устройстве инжекторного двигателя с распределенным впрыском имеется одна форсунка, подающая  топливо для всех цилиндров двигателя', '{"1": "Вариант А верный, Б — неверный", "2": "Вариант А неверный, Б — верный", "3": "А и Б верны", "4": "А и Б неверны"}', '{"answer": "1"}', null,'SINGLE_CHOICE', 2, now(), now(), 30),
-       (3, 'Топливная система: Топливный насос — это..', '{"1": "резервуар для хранения топлива, с которым может сообщаться система улавливания паров топлива", "2": "элемент, который управляет впрыском и обеспечивает необходимый состав топливно-воздушной смеси", "3": "устройство, которое обеспечивает очистку топлива от разнообразных загрязнений, пыли и посторонних твердых частиц", "4": "устройство, которое подает топливо из бака к двигателю и создает высокое давление"}', '{"answer": "4"}', null,'SINGLE_CHOICE', 1, now(), now(), 30);
+       (3, 'Топливная система: Топливный насос — это..', '{"1": "резервуар для хранения топлива, с которым может сообщаться система улавливания паров топлива", "2": "элемент, который управляет впрыском и обеспечивает необходимый состав топливно-воздушной смеси", "3": "устройство, которое обеспечивает очистку топлива от разнообразных загрязнений, пыли и посторонних твердых частиц", "4": "устройство, которое подает топливо из бака к двигателю и создает высокое давление"}', '{"answer": "4"}', null,'SINGLE_CHOICE', 1, now(), now(), 30),
+       (4, 'If you match these criteria, contact your manager because you qualify for a salary %answer1\n\n -achieved your quarter goal\n -fulfilled personal development plan\n -received less than 5% of negative %answer2 from customers.\n\n A candidate for the salary increase is %answer3', '{"answer1": {"1": "upgrade", "2": "growth", "3": "raise"}, "answer2": {"1": "feedback", "2": "review", "3": "criticism"}, "answer3": {"1": "a team player", "2": "a goal-achiever who gives a positive experience to clients", "3": "an employee who fulfilled sales plan"}}', '{"answer1": "3", "answer2": "1", "answer3": "2"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 2, now(), now(), 30),
+       (4, 'FROM NOW ON ALL DOCUMENTATION IS ON CORPORATE EMAILS\n A week ago, our company hired the 5000th employee to the staff. That means that we aren’t a small startup anymore, but a big company. It is time to take care of %answer1 and move all documentation from personal to corporate emails.\n Do not worry, there’s no need to move your old files to the corporate’s drive. Just make sure that from now on, every data you create is located on your work %answer2\n The company requires to keep all documentation on corporate emails from now on because %answer3', '{"answer1": {"1": "insurance", "2": "security", "3": "safety"}, "answer2": {"1": "profile", "2": "link", "3": "account"}, "answer3": {"1": "they have a lot of employees and want to ensure digital security", "2": "they don’t want to move old files from personal accounts", "3": "they lost important data"}}', '{"answer1": "2", "answer2": "3", "answer3": "1"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 4, now(), now(), 30),
+       (4, 'Dear Mr. Smith,\n I got the letter you sent us about the telemarketing system. All conditions in the offer %answer1 great for us, just I want to double-check a few things with you. You said the system is up-to-date, but what will happen if it is outdated at some point? Do you provide a supporting service?\n Also, you mentioned that it takes two weeks to install the system. We are in a bit of a hurry, so is there %answer2 to finish the installation process for senior management in 2–3 days? \n Please, give me a call to discuss these matters. \n The purpose of this letter is %answer3', '{"answer1": {"1": "sound", "2": "ring", "3": "go"}, "answer2": {"1": "an opportunity", "2": "a circumstance", "3": "a possibility"}, "answer3": {"1": "to decline the offer", "2": "to sign a contract as soon as possible", "3": "to clarify some details about the offer"}}', '{"answer1": "1", "answer2": "3", "answer3": "3"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 6, now(), now(), 30),
+       (4, 'Most senior leaders of large enterprises state they want to %answer1 their workforce back to offices after the pandemic. Companies’ executives believe that teams located together build a high-productive work culture.\n However, employees are keen to retain their work-from-home privileges. Some of the advantages are less commute stress, flexible schedules, and saving money. Clearly, to keep staff businesses need to be sensitive around bringing people back to the office and figure %answer2 how to combine both office time and work from home.\n To maintain employees at work and fulfill their own interests companies should %answer3', '{"answer1": {"1": "relocate", "2": "shift", "3": "carry"}, "answer2": {"1": "out", "2": "up", "3": "through"}, "answer3": {"1": "locate teams together to build a high-productive work culture", "2": "create some sort of hybrid model necessitating partly office presence", "3": "keep privileges for workforce such as full-time work from home"}}', '{"answer1": "2", "answer2": "1", "answer3": "2"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 8, now(), now(), 30),
+       (4, 'Nowadays dynamic work environment %answer1 a robust leadership pipeline. Leaders are not necessarily born; employees can learn leadership behaviors by making decisions and fully participating in building community. The following key leadership %answer2 are most important for success:\n - high integrity\n - drive for results and vision\n - ability to inspire others\n Leadership is not synonymous with management. A manager implements strategies and finds solutions to problems. In contrast, the goal of a leader is to engage people in living the vision.\n One of the findings about the leadership in working environment is that %answer3', '{"answer1": {"1": "needs", "2": "demands", "3": "requires"}, "answer2": {"1": "characteristics", "2": "traits", "3": "features"}, "answer3": {"1": "the leadership skills can be developed by implementing strategies and finding solutions to problems", "2": "leadership is not the same as management; if you weren’t born as a leader, you couldn’t become one", "3": "to cope with rapid changes, businesses have a need for strong leaders"}}', '{"answer1": "3", "answer2": "2", "answer3": "3"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 10, now(), now(), 30),
+       (4, '— Good morning! I %answer1 an appointment with Mr. Bauer.\n— What is %answer2 name, please?\n— It %answer3 Kate Barry.\n— %answer4 do you spell your last name?', '{"answer1": {"1": "has", "2": "having", "3": "have"}, "answer2": {"1": "your", "2": "you", "3": "you’re"}, "answer3": {"1": "is", "2": "are", "3": " "}, "answer4": {"1": "what", "2": "how", "3": "why"}}', '{"answer1": "3", "answer2": "1", "answer3": "1", "answer4": "2"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 2, now(), now(), 30),
+       (4, '— Did you %answer1 your way here all right?\n— Yeah, your secretary sent very clear directions. %answer2 part was to get a security pass, actually.\n— Oh, really? I %answer3 to the security to see how we can make the process simpler for visitors. Would you like %answer4 tea or coffee before we start?', '{"answer1": {"1": "found", "2": "finding", "3": "find"}, "answer2": {"1": "harder", "2": "the hardest", "3": "the most hard"}, "answer3": {"1": "will talk", "2": "talk", "3": "am talking"}, "answer4": {"1": "some", "2": "any", "3": "something"}}', '{"answer1": "3", "answer2": "2", "answer3": "1", "answer4": "1"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 4, now(), now(), 30),
+       (4, '— Why did you decide %answer1 into the nonprofit sector? \n — Well, I just wanted to do something meaningful. So, I %answer2 the building of a new village school for 6 months already. \n — And are you happy with %answer3 results of your work? \n — Yeah, we’re going ahead of schedule. The construction %answer4 to end two months early.', '{"answer1": {"1": "going", "2": "go", "3": "to go"}, "answer2": {"1": "have been supervising", "2": "supervised", "3": "was supervising"}, "answer3": {"1": "a", "2": " ", "3": "the"}, "answer4": {"1": "is expect", "2": "is expected", "3": "expects"}}', '{"answer1": "3", "answer2": "1", "answer3": "3", "answer4": "2"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 6, now(), now(), 30),
+       (4, '— If I were the investor, I %answer1 a single penny to our startup after that presentation. \n — How could I know the memory stick would fail? \n — You %answer2 a backup with you. \n — Well, don’t you dare blame it all %answer3 me! You said you %answer4 a technical rehearsal, but the mike sounded funny like I’m Darth Vader or something.', '{"answer1": {"1": "won’t give", "2": "wouldn’t give", "3": "wouldn’t have given"}, "answer2": {"1": "must have brought", "2": "needn’t have brought", "3": "should have brought"}, "answer3": {"1": "at", "2": "on", "3": "with"}, "answer4": {"1": "had run", "2": "ran", "3": "have run"}}', '{"answer1": "2", "answer2": "3", "answer3": "2", "answer4": "1"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 8, now(), now(), 30),
+       (4, '— After our latest marketing campaign, not only %answer1 a ton of negative comments, but also a few high-profile influencers made harsh public statements. \n — I wonder %answer2 somehow scale down the negative sentiment. I mean, if we had issued an apology straight away, it %answer3 such a serious toll on our online reputation. \n — Well, maybe. Anyways, the CEO %answer4 our official stand by tomorrow evening, and we’ll decide on how to handle the situation in these circumstances.', '{"answer1": {"1": "we got", "2": "got we", "3": "did we get"}, "answer2": {"1": "whether we could", "2": "could we", "3": "if could we"}, "answer3": {"1": "won’t have taken", "2": "wouldn’t have taken", "3": "wouldn’t take"}, "answer4": {"1": "will have issued", "2": "will have been issuing", "3": "have issued"}}', '{"answer1": "3", "answer2": "1", "answer3": "2", "answer4": "1"}', null,'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 10, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: В ОФИСНОЙ ОБСТАНОВКЕ\nВыберите правильный ответ. Why doesn’t Dany know Jordan if they work for the same company?', '{"1": "Jordan is a new colleague from California", "2": "Jordan doesn’t work for this company. He came just to see the office", "3": "Jordan works in an office in a different city"}', '{"answer": "3"}', '[{ "url": "audio/1.mp3", "type": "audio" }]','SINGLE_CHOICE', 1, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: В ОФИСНОЙ ОБСТАНОВКЕ\nПредставьте себя на месте Джордана. Поддержите разговор: Do you want me to show you around?', '{"1": "Of course, I can show it to you. It’s not a secret", "2": "Sure, it would be interesting to see the place", "3": "Thank you, but I already have one"}', '{"answer": "2"}', '[{ "url": "audio/1.mp3", "type": "audio" }]','SINGLE_CHOICE', 1, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ТЕЛЕФОННЫЙ ЗВОНОК\nВыберите правильный ответ. When are Dany and Jordan going to meet?', '{"1": "Not clear. Dany will tell him the time later", "2": "On Wednesday", "3": "In half an hour"}', '{"answer": "1"}', '[{ "url": "audio/2.mp3", "type": "audio" }]','SINGLE_CHOICE', 2, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ТЕЛЕФОННЫЙ ЗВОНОК\nКоллега обратился с вопросом.Продолжите диалог: When are you available?', '{"1": "I don’t know. We’ll see", "2": "It’ll take a couple of minutes", "3": "I’ll check my timetable"}', '{"answer": "3"}', '[{ "url": "audio/2.mp3", "type": "audio" }]','SINGLE_CHOICE', 2, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: СОБЕСЕДОВАНИЕ: СИДЯТ ЗА СТОЛОМ\nВыберите правильный ответ. How does Dany feel about going abroad?', '{"1": "He doesn’t like leaving the USA at all", "2": "He is fine with travelling for work but doesn’t want to live in a different country", "3": "He agrees to travel only to Spain and Russia because he speaks those languages"}', '{"answer": "2"}', '[{ "url": "audio/3.mp3", "type": "audio" }]','SINGLE_CHOICE', 3, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: СОБЕСЕДОВАНИЕ: СИДЯТ ЗА СТОЛОМ\nК вам обратился коллега. Продолжите диалог: How do you feel about that?', '{"1": "I don’t feel very well", "2": "I don’t have any problem with that", "3": "Fine, thanks. What about you?"}', '{"answer": "2"}', '[{ "url": "audio/3.mp3", "type": "audio" }]','SINGLE_CHOICE', 3, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ДЭНИ ЗА СТОЛОМ. ДЖОРДАН СТУЧИТСЯ, ЗАХОДИТ В ДВЕРЬ\nВыберите правильный ответ. What is Jordan’s request and why does he make it?', '{"1": "He wants a bigger salary because he has shown good results", "2": "He wants a position with greater responsibilities", "3": "He wants a bonus for staying with the company for so long"}', '{"answer": "1"}', '[{ "url": "audio/4.mp3", "type": "audio" }]','SINGLE_CHOICE', 4, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ДЭНИ ЗА СТОЛОМ. ДЖОРДАН СТУЧИТСЯ, ЗАХОДИТ В ДВЕРЬ\nК вам обратился подчиненный. Ответьте ему на запрос: It’s time that my work was recognised', '{"1": "I know you are responsible for the mistake", "2": "We do value your input", "3": "We’re way past the deadline"}', '{"answer": "2"}', '[{ "url": "audio/4.mp3", "type": "audio" }]','SINGLE_CHOICE', 4, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ПЕРЕГОВОРЫ, СИДЯТ ЗА СТОЛОМ\nВыберите правильный ответ. Why does Dany think an ad in a business magazine is a better idea?', '{"1": "Their target audience doesn’t watch TV", "2": "They don’t have expertise to make a commercial better than their competitors", "3": "Their budget is not enough for a TV-commercial"}', '{"answer": "3"}', '[{ "url": "audio/5.mp3", "type": "audio" }]','SINGLE_CHOICE', 5, now(), now(), 30),
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ПЕРЕГОВОРЫ, СИДЯТ ЗА СТОЛОМ\nВы на совещании. Что скажете на предложение коллеги: We all need to let the steam off', '{"1": "I agree, let’s call it a day", "2": "Well, it’s not rocket science", "3": "Right, it’s time to get the ball rolling"}', '{"answer": "1"}', '[{ "url": "audio/5.mp3", "type": "audio" }]','SINGLE_CHOICE', 5, now(), now(), 30);
+
 
 insert into question_distribution (test_id, weight, question_count)
 values (1, 1, 5),
        (1, 2, 5),
        (2, 1, 10),
        (3, 1, 5),
-       (3, 2, 5);
+       (3, 2, 5),
+       (4, 1, 2),
+       (4, 2, 4),
+       (4, 3, 2),
+       (4, 4, 4),
+       (4, 5, 2),
+       (4, 6, 2),
+       (4, 8, 2),
+       (4, 10, 2);
+
 
 insert into test_pass (test_id, user_id, time_started, time_finished, final_score, status)
 values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED'),
@@ -209,9 +246,7 @@ values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED'),
        (1,4,'2022-05-20 17:44:59.791','2022-05-20 23:02:35.601',8,'PASSED'),
        (1,4,'2022-05-20 18:03:21.564','2022-05-20 23:03:35.265',3,'PASSED'),
        (2,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',5,'PASSED'),
-       (1,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',10,'PASSED'),
-       (1,2,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',8,'PASSED'),
-       (1,2,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',10,'PASSED');
+       (1,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',10,'PASSED');
 
 
 insert into test_pass_question_id (test_pass_id, question_id_order, question_id)

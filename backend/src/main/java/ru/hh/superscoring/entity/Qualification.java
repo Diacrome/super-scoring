@@ -19,8 +19,8 @@ public class Qualification {
   @Column(name = "test_id")
   private Integer testId;
 
-  @Column(name = "order_number")
-  private Integer orderNumber;
+  @Column(name = "qualification_score")
+  private Integer qualificationScore;
 
   @Column(name = "qualification_name")
   private String qualificationName;
@@ -44,12 +44,12 @@ public class Qualification {
     this.testId = testId;
   }
 
-  public Integer getOrderNumber() {
-    return orderNumber;
+  public Integer getQualificationScore() {
+    return qualificationScore;
   }
 
-  public void setOrderNumber(Integer orderNumber) {
-    this.orderNumber = orderNumber;
+  public void setQualificationScore(Integer qualificationScore) {
+    this.qualificationScore = qualificationScore;
   }
 
   public String getQualificationName() {

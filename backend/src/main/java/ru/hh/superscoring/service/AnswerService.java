@@ -13,6 +13,7 @@ import ru.hh.superscoring.dao.QualificationDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
 import ru.hh.superscoring.entity.Answer;
+import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.entity.TestPass;
@@ -27,8 +28,6 @@ public class AnswerService {
   private final TestDao testDao;
   private final QualificationDao qualificationDao;
   private final TestPassService testPassService;
-  private final Integer ONE_HUNDRED_PERCENT = 1;
-
 
   public AnswerService(AnswerDao answerDao, TestPassDao testPassDao, TestDao testDao, QualificationDao qualificationDao, TestPassService testPassService) {
     this.answerDao = answerDao;
@@ -76,7 +75,7 @@ public class AnswerService {
       testPass.setStatus(TestPassStatus.PASSED);
       testPass.setTimeFinished(LocalDateTime.now());
       testPass.setMaxPossible(maxPossible);
-      testPass.setQualificationName(qualificationCalculation(finalScore, maxPossible, testPass.getTestId()));
+      testPass.setQualificationName(qualificationCalculation(finalScore, testPass.getTestId()));
       testPassDao.save(testPass);
     }
   }
@@ -104,20 +103,12 @@ public class AnswerService {
     return JsonValidator.verifyAnswer(answer, question.getPayload(), question.getAnswerType());
   }
 
-  private String qualificationCalculation(Integer finalScore, Integer maxPossible, Integer testId) {
-    List<String> qualificationNames = qualificationDao.getTestQualification(testId);
-    double percentStep = (double) ONE_HUNDRED_PERCENT / (qualificationNames.size() + 1);
-    double percentResult = (double) finalScore / maxPossible;
-    if (percentResult < percentStep) {
-      return "Not qualified";
-    }
-    if ((percentResult <= 1.0) && (percentResult > (1.0 - percentStep))) {
-      return qualificationNames.get(0);
-    }
+  private String qualificationCalculation(Integer finalScore, Integer testId) {
+    List<Qualification> qualifications = qualificationDao.getTestQualification(testId);
     int index = 0;
-    for (double stepNumber = percentStep; stepNumber <= percentResult; stepNumber += percentStep) {
+    while (finalScore > qualifications.get(index).getQualificationScore()) {
       index++;
     }
-    return qualificationNames.get(qualificationNames.size() - index);
+    return qualifications.get(index).getQualificationName();
   }
 }
