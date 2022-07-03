@@ -11,9 +11,9 @@ public class QualificationDao extends GenericDao {
     super(sessionFactory);
   }
 
-  public List<String> getTestQualification(Integer testId) {
+  public List<Qualification> getTestQualification(Integer testId) {
     return getSession()
-        .createQuery("select q.qualificationName from Qualification q where q.testId = :id order by q.orderNumber", String.class)
+        .createQuery("select q.qualificationName from Qualification q where q.testId = :id order by q.pointNumber", Qualification.class)
         .setParameter("id", testId)
         .getResultList();
   }
