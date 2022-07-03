@@ -106,7 +106,7 @@ public class AnswerService {
   private String qualificationCalculation(Integer finalScore, Integer testId) {
     List<Qualification> qualifications = qualificationDao.getTestQualification(testId);
     int index = 0;
-    while (finalScore > qualifications.get(index).getPointNumber()) {
+    while (finalScore > qualifications.get(index).getQualificationScore()) {
       index++;
     }
     return qualifications.get(index).getQualificationName();

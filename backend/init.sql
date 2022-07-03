@@ -66,7 +66,7 @@ create table qualification
 (
     id           serial  primary key,
     test_id      integer not null references test (id),
-    point_number smallint not null,
+    qualification_score smallint not null,
     qualification_name varchar(50)
 
 );
@@ -114,7 +114,7 @@ values (1, 'Математический тест', 'Тест на знание 
        (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now(), 300),
        (4, 'Деловой английский язык','Тест на знание делового английского языка',now(),now(),300);
 
-insert into qualification (test_id,point_number,qualification_name)
+insert into qualification (test_id,qualification_score,qualification_name)
 values (1,5,'Доктор математических наук'),
        (1,4,'Кандидат математических наук'),
        (1,3,'Преподаватель высшей математики'),
