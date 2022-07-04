@@ -17,6 +17,21 @@ public class QuestionDistributionDao extends GenericDao {
         .getResultList();
   }
 
+  public Integer getQuestionCountForTest(Integer testId) {
+    return getSession()
+        .createQuery("select sum(qd.questionCount) from QuestionDistribution qd where qd.testId = :id", Integer.class)
+        .setParameter("id", testId)
+        .uniqueResult();
+  }
+
+  public QuestionDistribution existsSuchQuestionDistribution(Integer testId, Integer weight) {
+    return getSession()
+        .createQuery("select qd from QuestionDistribution qd where qd.testId = :id and qd.weight = :weight", QuestionDistribution.class)
+        .setParameter("id", testId)
+        .setParameter("weight", weight)
+        .uniqueResult();
+  }
+
   public Integer deleteQuestionDistribution(Integer distributionId) {
     return getSession()
         .createQuery("delete from QuestionDistribution qd where qd.id = :distributionId")

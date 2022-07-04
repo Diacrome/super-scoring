@@ -117,4 +117,28 @@ public class TestService {
     return true;
   }
 
+  @Transactional
+  public boolean addQuestionDistribution(QuestionDistribution newQuestionDistribution) {
+    QuestionDistribution questionDistribution = new QuestionDistribution();
+    if (questionDistributionDao.existsSuchQuestionDistribution(newQuestionDistribution.getTestId(),
+        newQuestionDistribution.getWeight()) == null) {
+      questionDistribution.setTestId(newQuestionDistribution.getTestId());
+      questionDistribution.setWeight(newQuestionDistribution.getWeight());
+      questionDistribution.setQuestionCount(newQuestionDistribution.getQuestionCount());
+      questionDistributionDao.save(questionDistribution);
+    } else {
+      questionDistribution = questionDistributionDao.get(QuestionDistribution.class, newQuestionDistribution.getId());
+      questionDistribution.setQuestionCount(newQuestionDistribution.getQuestionCount());
+    }
+    return true;
+  }
+
+  @Transactional(readOnly = true)
+  public boolean isValidQuestionDistribution(Integer testId) {
+    if (testDao.getTestSize(testId) == questionDistributionDao.getQuestionCountForTest(testId)) {
+      return true;
+    }
+    return false;
+  }
+
 }
