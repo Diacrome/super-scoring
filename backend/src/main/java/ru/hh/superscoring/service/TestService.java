@@ -135,7 +135,7 @@ public class TestService {
 
   @Transactional(readOnly = true)
   public boolean isValidQuestionDistribution(Integer testId) {
-    if (testDao.getTestSize(testId) == questionDistributionDao.getQuestionCountForTest(testId)) {
+    if (testDao.get(Test.class, testId).getQuestionQuantity() == questionDistributionDao.getQuestionCountForTest(testId)) {
       return true;
     }
     return false;
