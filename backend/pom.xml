@@ -117,7 +117,7 @@
                 <version>2.2.0</version>
                 <configuration>
                     <outputPath>
-                        ${project.build.outputDirectory}
+                        ../docs
                     </outputPath>
                     <prettyPrint>
                         true

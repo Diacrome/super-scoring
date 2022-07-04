@@ -45,8 +45,3 @@ services:
     build: docs
     ports:
       - "8001:80"
-  swagger:
-    build: docs/swagger
-    ports:
-      - "8003:8080"
-

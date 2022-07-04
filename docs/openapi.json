@@ -474,6 +474,62 @@
         }
       }
     },
+    "/all-passes-for-user" : {
+      "get" : {
+        "tags" : [ "Прохождение теста" ],
+        "summary" : "Получение истории прохождений пользователя",
+        "description" : "Получение истории прохождения пользователем указанного теста",
+        "operationId" : "getAllTestPassesForUser",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "testId",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "возвращает JSON объект с отображением порядкового номера на TestPassDTO",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LeaderBoardDto"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Токен не передан"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации или прохождение отсутствует"
+          }
+        }
+      }
+    },
     "/questions" : {
       "get" : {
         "tags" : [ "Прохождение теста" ],
@@ -744,6 +800,43 @@
         }
       }
     },
+    "/test/all-tests-for-user" : {
+      "get" : {
+        "tags" : [ "Тесты" ],
+        "operationId" : "getAllTestsForUser",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
     "/test/status" : {
       "get" : {
         "tags" : [ "Тесты" ],
@@ -917,38 +1010,6 @@
           }
         }
       },
-      "JsonNode" : {
-        "type" : "object"
-      },
-      "QuestionDto" : {
-        "type" : "object",
-        "properties" : {
-          "question" : {
-            "type" : "string"
-          },
-          "payload" : {
-            "$ref" : "#/components/schemas/JsonNode"
-          },
-          "answerType" : {
-            "type" : "string",
-            "enum" : [ "SINGLE_CHOICE", "MULTIPLE_CHOICE", "MULTIPLE_QUESTIONS_SINGLE_CHOICE", "RANKING" ]
-          },
-          "content" : {
-            "$ref" : "#/components/schemas/JsonNode"
-          }
-        }
-      },
-      "QuestionsForTestDto" : {
-        "type" : "object",
-        "properties" : {
-          "question" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "$ref" : "#/components/schemas/QuestionDto"
-            }
-          }
-        }
-      },
       "LeaderBoardDto" : {
         "type" : "object",
         "properties" : {
@@ -981,6 +1042,42 @@
           "score" : {
             "type" : "integer",
             "format" : "int32"
+          },
+          "attempts" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "JsonNode" : {
+        "type" : "object"
+      },
+      "QuestionDto" : {
+        "type" : "object",
+        "properties" : {
+          "question" : {
+            "type" : "string"
+          },
+          "payload" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          },
+          "answerType" : {
+            "type" : "string",
+            "enum" : [ "SINGLE_CHOICE", "MULTIPLE_CHOICE", "MULTIPLE_QUESTIONS_SINGLE_CHOICE", "RANKING" ]
+          },
+          "content" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          }
+        }
+      },
+      "QuestionsForTestDto" : {
+        "type" : "object",
+        "properties" : {
+          "question" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "$ref" : "#/components/schemas/QuestionDto"
+            }
           }
         }
       },
@@ -1003,7 +1100,7 @@
           },
           "status" : {
             "type" : "string",
-            "enum" : [ "PASS", "PASSED", "CANCELED" ]
+            "enum" : [ "PASS", "PASSED", "CANCELED", "TIMEOUT" ]
           },
           "testPassId" : {
             "type" : "integer",
