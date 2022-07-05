@@ -14,6 +14,7 @@ export interface CurrentPass {
   answeredQuestions: Record<string, boolean>;
   startTime: string;
   testId: number;
+  testPassId: number;
   status: string;
 }
 

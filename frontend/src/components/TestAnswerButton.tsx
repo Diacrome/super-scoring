@@ -3,7 +3,9 @@ import Button from "./Button/Button";
 import { useNavigate } from "react-router-dom";
 import { TestAnswerButtonProps } from "../types/questions";
 import { useSendAnswer } from "../hooks/useSendAnswer";
-import { IsSelectedOption } from "../functions/isSelectedOption";
+import { isSelectedOption } from "../functions/isSelectedOption";
+import { useAppSelector } from "../hooks/useAppSelector";
+import { CurrentPass } from "../types/status";
 
 const TestAnswerButton: FC<TestAnswerButtonProps> = ({
   questionOrder,
@@ -11,19 +13,23 @@ const TestAnswerButton: FC<TestAnswerButtonProps> = ({
   selectedOption,
   answerType,
 }) => {
+  const currentPass = useAppSelector(
+    (state) => state.status.currentPass as CurrentPass
+  );
   const sendAnswer = useSendAnswer();
   const navigate = useNavigate();
 
   const nextQuestion = () => {
-    if (IsSelectedOption(selectedOption, answerType)) {
+    if (isSelectedOption(selectedOption, answerType)) {
       sendAnswer(questionOrder, selectedOption, answerType);
     }
   };
 
   const endTest = () => {
-    if (IsSelectedOption(selectedOption, answerType)) {
-      sendAnswer(questionOrder, selectedOption, answerType);
-      navigate(`/3/1`); // Тут надо сделать по id теста
+    if (isSelectedOption(selectedOption, answerType)) {
+      sendAnswer(questionOrder, selectedOption, answerType).then(() =>
+        navigate(`/${currentPass.testId}/${currentPass.testPassId}`)
+      );
     }
   };
 
