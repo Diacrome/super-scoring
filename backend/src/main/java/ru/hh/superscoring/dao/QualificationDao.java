@@ -13,7 +13,7 @@ public class QualificationDao extends GenericDao {
 
   public List<Qualification> getTestQualification(Integer testId) {
     return getSession()
-        .createQuery("select q.qualificationName from Qualification q where q.testId = :id order by q.qualificationScore", Qualification.class)
+        .createQuery("select q from Qualification q where q.testId = :id order by q.qualificationScore", Qualification.class)
         .setParameter("id", testId)
         .getResultList();
   }
