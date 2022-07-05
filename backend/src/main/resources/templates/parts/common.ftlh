@@ -15,17 +15,17 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="dashboard">Home</a>
+                        <a class="nav-link active" aria-current="page" href="admin">Home</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="new_test">Создать тест</a>
+                        <a class="nav-link active" aria-current="page" href="admin/test/new">Создать тест</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="tests">Управление тестами</a>
+                        <a class="nav-link active" aria-current="page" href="admin/tests">Управление тестами</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">

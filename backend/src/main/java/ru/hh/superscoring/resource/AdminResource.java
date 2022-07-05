@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,23 +47,19 @@ public class AdminResource {
   }
 
   @GET
-  public Response checkAuthorization(@CookieParam("Authorization") String token) {
-    boolean isAdmin = authService.isAdmin(authService.getUserIdWithToken(token));
-    if (isAdmin) {
-      model.setName(authService.getUserWithToken(token));
-      return Response.temporaryRedirect(URI.create("/admin/dashboard")).build();
-    } else {
+  @GeneratedValue(generator = MediaType.TEXT_HTML)
+  public Response checkAuthorization(@CookieParam("Authorization") String token) throws TemplateException, IOException {
+    if (notAdmin(token)) {
       return Response.status(400).entity("You don't have permission to access").build();
     }
-  }
-
-  @GET
-  @Path("dashboard")
-  @GeneratedValue(generator = MediaType.TEXT_HTML)
-  public Response index(@CookieParam("Authorization") String token) throws IOException, TemplateException {
+    model.setName(authService.getUserWithToken(token));
     model.setMessage("Здравствуйте, " + model.getName());
     String page = processPage("index.ftlh");
     return Response.ok().entity(page).build();
+  }
+
+  private boolean notAdmin(String token) {
+    return !authService.isAdmin(authService.getUserIdWithToken(token));
   }
 
   private String processPage(String pageTemplate) throws IOException, TemplateException {
@@ -75,18 +70,24 @@ public class AdminResource {
   }
 
   @GET
-  @Path("new_test")
+  @Path("test/new")
   @GeneratedValue(generator = MediaType.TEXT_HTML)
-  public Response newTest() throws TemplateException, IOException {
+  public Response newTest(@CookieParam("Authorization") String token) throws TemplateException, IOException {
+    if (notAdmin(token)) {
+      return Response.status(400).entity("You don't have permission to access").build();
+    }
     return Response.ok().entity(processPage("new_test.ftlh")).build();
   }
 
   @POST
-  @Path("add_test")
+  @Path("test/add")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response addTest(FormDataMultiPart multiPart,
                           @CookieParam("Authorization") String token)
       throws TemplateException, IOException {
+    if (notAdmin(token)) {
+      return Response.status(400).entity("You don't have permission to access").build();
+    }
     Map<String, List<FormDataBodyPart>> formParams = multiPart.getFields();
 
     // Save test

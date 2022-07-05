@@ -3,7 +3,7 @@
 
 <@c.page>
 <div class="container"></div>
-<form class="form-horizontal" id="test_form" method="post" action="add_test" enctype="multipart/form-data">
+<form class="form-horizontal" id="test_form" method="post" action="add" enctype="multipart/form-data">
     <fieldset>
         <div class="row">
 
