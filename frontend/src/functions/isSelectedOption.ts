@@ -1,6 +1,6 @@
 import { AnswerType, SelectedOption } from "../types/questions";
 
-export const IsSelectedOption = (
+export const isSelectedOption = (
   selectedOption: SelectedOption,
   answerType: AnswerType
 ) => {
