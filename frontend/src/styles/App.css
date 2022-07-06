@@ -132,8 +132,34 @@ label {
     margin-bottom: 5px;
 }
 
+.test__btns {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.test__btn-answer {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.test__btn-cancel {
+    width: 100%;
+}
+
 @media (min-width: 600px) {
+    .test__btns {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
     .test__btn-answer {
+        width: 200px;
+        margin-bottom: 0;
+    }
+
+    .test__btn-cancel {
         width: 200px;
     }
 
