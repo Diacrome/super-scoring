@@ -11,6 +11,8 @@ import MultipleChoiceForm from "./MultipleChoiceForm";
 import MultipleQuestionsSingleChoiceForm from "./MultipleQuestionsSingleChoiceForm";
 import TestAnswerButton from "./TestAnswerButton";
 import { getSelectedOptionInitialState } from "../functions/getSelectedOptionInitialState";
+import Button from "./Button/Button";
+import { useCancelPass } from "../hooks/useCancelPass";
 
 const QuestionForm: FC<QuestionFormProps> = ({
   questionText,
@@ -22,6 +24,7 @@ const QuestionForm: FC<QuestionFormProps> = ({
   const [selectedOption, setSelectedOption] = useState<SelectedOption>(
     getSelectedOptionInitialState(answerType, questionAnswers)
   );
+  const cancelPass = useCancelPass();
 
   const changeSelectedOption = (state: SelectedOption) => {
     setSelectedOption(state);
@@ -64,12 +67,17 @@ const QuestionForm: FC<QuestionFormProps> = ({
   return (
     <>
       {form}
-      <TestAnswerButton
-        questionOrder={questionOrder}
-        questionsCount={questionCount}
-        selectedOption={selectedOption}
-        answerType={answerType}
-      />
+      <div className="test__btns">
+        <TestAnswerButton
+          questionOrder={questionOrder}
+          questionsCount={questionCount}
+          selectedOption={selectedOption}
+          answerType={answerType}
+        />
+        <div className="test__btn-cancel">
+          <Button onClick={() => cancelPass()}>Отменить прохождение</Button>
+        </div>
+      </div>
     </>
   );
 };
