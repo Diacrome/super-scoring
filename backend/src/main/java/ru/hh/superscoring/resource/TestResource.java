@@ -29,6 +29,7 @@ import ru.hh.superscoring.dto.UserPassDto;
 import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.util.Role;
+import ru.hh.superscoring.util.exceptions.DistributionAlreadyExistsException;
 import ru.hh.superscoring.util.exceptions.DistributionNotFoundException;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
@@ -155,6 +156,7 @@ public class TestResource {
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "При успешном включении"
   ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
   ), @ApiResponse(responseCode = "403", description = "Недостаточно прав"
+  ), @ApiResponse(responseCode = "406", description = "Заданное в распределении количество вопросов неверно"
   ), @ApiResponse(responseCode = "400", description = "Ошибка при сохранении")})
   @Path("on/{id}")
   @Produces("application/json")
@@ -167,6 +169,10 @@ public class TestResource {
     boolean isUserAdmin = authService.isAdmin(userId);
     if (!isUserAdmin) {
       return Response.status(403, "Admin rights required").build();
+    }
+    boolean validQuestionDistribution = testService.isValidQuestionDistribution(testId);
+    if (!validQuestionDistribution) {
+      return Response.status(406, "Invalid question count in distribution for test").build();
     }
     try {
       testService.switchOnTest(testId);
@@ -262,9 +268,13 @@ public class TestResource {
     Role role;
     role = authService.getRoleByToken(authorizationToken);
     if (role == Role.ADMIN) {
-      if (testService.getTestById(questionDistribution.getTestId()) != null &&
-          testService.addQuestionDistribution(questionDistribution)) {
-        return Response.status(201, "Question distribution added").build();
+      try {
+        if (testService.getTestById(questionDistribution.getTestId()) != null &&
+            testService.addQuestionDistribution(questionDistribution)) {
+          return Response.status(201, "Question distribution added").build();
+        }
+      } catch (DistributionAlreadyExistsException e) {
+        return Response.status(400).entity(e.getMessage()).build();
       }
       return Response.status(404, "There is no such test in the system").build();
     }

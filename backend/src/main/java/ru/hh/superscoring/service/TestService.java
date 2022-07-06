@@ -8,6 +8,7 @@ import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.util.exceptions.DistributionAlreadyExistsException;
 import ru.hh.superscoring.util.exceptions.DistributionNotFoundException;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 
@@ -118,27 +119,18 @@ public class TestService {
   }
 
   @Transactional
-  public boolean addQuestionDistribution(QuestionDistribution newQuestionDistribution) {
-    QuestionDistribution questionDistribution = new QuestionDistribution();
+  public boolean addQuestionDistribution(QuestionDistribution newQuestionDistribution) throws DistributionAlreadyExistsException {
     if (questionDistributionDao.existsSuchQuestionDistribution(newQuestionDistribution.getTestId(),
-        newQuestionDistribution.getWeight()) == null) {
+        newQuestionDistribution.getWeight()) != null) {
+      throw new DistributionAlreadyExistsException("Distribution with such weight for this test exists: " + newQuestionDistribution.getWeight());
+    } else {
+      QuestionDistribution questionDistribution = new QuestionDistribution();
       questionDistribution.setTestId(newQuestionDistribution.getTestId());
       questionDistribution.setWeight(newQuestionDistribution.getWeight());
       questionDistribution.setQuestionCount(newQuestionDistribution.getQuestionCount());
       questionDistributionDao.save(questionDistribution);
-    } else {
-      questionDistribution = questionDistributionDao.get(QuestionDistribution.class, newQuestionDistribution.getId());
-      questionDistribution.setQuestionCount(newQuestionDistribution.getQuestionCount());
     }
     return true;
-  }
-
-  @Transactional(readOnly = true)
-  public boolean isValidQuestionDistribution(Integer testId) {
-    if (testDao.get(Test.class, testId).getQuestionQuantity() == questionDistributionDao.getQuestionCountForTest(testId)) {
-      return true;
-    }
-    return false;
   }
 
 }
