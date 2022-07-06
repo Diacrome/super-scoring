@@ -2,7 +2,7 @@ package ru.hh.superscoring.dao;
 
 import org.hibernate.SessionFactory;
 import ru.hh.superscoring.dto.LeaderDto;
-import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.dto.StatisticDto;
 import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.dto.UserPassDto;
 import ru.hh.superscoring.entity.Question;
@@ -138,4 +138,14 @@ public class TestPassDao extends GenericDao {
         .uniqueResult();
   }
 
+  public List<StatisticDto> getDataForChartByTestId(int testId) {
+    return getSession()
+        .createQuery("select new ru.hh.superscoring.dto.StatisticDto(tp.finalScore, count(tp.finalScore)) " +
+            "from TestPass as tp " +
+            "where tp.testId = :test_id and tp.finalScore > 0 " +
+            "group by tp.finalScore " +
+            "order by tp.finalScore")
+        .setParameter("test_id", testId)
+        .getResultList();
+  }
 }

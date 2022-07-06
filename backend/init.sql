@@ -238,18 +238,18 @@ values (1, 1, 5),
        (4, 10, 2);
 
 
-insert into test_pass (test_id, user_id, time_started, time_finished, final_score, status)
-values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED'),
-       (2, 1, now() - interval '200 seconds', now(), 1 ,'PASSED'),
-       (2, 4, now() - interval '200 seconds', now(), 10,'PASSED'),
-       (1, 3, now() - interval '100 seconds', now(), 7,'PASSED'),
-       (2,3,'2022-05-20 17:46:39.791','2022-05-20 17:48:19.791',6,'PASSED'),
-       (1,4,'2022-05-20 17:44:59.791','2022-05-20 17:48:19.791',10,'PASSED'),
-       (1,3,'2022-05-20 17:46:39.791','2022-05-20 17:48:19.791',7,'PASSED'),
-       (1,4,'2022-05-20 17:44:59.791','2022-05-20 23:02:35.601',8,'PASSED'),
-       (1,4,'2022-05-20 18:03:21.564','2022-05-20 23:03:35.265',3,'PASSED'),
-       (2,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',5,'PASSED'),
-       (1,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',10,'PASSED');
+insert into test_pass (test_id, user_id, time_started, time_finished, final_score, status, max_possible)
+values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED', 15),
+       (2, 1, now() - interval '200 seconds', now(), 1 ,'PASSED', 10),
+       (2, 4, now() - interval '200 seconds', now(), 10,'PASSED', 10),
+       (1, 3, now() - interval '100 seconds', now(), 7,'PASSED', 15),
+       (2,3,'2022-05-20 17:46:39.791','2022-05-20 17:48:19.791',6,'PASSED', 10),
+       (1,4,'2022-05-20 17:44:59.791','2022-05-20 17:48:19.791',10,'PASSED', 15),
+       (1,3,'2022-05-20 17:46:39.791','2022-05-20 17:48:19.791',7,'PASSED', 15),
+       (1,4,'2022-05-20 17:44:59.791','2022-05-20 23:02:35.601',8,'PASSED', 15),
+       (1,4,'2022-05-20 18:03:21.564','2022-05-20 23:03:35.265',3,'PASSED', 15),
+       (2,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',5,'PASSED', 10),
+       (1,1,'2022-05-20 17:44:59.791','2022-05-20 23:04:17.645',10,'PASSED', 15);
 
 
 insert into test_pass_question_id (test_pass_id, question_id_order, question_id)
