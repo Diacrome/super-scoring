@@ -1,9 +1,5 @@
 package ru.hh.superscoring.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
 import ru.hh.superscoring.dao.QuestionDistributionDao;
@@ -13,6 +9,11 @@ import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TestService {
 

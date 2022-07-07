@@ -9,11 +9,16 @@ import ru.hh.superscoring.entity.Answer;
 import ru.hh.superscoring.dao.AuthDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.UserDao;
+import ru.hh.superscoring.dto.Model;
+import ru.hh.superscoring.entity.Answer;
+import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.Qualification;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.resource.AnswerResource;
 import ru.hh.superscoring.entity.Token;
 import ru.hh.superscoring.entity.User;
+import ru.hh.superscoring.resource.AdminResource;
+import ru.hh.superscoring.resource.AnswerResource;
 import ru.hh.superscoring.resource.AuthResource;
 import ru.hh.superscoring.entity.TestPassQuestion;
 import ru.hh.superscoring.resource.HelloResource;
@@ -68,7 +73,10 @@ import ru.hh.superscoring.service.TestService;
     AuthResource.class,
     NabCommonConfig.class,
     StatusService.class,
-    CorsConfig.class
+    CorsConfig.class,
+    StatusService.class,
+    AdminResource.class,
+    Model.class
 })
 
 public class CommonConfig {

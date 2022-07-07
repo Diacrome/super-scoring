@@ -1,12 +1,6 @@
 package ru.hh.superscoring.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.QuestionDao;
@@ -14,8 +8,15 @@ import ru.hh.superscoring.dao.QuestionDistributionDao;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
-import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.util.JsonValidator;
+import ru.hh.superscoring.util.exceptions.TestNoFilledException;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class QuestionService {
   private final QuestionDao questionDao;
@@ -125,6 +126,7 @@ public class QuestionService {
     Question question = new Question();
     question.setTestId(newQuestion.getTestId());
     question.setWording(newQuestion.getWording());
+    question.setWeight(newQuestion.getWeight());
     question.setPayload(newQuestion.getPayload());
     question.setAnswer(newQuestion.getAnswer());
     question.setContent(newQuestion.getContent());
@@ -137,4 +139,13 @@ public class QuestionService {
     return true;
   }
 
+  public int saveQuestions(List<Question> questionList) {
+    int questionsCounter = 0;
+    for (Question question : questionList) {
+      if (addQuestion(question)) {
+        questionsCounter++;
+      }
+    }
+    return questionsCounter;
+  }
 }
