@@ -41,3 +41,7 @@ services:
     volumes:
       - ./tests:/etc/newman
     entrypoint: sh wait-for.sh backend:8000 --timeout=1000 -- newman run tests.json
+  documentation:
+    build: docs
+    ports:
+      - "8001:80"

@@ -1,0 +1,1143 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "title" : "Super Scoring App API",
+    "description" : "SuperScoring App API description",
+    "version" : "0.1.0"
+  },
+  "tags" : [ {
+    "name" : "Ответы",
+    "description" : "API для взаимодействия с ответами"
+  }, {
+    "name" : "Авторизация",
+    "description" : "API отвечающие за авторизацию и аутентификацию пользователя"
+  }, {
+    "name" : "Приветствие",
+    "description" : "Ресурс с приветственным сообщением"
+  }, {
+    "name" : "Вопросы",
+    "description" : "API для взаимодействия с вопросами"
+  }, {
+    "name" : "Прохождение теста",
+    "description" : "API для взаимодействия с прохождениями тестов"
+  }, {
+    "name" : "Тесты",
+    "description" : "API для взаимодействия с тестами"
+  } ],
+  "paths" : {
+    "/answer" : {
+      "post" : {
+        "tags" : [ "Ответы" ],
+        "summary" : "Сохранение ответа",
+        "description" : "Сохранят ответ пользователя на вопрос",
+        "operationId" : "saveAnswer",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "questionOrder" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "answer" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            },
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "questionOrder" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "answer" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "При успешном сохранении"
+          },
+          "401" : {
+            "description" : "Не передан токен пользователя"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "400" : {
+            "description" : "Ошибка при сохранении или ответ отклонен валидатором"
+          }
+        }
+      }
+    },
+    "/auth/register" : {
+      "post" : {
+        "tags" : [ "Авторизация" ],
+        "summary" : "Регистрация пользователя",
+        "description" : "Регистрирует пользователя не администратора",
+        "operationId" : "addNewUser",
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "login" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  },
+                  "name" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "При успешном добавлении пользователя"
+          },
+          "401" : {
+            "description" : "Пользователь уже существует"
+          }
+        }
+      }
+    },
+    "/auth/token" : {
+      "post" : {
+        "tags" : [ "Авторизация" ],
+        "summary" : "Авторизация по логину и паролю",
+        "description" : "Создает и возвращает токен пользователя",
+        "operationId" : "generateToken",
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "login" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "возвращает токен",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string",
+                  "example" : "token: ktuq13qll08kmg8oc49b"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "400" : {
+            "description" : "Ошибка при создании токена"
+          }
+        }
+      }
+    },
+    "/auth/check-token" : {
+      "get" : {
+        "tags" : [ "Авторизация" ],
+        "summary" : "Авторизация по токену",
+        "description" : "Возвращает имя пользователя, которому принадлежит токен",
+        "operationId" : "getUserByToken",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "возвращает имя пользователя",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string",
+                  "example" : "name: Anna"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "400" : {
+            "description" : "Ошибка при получении имени"
+          }
+        }
+      }
+    },
+    "/auth/set-admin" : {
+      "post" : {
+        "tags" : [ "Авторизация" ],
+        "summary" : "Выдача прав администратора",
+        "description" : "Делает обычного пользователя администратором",
+        "operationId" : "setAdminRights",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "login" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Указанный пользователь стал администратором"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "403" : {
+            "description" : "Недостаточно прав"
+          },
+          "400" : {
+            "description" : "Ошибка при сохранении или указанный пользователь не найден"
+          }
+        }
+      }
+    },
+    "/hello" : {
+      "get" : {
+        "tags" : [ "Приветствие" ],
+        "summary" : "Приветственная строка от команды",
+        "description" : "Выводит приветственную строку",
+        "operationId" : "hello",
+        "responses" : {
+          "200" : {
+            "description" : "Приветствие от команды"
+          }
+        }
+      }
+    },
+    "/question/add" : {
+      "post" : {
+        "tags" : [ "Вопросы" ],
+        "summary" : "Добавление вопроса",
+        "description" : "Создает новый вопрос",
+        "operationId" : "addQuestionToTest",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Question"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "При успешном добавлении вопроса"
+          },
+          "404" : {
+            "description" : "Отсутствие теста в который добавляется вопрос"
+          },
+          "403" : {
+            "description" : "Недостаточно прав"
+          }
+        }
+      }
+    },
+    "/question/inactive/{questionId}" : {
+      "put" : {
+        "tags" : [ "Вопросы" ],
+        "summary" : "Выключение вопроса",
+        "description" : "Делает вопрос с указанным id неактивным",
+        "operationId" : "disableActiveQuestion",
+        "parameters" : [ {
+          "name" : "questionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "При успешном отключении вопроса"
+          },
+          "401" : {
+            "description" : "Токен не передан"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "403" : {
+            "description" : "Недостаточно прав"
+          },
+          "400" : {
+            "description" : "Ошибка при сохранении или указанный вопрос не найден"
+          }
+        }
+      }
+    },
+    "/question/active/{questionId}" : {
+      "put" : {
+        "tags" : [ "Вопросы" ],
+        "summary" : "Включение вопроса",
+        "description" : "Делает вопрос с указанным id активным",
+        "operationId" : "enableInactiveQuestion",
+        "parameters" : [ {
+          "name" : "questionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "При успешном включении вопроса"
+          },
+          "401" : {
+            "description" : "Токен не передан"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "403" : {
+            "description" : "Недостаточно прав"
+          },
+          "400" : {
+            "description" : "Ошибка при сохранении или указанный вопрос не найден"
+          }
+        }
+      }
+    },
+    "/question/all-questions" : {
+      "get" : {
+        "tags" : [ "Вопросы" ],
+        "operationId" : "getAllQuestions",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "*/*" : { }
+            }
+          }
+        }
+      }
+    },
+    "/question/all-questions-in-test/{testId}" : {
+      "get" : {
+        "tags" : [ "Вопросы" ],
+        "operationId" : "getAllQuestionsForTest",
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "*/*" : { }
+            }
+          }
+        }
+      }
+    },
+    "/cancel" : {
+      "post" : {
+        "tags" : [ "Прохождение теста" ],
+        "operationId" : "cancelTest",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "*/*" : { }
+            }
+          }
+        }
+      }
+    },
+    "/all-passes-for-user" : {
+      "get" : {
+        "tags" : [ "Прохождение теста" ],
+        "summary" : "Получение истории прохождений пользователя",
+        "description" : "Получение истории прохождения пользователем указанного теста",
+        "operationId" : "getAllTestPassesForUser",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "testId",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "возвращает JSON объект с отображением порядкового номера на TestPassDTO",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LeaderBoardDto"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Токен не передан"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации или прохождение отсутствует"
+          }
+        }
+      }
+    },
+    "/questions" : {
+      "get" : {
+        "tags" : [ "Прохождение теста" ],
+        "summary" : "Получение вопросов",
+        "description" : "Получение вопросов текущего прохождения",
+        "operationId" : "getQuestions",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "возвращает id созданного теста",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QuestionsForTestDto"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Токен не передан"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации или прохождение отсутствует"
+          }
+        }
+      }
+    },
+    "/start/{testId}" : {
+      "post" : {
+        "tags" : [ "Прохождение теста" ],
+        "summary" : "Начать тестирование",
+        "description" : "Запускает процесс прохождения для указанного теста",
+        "operationId" : "startTest",
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Тестирование начато"
+          },
+          "401" : {
+            "description" : "Токен не передан"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации или указанный тест отсутствует"
+          },
+          "400" : {
+            "description" : "Тестирование не может быть начато: другой тест начат или вопросов недостаточно"
+          }
+        }
+      }
+    },
+    "/leaders/{testId}" : {
+      "get" : {
+        "tags" : [ "Прохождение теста" ],
+        "summary" : "Получение таблицы лидеров",
+        "description" : "Получение таблицы лидеров для указанного теста",
+        "operationId" : "startTest_1",
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "возвращает id созданного теста",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LeaderBoardDto"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Токен не передан"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации или прохождение отсутствует"
+          }
+        }
+      }
+    },
+    "/test/on/{id}" : {
+      "post" : {
+        "tags" : [ "Тесты" ],
+        "summary" : "Включение теста",
+        "description" : "Делает тест с указанным id активным",
+        "operationId" : "activateTest",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "При успешном включении"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "403" : {
+            "description" : "Недостаточно прав"
+          },
+          "400" : {
+            "description" : "Ошибка при сохранении"
+          }
+        }
+      }
+    },
+    "/test/create" : {
+      "post" : {
+        "tags" : [ "Тесты" ],
+        "summary" : "Создание нового теста",
+        "description" : "Создает новый тест. Доступно при наличии прав администратора.",
+        "operationId" : "createTest",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/x-www-form-urlencoded" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  },
+                  "questionCount" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  }
+                }
+              }
+            },
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "description" : {
+                    "type" : "string"
+                  },
+                  "questionCount" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "возвращает id созданного теста",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int32"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "403" : {
+            "description" : "Недостаточно прав"
+          },
+          "400" : {
+            "description" : "Ошибка при создании"
+          }
+        }
+      }
+    },
+    "/test/get-tests" : {
+      "get" : {
+        "tags" : [ "Тесты" ],
+        "operationId" : "getAllTests",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
+    "/test/all-tests-for-user" : {
+      "get" : {
+        "tags" : [ "Тесты" ],
+        "operationId" : "getAllTestsForUser",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "perPage",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
+    "/test/status" : {
+      "get" : {
+        "tags" : [ "Тесты" ],
+        "summary" : "Статус прохождения теста",
+        "description" : "Возвращает статус прохождения теста для текущего пользователя по токену",
+        "operationId" : "getStatus",
+        "parameters" : [ {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Возвращает статус прохождения",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StatusDto"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Ошибка авторизации"
+          }
+        }
+      }
+    },
+    "/test/info/{id}" : {
+      "get" : {
+        "tags" : [ "Тесты" ],
+        "summary" : "Информация о тесте по id",
+        "description" : "Получение начальных сведений о тесте по id",
+        "operationId" : "getTestObject",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Возвращает описание теста",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TestDto"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ошибка в случае отсутствия активного теста в системе"
+          }
+        }
+      }
+    },
+    "/test/results/{pass_id}" : {
+      "get" : {
+        "tags" : [ "Тесты" ],
+        "operationId" : "getTestPassResults",
+        "parameters" : [ {
+          "name" : "pass_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "default response",
+            "content" : {
+              "application/json" : { }
+            }
+          }
+        }
+      }
+    },
+    "/test/off/{id}" : {
+      "post" : {
+        "tags" : [ "Тесты" ],
+        "summary" : "Выключение теста",
+        "description" : "Делает тест с указанным id неактивным",
+        "operationId" : "inactivateTest",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "authorization",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "При успешном отключении"
+          },
+          "404" : {
+            "description" : "Ошибка авторизации"
+          },
+          "403" : {
+            "description" : "Недостаточно прав"
+          },
+          "400" : {
+            "description" : "Ошибка при сохранении"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Question" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "testId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "wording" : {
+            "type" : "string"
+          },
+          "payload" : {
+            "type" : "string"
+          },
+          "answer" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "answerType" : {
+            "type" : "string",
+            "enum" : [ "SINGLE_CHOICE", "MULTIPLE_CHOICE", "MULTIPLE_QUESTIONS_SINGLE_CHOICE", "RANKING" ]
+          },
+          "dateCreated" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "dateModified" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "timeLimit" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "active" : {
+            "type" : "boolean"
+          },
+          "weight" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "LeaderBoardDto" : {
+        "type" : "object",
+        "properties" : {
+          "leaders" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "$ref" : "#/components/schemas/LeaderDto"
+            }
+          },
+          "page" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "perPage" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "found" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "LeaderDto" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "score" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "attempts" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "JsonNode" : {
+        "type" : "object"
+      },
+      "QuestionDto" : {
+        "type" : "object",
+        "properties" : {
+          "question" : {
+            "type" : "string"
+          },
+          "payload" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          },
+          "answerType" : {
+            "type" : "string",
+            "enum" : [ "SINGLE_CHOICE", "MULTIPLE_CHOICE", "MULTIPLE_QUESTIONS_SINGLE_CHOICE", "RANKING" ]
+          },
+          "content" : {
+            "$ref" : "#/components/schemas/JsonNode"
+          }
+        }
+      },
+      "QuestionsForTestDto" : {
+        "type" : "object",
+        "properties" : {
+          "question" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "$ref" : "#/components/schemas/QuestionDto"
+            }
+          }
+        }
+      },
+      "CurrentPass" : {
+        "type" : "object",
+        "properties" : {
+          "answeredQuestions" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "boolean"
+            }
+          },
+          "startTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "testId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "PASS", "PASSED", "CANCELED", "TIMEOUT" ]
+          },
+          "testPassId" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "StatusDto" : {
+        "type" : "object",
+        "properties" : {
+          "authorized" : {
+            "type" : "boolean"
+          },
+          "currentPass" : {
+            "$ref" : "#/components/schemas/CurrentPass"
+          },
+          "role" : {
+            "type" : "string",
+            "enum" : [ "ADMIN", "USER" ]
+          }
+        }
+      },
+      "TestDto" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
