@@ -6,7 +6,6 @@ import { useAppSelector } from "../hooks/useAppSelector";
 import { getQuestionAnswers } from "../functions/getQuestionAnswers";
 import QuestionContent from "../components/QuestionContent";
 import { fetchData } from "../functions/fetchData";
-
 const TestScreen: FC = () => {
   const { currentPass } = useAppSelector((state) => state.status);
   const [questions, setQuestions] = useState<Questions | null>(null);
@@ -19,9 +18,7 @@ const TestScreen: FC = () => {
     Object.values(currentPass.answeredQuestions).indexOf(false) + 1;
 
   useEffect(() => {
-    fetchData("http://localhost:8000/questions").then((response) =>
-      setQuestions(response.question)
-    );
+    fetchData("questions").then((response) => setQuestions(response.question));
   }, []);
 
   if (questions === null) return <Loader />;

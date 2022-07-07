@@ -3,6 +3,7 @@ import { useAppDispatch } from "./useAppDispatch";
 import { fetchStatus } from "../store/action-creators/status";
 import { buildAnswer } from "../functions/buildAnswer";
 import { AnswerType, SelectedOption } from "../types/questions";
+import { backendLocation } from "../types/locations";
 
 export const useSendAnswer = () => {
   const dispatch = useAppDispatch();
@@ -18,7 +19,7 @@ export const useSendAnswer = () => {
       answer,
     });
     axios
-      .post("http://localhost:8000/answer", params)
+      .post(`${backendLocation}/answer`, params)
       .then(() => {
         dispatch(fetchStatus());
       })
