@@ -13,9 +13,7 @@ const TestInfo: FC = () => {
   const testStart = useTestStart();
 
   useEffect(() => {
-    fetchData(`http://localhost:8000/test/info/${testId}`).then((data) =>
-      setTestDescription(data)
-    );
+    fetchData(`test/info/${testId}`).then((data) => setTestDescription(data));
   }, []);
 
   const handleTestStart = () => testStart(testId);

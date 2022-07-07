@@ -12,7 +12,7 @@ const Results: FC = () => {
   const [testResults, setTestResults] = useState<TestResults | null>(null);
 
   useEffect(() => {
-    fetchData(`http://localhost:8000/test/results/${testPassId}`).then((data) =>
+    fetchData(`test/results/${testPassId}`).then((data) =>
       setTestResults(data)
     );
   }, []);
