@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import ru.hh.superscoring.dto.LeaderDto;
 import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassDto;
+import ru.hh.superscoring.dto.UserPassDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
@@ -118,11 +119,23 @@ public class TestPassDao extends GenericDao {
             ".TestPassDto(tp.id,tp.status,tp.finalScore,tp.maxPossible,tp.qualificationName,tp.timeFinished,tp.timeStarted,tp.testId,t.name) " +
             "from TestPass tp inner join Test t on tp.testId = t.id " +
             "where tp.testId = :testId and tp.userId = :userId order by tp.id asc", TestPassDto.class)
-        .setParameter("testId",testId)
-        .setParameter("userId",userId)
+        .setParameter("testId", testId)
+        .setParameter("userId", userId)
         .setFirstResult(page * perPage)
         .setMaxResults(perPage)
         .getResultList();
+  }
+
+  public UserPassDto getUserPassById(int testPassId) {
+    return getSession()
+        .createQuery("select new ru.hh.superscoring.dto" +
+            ".UserPassDto(tp.id,tp.status,tp.finalScore,tp.maxPossible,tp.qualificationName,tp.timeFinished,tp.timeStarted,tp.testId,t.name,u.name,u.surname,u.patronymic) " +
+            "from TestPass tp " +
+            "inner join Test t on tp.testId = t.id " +
+            "inner join User u on tp.userId = u.id " +
+            "where tp.id = :testPassId", UserPassDto.class)
+        .setParameter("testPassId", testPassId)
+        .getSingleResult();
   }
 
 }

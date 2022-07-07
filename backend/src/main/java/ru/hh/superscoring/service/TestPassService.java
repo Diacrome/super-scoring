@@ -6,18 +6,22 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.ws.rs.core.Response;
 import org.hibernate.PropertyValueException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hh.superscoring.dao.TestDao;
 import ru.hh.superscoring.dao.TestPassDao;
+import ru.hh.superscoring.dao.UserDao;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.StartResultDto;
-import ru.hh.superscoring.dto.TestDto;
+import ru.hh.superscoring.dto.TestPassBoardDto;
 import ru.hh.superscoring.dto.TestPassDto;
+import ru.hh.superscoring.dto.UserPassDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.entity.TestPass;
 import ru.hh.superscoring.entity.TestPassQuestion;
+import ru.hh.superscoring.entity.User;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.util.StartResult;
 import ru.hh.superscoring.util.TestPassStatus;
@@ -26,11 +30,13 @@ public class TestPassService {
   private final TestPassDao testPassDao;
   private final QuestionService questionService;
   private final TestDao testDao;
+  private final UserDao userDao;
 
-  public TestPassService(TestPassDao testPassDao, QuestionService questionService, TestDao testDao) {
+  public TestPassService(TestPassDao testPassDao, QuestionService questionService, TestDao testDao, UserDao userDao) {
     this.testPassDao = testPassDao;
     this.questionService = questionService;
     this.testDao = testDao;
+    this.userDao = userDao;
   }
 
   @Transactional
@@ -110,14 +116,11 @@ public class TestPassService {
 
   @Transactional(readOnly = true)
   public TestPassDto getTestPassById(Integer testPassId) {
-    TestPass testPass = testPassDao.get(TestPass.class, testPassId);
-    if (testPass == null) {
+    UserPassDto userPassDto = testPassDao.getUserPassById(testPassId);
+    if (userPassDto == null) {
       return null;
     }
-    Test test = testDao.get(Test.class, testPass.getTestId());
-    TestPassDto testPassDto = TestPassDto.map(testPass);
-    testPassDto.setTestName(test.getName());
-    return testPassDto;
+    return userPassDto;
   }
 
   @Transactional
@@ -125,18 +128,15 @@ public class TestPassService {
     testPassDao.get(TestPass.class, testPassId).setStatus(TestPassStatus.TIMEOUT);
   }
 
-  @Transactional
-  public void earlyCancelTestPassByUserId(Integer userId) {
-    Integer testPassId = testPassDao.getTestPassByUserId(userId);
-    if (testPassId == null) {
-      throw (new PropertyValueException("No testPass for such user!", "testPassDao", "userId"));
-    }
-    testPassDao.get(TestPass.class, testPassId).setStatus(TestPassStatus.CANCELED);
-  }
-
   @Transactional(readOnly = true)
-  public List<TestPassDto> getAllTestPassesForUser(int page, int perPage, int testId, int userId) {
-    return testPassDao.getAllTestPassesForUser(page, perPage, testId, userId);
+  public TestPassBoardDto getAllTestPassesForUser(int page, int perPage, int testId, int userId) {
+    List<TestPassDto> listTestPassDto = testPassDao.getAllTestPassesForUser(page, perPage, testId, userId);
+    TestPassBoardDto testPassBoardDto = TestPassBoardDto.map(listTestPassDto,page, perPage);
+    User user = userDao.get(User.class, userId);
+    testPassBoardDto.setName(user.getName());
+    testPassBoardDto.setSurname(user.getSurname());
+    testPassBoardDto.setPatronymic(user.getPatronymic());
+    return testPassBoardDto;
   }
 
 }

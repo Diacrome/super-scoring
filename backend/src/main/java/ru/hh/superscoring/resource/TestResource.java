@@ -24,6 +24,7 @@ import ru.hh.superscoring.dto.TestBoardDto;
 import ru.hh.superscoring.dto.TestBoardForUserDto;
 import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassDto;
+import ru.hh.superscoring.dto.UserPassDto;
 import ru.hh.superscoring.entity.Test;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
@@ -98,6 +99,9 @@ public class TestResource {
   public Response createTest(@FormParam("name") String name,
                              @FormParam("description") String description,
                              @FormParam("questionCount") Integer questionCount,
+                             @FormParam("attemptQuantity") Integer attemptQuantity,
+                             @FormParam("repeatInterval") Integer repeatInterval,
+                             @FormParam("timeLimit") short timeLimit,
                              @HeaderParam("authorization") String authorizationToken) {
     Integer userId = authService.getUserIdWithToken(authorizationToken);
     if (userId == null) {
@@ -109,7 +113,7 @@ public class TestResource {
     }
     Integer savedId;
     try {
-      savedId = testService.saveTest(name, description, userId, questionCount);
+      savedId = testService.saveTest(name, description, userId, questionCount, attemptQuantity, repeatInterval, timeLimit);
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
@@ -139,7 +143,7 @@ public class TestResource {
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
-    return Response.status(201).build();
+    return Response.status(201).entity("Test disabled").build();
   }
 
   @POST
@@ -167,10 +171,18 @@ public class TestResource {
     } catch (Exception e) {
       return Response.status(400).entity("Unable to save test!").build();
     }
-    return Response.status(201).build();
+    return Response.status(201).entity("Test enabled").build();
   }
 
   @GET
+  @Operation(summary = "Получение тестов", description = "Получение всех тестов. Доступно только с правами администратора")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении списка тестов",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TestBoardDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации"
+  ), @ApiResponse(responseCode = "403", description = "Недостаточно прав")})
   @Path("/get-tests")
   @Produces("application/json")
   public Response getAllTests(@HeaderParam("authorization") String authorizationToken,
@@ -192,11 +204,18 @@ public class TestResource {
   }
 
   @GET
+  @Operation(summary = "Получение тестов", description = "Получение всех тестов. Доступно для всех типов пользователей")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении списка тестов",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TestBoardForUserDto.class))}
+  ), @ApiResponse(responseCode = "401", description = "Токен не передан"
+  ), @ApiResponse(responseCode = "404", description = "Ошибка авторизации")})
   @Path("/all-tests-for-user")
   @Produces("application/json")
   public Response getAllTestsForUser(@HeaderParam("authorization") String authorizationToken,
-                              @QueryParam("page") @DefaultValue("0") Integer page,
-                              @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
+                                     @QueryParam("page") @DefaultValue("0") Integer page,
+                                     @QueryParam("perPage") @DefaultValue("10") Integer perPage) {
     if (authorizationToken == null) {
       return Response.status(401).entity("No token found!").build();
     }
@@ -209,12 +228,19 @@ public class TestResource {
   }
 
   @GET
+  @Operation(summary = "Получение результатов прохождения теста",
+      description = "Получение результатов прохождения теста по id прохождения теста")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "201",
+      description = "При успешном получении результатов прохождения теста",
+      content = {@Content(mediaType = "application/json", schema = @Schema(implementation = TestPassDto.class))}
+  ), @ApiResponse(responseCode = "404", description = "Отсутствует прохождение теста с таким id")})
   @Path("/results/{pass_id}")
   @Produces("application/json")
   public Response getTestPassResults(@PathParam("pass_id") int testPassId) {
-    TestPassDto testPassDto = testPassService.getTestPassById(testPassId);
-    if (testPassDto != null) {
-      return Response.status(201).entity(testPassDto).build();
+    UserPassDto userPassDto = (UserPassDto) testPassService.getTestPassById(testPassId);
+    if (userPassDto != null) {
+      return Response.status(201).entity(userPassDto).build();
     } else {
       return Response.status(404, "There is no such 'TestPass' in the system").build();
     }

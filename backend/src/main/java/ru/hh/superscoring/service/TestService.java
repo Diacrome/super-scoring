@@ -35,7 +35,13 @@ public class TestService {
   }
 
   @Transactional
-  public Integer saveTest(String name, String description, Integer creatorId, Integer questionCount) {
+  public Integer saveTest(String name,
+                          String description,
+                          Integer creatorId,
+                          Integer questionCount,
+                          Integer attemptQuantity,
+                          Integer repeatInterval,
+                          short timeLimit) {
     Test test = new Test();
     test.setName(name);
     test.setDescription(description);
@@ -44,7 +50,10 @@ public class TestService {
     test.setQuestionQuantity(questionCount);
     test.setDateCreated(LocalDateTime.now());
     test.setDateModified(LocalDateTime.now());
-    test.setIsActive(true);
+    test.setIsActive(false);
+    test.setAttemptQuantity(attemptQuantity);
+    test.setRepeatInterval(repeatInterval);
+    test.setTimeLimit(timeLimit);
     testDao.save(test);
     return test.getId();
   }

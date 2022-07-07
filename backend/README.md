@@ -173,7 +173,10 @@ Connection.
 Создает новый тест.
 
 **Получает**
-- название теста (`String name`), описание (`String description`) и количество вопросов (`Integer questionCount`), в виде @FormParam в формате *x-www-form-urlencoded*.
+- название теста (`String name`), описание (`String description`), время прохождения теста (`Intrger timeLimit`), 
+допустимое количество попыток (`Intrger attemptQuantity`), 
+интервал времени после которого можно будет повторно пройти тест (`Intrger repeatInterval`), 
+и количество вопросов (`Integer questionCount`), в виде @FormParam в формате *x-www-form-urlencoded*.
 - токен из заголовка запроса (`String authorization`) в виде @HeaderParam
 
 **Возвращает**
