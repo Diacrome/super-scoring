@@ -118,6 +118,14 @@ label {
     max-width: 800px;
 }
 
+.attempts-info {
+    text-align: center;
+}
+
+.not-exist-text{
+    text-align: center;
+}
+
 .test_content {
     display: block;
     margin-top: 15px;

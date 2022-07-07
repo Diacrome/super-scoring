@@ -6,6 +6,7 @@ import { useAppDispatch } from "../hooks/useAppDispatch";
 import { updateDefaultToken } from "../functions/updateDefaultToken";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { Role } from "../types/status";
+import { backendLocation } from "../types/locations";
 
 const HomeScreen: FC = () => {
   const { role } = useAppSelector((state) => state.status);
@@ -23,7 +24,7 @@ const HomeScreen: FC = () => {
   const goToAdminScreen = () => {
     const token = localStorage.getItem("Authorization");
     document.cookie = `Authorization=${token}`;
-    window.location.href = "http://localhost:8000/admin";
+    window.location.href = `${backendLocation}/admin`;
   };
 
   return (
