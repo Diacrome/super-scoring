@@ -5,7 +5,6 @@ import ReactAudioPlayer from "react-audio-player";
 
 const QuestionContent: FC<QuestionContentProps> = ({ content }) => {
   const contentUrl = `${contentLocation}/${content[0].url}`;
-  console.log(contentUrl);
 
   switch (content[0].type) {
     case ContentType.Image:
