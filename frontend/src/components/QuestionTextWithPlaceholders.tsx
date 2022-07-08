@@ -1,11 +1,17 @@
 import React, { ChangeEventHandler, FC, Fragment } from "react";
-import { ANSWER_PLH, SelectedOption } from "../types/questions";
+import {
+  ANSWER_PLH,
+  MultipleQuestionAnswers,
+  SelectedOption,
+} from "../types/questions";
+import QuestionPlaceholder from "./QuestionPlaceholder";
 
 interface QuestionTextWithPlaceholdersProps {
   text: string;
   selectedOption: SelectedOption;
-  questionAnswers: string[][];
+  questionAnswers: MultipleQuestionAnswers;
   handleOptionChange: ChangeEventHandler<HTMLSelectElement>;
+  getAnswerNumber: () => number;
 }
 
 const QuestionTextWithPlaceholders: FC<QuestionTextWithPlaceholdersProps> = ({
@@ -13,6 +19,7 @@ const QuestionTextWithPlaceholders: FC<QuestionTextWithPlaceholdersProps> = ({
   selectedOption,
   questionAnswers,
   handleOptionChange,
+  getAnswerNumber,
 }) => {
   const textParts = text.split(ANSWER_PLH);
 
@@ -22,18 +29,12 @@ const QuestionTextWithPlaceholders: FC<QuestionTextWithPlaceholdersProps> = ({
       {textParts.map((part, number) => (
         <Fragment key={number}>
           {!!number && (
-            <select
-              name={`${number - 1}`}
-              value={selectedOption[number - 1]}
-              onChange={handleOptionChange}
-            >
-              <option value={0} disabled></option>
-              {questionAnswers[number - 1].map((answer, number) => (
-                <option key={number} value={number + 1}>
-                  {answer}
-                </option>
-              ))}
-            </select>
+            <QuestionPlaceholder
+              selectedOption={selectedOption}
+              handleOptionChange={handleOptionChange}
+              questionAnswers={questionAnswers}
+              questionNumber={getAnswerNumber()}
+            />
           )}
           {part}
         </Fragment>
