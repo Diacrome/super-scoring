@@ -32,7 +32,7 @@ const TestScreen: FC = () => {
 
   return (
     <div className="test">
-      <div>Вопрос {questionOrder}:</div>
+      <div className="test__question-title">Question {questionOrder}:</div>
       {questionContent && <QuestionContent content={questionContent} />}
       <QuestionForm
         questionText={questionText}
