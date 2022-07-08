@@ -135,7 +135,7 @@ public class TestPassDao extends GenericDao {
             "inner join User u on tp.userId = u.id " +
             "where tp.id = :testPassId", UserPassDto.class)
         .setParameter("testPassId", testPassId)
-        .getSingleResult();
+        .uniqueResult();
   }
 
 }
