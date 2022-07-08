@@ -19,7 +19,7 @@ public class QuestionDistributionDao extends GenericDao {
 
   public Integer deleteQuestionDistribution(Integer distributionId) {
     return getSession()
-        .createQuery("delete qd from QuestionDistribution qd where qd.id = :distributionId")
+        .createQuery("delete from QuestionDistribution qd where qd.id = :distributionId")
         .setParameter("distributionId", distributionId)
         .executeUpdate();
   }
