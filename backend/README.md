@@ -168,6 +168,8 @@ Connection.
 - 400 и "No testPass for the user!", если для пользователя, которому принадлежит токен, нет текущего прохождения.
 - 400 и "Unable to save answer!", если запись не удалось произвести корректно.
 
+### Создание теста 
+
 `POST /test/create`
 
 Создает новый тест.
@@ -495,3 +497,11 @@ content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
 2. Для документации поднят отдельный контейнер с redocly/redoc
 3. Спецификация и Dockerfile берутся из папки docs\
 4. Спецификация автоматически генерируется и кладется в нужную папку при каждом локальном выполнении стадии package в maven
+
+
+### Добавление теста
+
+1. [Создать тест в базе](https://github.com/Diacrome/super-scoring/blob/main/backend/README.md#создание-теста)
+2. [Добавить вопросы](https://github.com/Diacrome/super-scoring/blob/main/backend/README.md#добавление-вопроса-к-тесту)
+3. [Задать распределение вопросов](https://github.com/Diacrome/super-scoring/blob/main/backend/README.md#добавление-распределения-вопросов-к-тесту)
+

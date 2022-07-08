@@ -8,6 +8,7 @@ import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.util.exceptions.DistributionAlreadyExistsException;
 import ru.hh.superscoring.util.exceptions.DistributionNotFoundException;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 
@@ -113,6 +114,21 @@ public class TestService {
   public boolean removeQuestionDistribution(Integer questionDistributionId) throws DistributionNotFoundException {
     if (questionDistributionDao.deleteQuestionDistribution(questionDistributionId) == 0) {
       throw new DistributionNotFoundException("No such distribution to delete");
+    }
+    return true;
+  }
+
+  @Transactional
+  public boolean addQuestionDistribution(QuestionDistribution newQuestionDistribution) throws DistributionAlreadyExistsException {
+    if (questionDistributionDao.existsSuchQuestionDistribution(newQuestionDistribution.getTestId(),
+        newQuestionDistribution.getWeight()) != null) {
+      throw new DistributionAlreadyExistsException("Distribution with such weight for this test exists: " + newQuestionDistribution.getWeight());
+    } else {
+      QuestionDistribution questionDistribution = new QuestionDistribution();
+      questionDistribution.setTestId(newQuestionDistribution.getTestId());
+      questionDistribution.setWeight(newQuestionDistribution.getWeight());
+      questionDistribution.setQuestionCount(newQuestionDistribution.getQuestionCount());
+      questionDistributionDao.save(questionDistribution);
     }
     return true;
   }
