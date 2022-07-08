@@ -8,6 +8,7 @@ import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.entity.Question;
 import ru.hh.superscoring.entity.QuestionDistribution;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.util.exceptions.DistributionNotFoundException;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 
 import java.time.LocalDateTime;
@@ -106,6 +107,14 @@ public class TestService {
   @Transactional(readOnly = true)
   public List<TestDto> getAllTestsForUser(int page, int perPage) {
     return testDao.getAllTestsForUser(page, perPage);
+  }
+
+  @Transactional
+  public boolean removeQuestionDistribution(Integer questionDistributionId) throws DistributionNotFoundException{
+    if (questionDistributionDao.deleteQuestionDistribution(questionDistributionId) == 0) {
+      throw new DistributionNotFoundException("No such distribution to delete");
+    }
+    return true;
   }
 
 }
