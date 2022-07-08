@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -26,6 +27,8 @@ import ru.hh.superscoring.dto.TestDto;
 import ru.hh.superscoring.dto.TestPassDto;
 import ru.hh.superscoring.dto.UserPassDto;
 import ru.hh.superscoring.entity.Test;
+import ru.hh.superscoring.util.Role;
+import ru.hh.superscoring.util.exceptions.DistributionNotFoundException;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.StatusService;
@@ -244,5 +247,27 @@ public class TestResource {
     } else {
       return Response.status(404, "There is no such 'TestPass' in the system").build();
     }
+  }
+
+  @DELETE
+  @Operation(summary = "Удаление распределения", description = "Удаляет распределение по id")
+  @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "При успешном удалении распределения"
+  ), @ApiResponse(responseCode = "404", description = "Отсутствие распределения, которое необходимо удалить"
+  ), @ApiResponse(responseCode = "403", description = "Недостаточно прав")})
+  @Path("/remove-distribution/{questionDistributionId}")
+  @Produces("application/json")
+  public Response RemoveQuestionDistributionFromTest(@HeaderParam("authorization") String authorizationToken,
+                                                     @PathParam("questionDistributionId") Integer distributionId) {
+    Role role;
+    role = authService.getRoleByToken(authorizationToken);
+    if (role == Role.ADMIN) {
+      try {
+        testService.removeQuestionDistribution(distributionId);
+      } catch (DistributionNotFoundException e) {
+        return Response.status(404, "No distribution found").build();
+      }
+      return Response.status(201, "Distribution deleted").build();
+    }
+    return Response.status(403, "Access denied").build();
   }
 }
