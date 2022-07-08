@@ -147,14 +147,19 @@ label {
     text-align: center;
 }
 
-.test_content {
+.test__question-title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.test__content {
     display: block;
-    margin-top: 15px;
+    margin-top: 20px;
     width: 100%;
 }
 
 .test__question-text {
-    margin: 15px 0;
+    margin: 20px 0;
 }
 
 .test__question-paragraph {
@@ -162,7 +167,7 @@ label {
 }
 
 .test__btns {
-    margin-top: 15px;
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

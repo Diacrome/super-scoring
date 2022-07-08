@@ -12,6 +12,7 @@ export enum AnswerType {
 export enum ContentType {
   Image = "image",
   Video = "video",
+  Audio = "audio",
 }
 
 type QuestionContent = Array<{
