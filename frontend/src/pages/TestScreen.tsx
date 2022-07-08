@@ -6,6 +6,8 @@ import { useAppSelector } from "../hooks/useAppSelector";
 import { getQuestionAnswers } from "../functions/getQuestionAnswers";
 import QuestionContent from "../components/QuestionContent";
 import { fetchData } from "../functions/fetchData";
+import TestProgressBar from "../components/TestProgressBar";
+import TestTimer from "../components/TestTimer";
 const TestScreen: FC = () => {
   const { currentPass } = useAppSelector((state) => state.status);
   const [questions, setQuestions] = useState<Questions | null>(null);
@@ -32,7 +34,16 @@ const TestScreen: FC = () => {
 
   return (
     <div className="test">
-      <div className="test__question-title">Question {questionOrder}:</div>
+      <TestProgressBar
+        progressPercent={((questionOrder - 1) / questionsCount) * 100}
+      />
+      <div className="test__title">
+        <div className="test__title-text">Question {questionOrder}:</div>
+        <TestTimer
+          testId={currentPass.testId}
+          startTime={currentPass.startTime}
+        />
+      </div>
       {questionContent && <QuestionContent content={questionContent} />}
       <QuestionForm
         questionText={questionText}

@@ -21,6 +21,10 @@ h2 {
     font-size: 24px;
 }
 
+select {
+    width: fit-content;
+}
+
 .App {
     margin: 0 auto;
     padding: 50px 50px;
@@ -116,7 +120,7 @@ label {
 .test-catalog {
     display: flex;
     flex-wrap: wrap;
-    padding: 0 20px
+    padding: 0 -20px
 }
 
 .test-card {
@@ -144,7 +148,8 @@ label {
 }
 
 .test {
-    margin: 0 auto;
+    margin-right: auto;
+    margin-left: auto;
     max-width: 800px;
 }
 
@@ -156,15 +161,62 @@ label {
     text-align: center;
 }
 
-.test__question-title {
+.test__progress {
+    display: flex;
+    background: cornflowerblue;
+    height: 30px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+}
+
+.test__timer {
+    width: fit-content;
+    display: block;
+    margin-left: auto;
+}
+
+.test__progress-bar {
+    width: 100%;
+    padding: 12px 15px;
+}
+
+.test__progress-full-bar {
+    border-radius: 3px;
+    background: white;
+    height: 100%;
+}
+
+.test__progress-pass-bar {
+    position: relative;
+    top: -6px;
+    border-radius: 3px;
+    background: #6ed78b;
+    height: 100%;
+}
+
+.test__progress-text {
+    width: 45px;
+    line-height: 30px;
+    color: white;
+}
+
+.test__title {
+    display: flex;
+    align-items: center;
+}
+
+.test__title-text {
     font-weight: bold;
     font-size: 20px;
 }
 
 .test__content {
     display: block;
-    margin-top: 20px;
     width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    margin: 15px auto;
+
 }
 
 .test__question-text {
@@ -192,6 +244,10 @@ label {
 }
 
 @media (min-width: 600px) {
+    .test {
+        margin-top: 30px;
+    }
+
     .test__btns {
         flex-direction: row;
         justify-content: space-between;
