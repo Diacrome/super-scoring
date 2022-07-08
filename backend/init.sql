@@ -114,6 +114,10 @@ values (1, 'Математический тест', 'Тест на знание 
        (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now(), 300),
        (4, 'Проверь свой уровень английского','Тестирование профессионального английского языка',now(),now(),1800);
 
+UPDATE test SET question_quantity = 20 WHERE id = 4;
+
+
+
 insert into qualification (test_id,qualification_score,qualification_name)
 values (1,24,'Доктор математических наук'),
        (1,18,'Кандидат математических наук'),
@@ -236,8 +240,7 @@ values (1, 1, 5),
 
 insert into test_pass (test_id, user_id, time_started, time_finished, final_score, status)
 values (1, 3, now() - interval '100 seconds', now(), 6,'PASSED'),
-       (1, 4, now() - interval '200 seconds', null, null,'PASS'),
-       (2, 1, now() - interval '200 seconds', null, null,'PASS'),
+       (2, 1, now() - interval '200 seconds', now(), 1 ,'PASSED'),
        (2, 4, now() - interval '200 seconds', now(), 10,'PASSED'),
        (1, 3, now() - interval '100 seconds', now(), 7,'PASSED'),
        (2,3,'2022-05-20 17:46:39.791','2022-05-20 17:48:19.791',6,'PASSED'),
