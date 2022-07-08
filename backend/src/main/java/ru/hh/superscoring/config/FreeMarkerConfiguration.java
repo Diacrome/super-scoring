@@ -13,7 +13,7 @@ public class FreeMarkerConfiguration {
   @Bean
   Configuration configuration() throws IOException {
     Configuration cfg = new Configuration(Configuration.VERSION_2_3_29);
-    cfg.setDirectoryForTemplateLoading(new File("/src/main/resources/templates"));
+    cfg.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
     cfg.setDefaultEncoding("UTF-8");
     cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     cfg.setLogTemplateExceptions(false);
