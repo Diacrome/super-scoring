@@ -254,10 +254,10 @@ public class TestResource {
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "При успешном удалении распределения"
   ), @ApiResponse(responseCode = "404", description = "Отсутствие распределения, которое необходимо удалить"
   ), @ApiResponse(responseCode = "403", description = "Недостаточно прав")})
-  @Path("/remove-distribution")
+  @Path("/remove-distribution/{questionDistributionId}")
   @Produces("application/json")
   public Response RemoveQuestionDistributionFromTest(@HeaderParam("authorization") String authorizationToken,
-                                                     @FormParam("questionDistributionId") Integer distributionId) {
+                                                     @PathParam("questionDistributionId") Integer distributionId) {
     Role role;
     role = authService.getRoleByToken(authorizationToken);
     if (role == Role.ADMIN) {
