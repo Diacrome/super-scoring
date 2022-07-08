@@ -11,6 +11,12 @@ const QuestionFormWithPlaceholders: FC<QuestionFormWithPlaceholdersProps> = ({
   selectedOption,
   handleOptionChange,
 }) => {
+  let answerNumber = 0;
+
+  const getAnswerNumber = () => {
+    return answerNumber++;
+  };
+
   return (
     <div className="test__question-text">
       {questionText.map((paragraphText) => (
@@ -21,6 +27,7 @@ const QuestionFormWithPlaceholders: FC<QuestionFormWithPlaceholdersProps> = ({
               selectedOption={selectedOption}
               questionAnswers={questionAnswers}
               handleOptionChange={handleOptionChange}
+              getAnswerNumber={getAnswerNumber}
             />
           ) : (
             paragraphText
