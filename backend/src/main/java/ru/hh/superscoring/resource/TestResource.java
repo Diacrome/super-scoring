@@ -170,10 +170,6 @@ public class TestResource {
     if (!isUserAdmin) {
       return Response.status(403, "Admin rights required").build();
     }
-    boolean validQuestionDistribution = testService.isValidQuestionDistribution(testId);
-    if (!validQuestionDistribution) {
-      return Response.status(406, "Invalid question count in distribution for test").build();
-    }
     try {
       testService.switchOnTest(testId);
     } catch (TestNoFilledException tnf) {
