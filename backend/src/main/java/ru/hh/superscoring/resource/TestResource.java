@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -248,7 +249,7 @@ public class TestResource {
     }
   }
 
-  @POST
+  @DELETE
   @Operation(summary = "Удаление распределения", description = "Удаляет распределение по id")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "При успешном удалении распределения"
   ), @ApiResponse(responseCode = "404", description = "Отсутствие распределения, которое необходимо удалить"
@@ -256,7 +257,7 @@ public class TestResource {
   @Path("/remove-distribution")
   @Produces("application/json")
   public Response RemoveQuestionDistributionFromTest(@HeaderParam("authorization") String authorizationToken,
-                                                     @PathParam("questionDistributionId") Integer distributionId) {
+                                                     @FormParam("questionDistributionId") Integer distributionId) {
     Role role;
     role = authService.getRoleByToken(authorizationToken);
     if (role == Role.ADMIN) {

@@ -110,7 +110,7 @@ public class TestService {
   }
 
   @Transactional
-  public boolean removeQuestionDistribution(Integer questionDistributionId) throws DistributionNotFoundException{
+  public boolean removeQuestionDistribution(Integer questionDistributionId) throws DistributionNotFoundException {
     if (questionDistributionDao.deleteQuestionDistribution(questionDistributionId) == 0) {
       throw new DistributionNotFoundException("No such distribution to delete");
     }
