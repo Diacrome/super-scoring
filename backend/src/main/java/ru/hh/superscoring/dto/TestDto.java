@@ -6,6 +6,7 @@ public class TestDto {
   private Integer id;
   private String name;
   private String description;
+  private long timeLimit;
 
   public static TestDto map(Test test) {
     if (test == null) {
@@ -15,6 +16,7 @@ public class TestDto {
     testDto.setId(test.getId());
     testDto.setName(test.getName());
     testDto.setDescription(test.getDescription());
+    testDto.setTimeLimit(test.getTimeLimit());
     return testDto;
   }
 
@@ -25,6 +27,14 @@ public class TestDto {
     this.id = id;
     this.name = name;
     this.description = description;
+  }
+
+  public long getTimeLimit() {
+    return timeLimit;
+  }
+
+  public void setTimeLimit(long timeLimit) {
+    this.timeLimit = timeLimit;
   }
 
   public Integer getId() {
