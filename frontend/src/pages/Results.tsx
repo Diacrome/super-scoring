@@ -5,6 +5,7 @@ import Loader from "../components/Loader/Loader";
 import { TestResults, TestStatus } from "../types/results";
 import { getDate } from "../functions/getDate";
 import TestResultsChart from "../components/TestResultsChart";
+import { backendLocation } from "../types/locations";
 
 const Results: FC = () => {
   const { testPassId } = useParams();
@@ -66,6 +67,11 @@ const Results: FC = () => {
                 ratio={testResults.finalScore / testResults.maxPossible}
               />
             </div>
+            <img
+              className="results__diagram"
+              src={`${backendLocation}/graph/${testPassId}`}
+              alt="Диаграмма распределения результатов"
+            />
           </div>
         </div>
       );

@@ -263,7 +263,6 @@ label {
 
 .results__chart {
     width: 100%;
-
 }
 
 @media (min-width: 700px) {
@@ -285,6 +284,12 @@ label {
     .results__chart-wrapper{
         margin: 0;
     }
+}
+
+.results__diagram {
+    margin-top: 50px;
+    display: block;
+    width: 100%;
 }
 
 
