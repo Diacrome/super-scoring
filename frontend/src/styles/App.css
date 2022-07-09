@@ -50,9 +50,13 @@ h2 {
     color: cornflowerblue;
 }
 
-.auth-form {
+.login-screen {
     margin: 0 auto;
     max-width: 300px;
+}
+
+.login-form {
+
 }
 
 .text-input {
@@ -87,6 +91,11 @@ label {
 
 .login-block {
     display: flex;
+}
+
+.register-text{
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 .navbar {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoginParams } from "../types/login";
+import { AuthParams } from "../types/login";
 import { useAppDispatch } from "./useAppDispatch";
 import { fetchStatus } from "../store/action-creators/status";
 import { backendLocation } from "../types/locations";
@@ -7,7 +7,7 @@ import { backendLocation } from "../types/locations";
 export const useFetchToken = () => {
   const dispatch = useAppDispatch();
 
-  return async (loginParams: LoginParams) => {
+  return async (loginParams: AuthParams) => {
     const params = new URLSearchParams({ ...loginParams });
     axios
       .post(`${backendLocation}/auth/token`, params)
