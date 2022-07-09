@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.awt.*;
+import java.io.IOException;
 import java.util.Set;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -19,13 +21,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.hibernate.HibernateException;
-import ru.hh.superscoring.dao.UserDao;
+import org.hibernate.PropertyValueException;
 import ru.hh.superscoring.dto.LeaderBoardDto;
 import ru.hh.superscoring.dto.QuestionsForTestDto;
 import ru.hh.superscoring.dto.StartResultDto;
-import ru.hh.superscoring.dto.TestPassBoardDto;
 import ru.hh.superscoring.entity.TestPassQuestion;
-import ru.hh.superscoring.entity.User;
 import ru.hh.superscoring.util.exceptions.TestNoFilledException;
 import ru.hh.superscoring.service.AuthService;
 import ru.hh.superscoring.service.TestPassService;
@@ -175,4 +175,25 @@ public class TestPassResource {
     return Response.ok(testPassService.getAllTestPassesForUser(page, perPage, testId, userId)).build();
   }
 
+  @GET
+  @Operation(summary = "Диаграмма: статистика по тесту",
+      description = "Получение изображения диаграммы со статистикой прохождения теста для страницы результатов тестирования")
+  @ApiResponses(value = {@ApiResponse(
+      responseCode = "200", description = "возвращает изображение JPG",
+      content = {@Content(schema = @Schema(implementation = LeaderBoardDto.class))}
+  ), @ApiResponse(responseCode = "400", description = "Невозможно отобразить диаграмму"
+  ), @ApiResponse(responseCode = "404", description = "Для этого прохождения не установлен результат")})
+  @Path("/graph/{pass_id}")
+  @Produces("image/jpg")
+  public Response getGraph(@PathParam("pass_id") int testPassId) {
+    try {
+      return Response.ok(testPassService.getChartForResult(testPassId)).build();
+    } catch (PropertyValueException pve) {
+      return Response.status(404, "No result for this pass!").build();
+    } catch (Exception ex) {
+      return Response.status(400, "Unable to display chart").build();
+    }
+  }
+
 }
+
