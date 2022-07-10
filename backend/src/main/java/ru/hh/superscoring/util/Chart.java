@@ -10,6 +10,7 @@ import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
@@ -29,9 +30,8 @@ public class Chart {
         PlotOrientation.VERTICAL,
         true, true, false);
 
-
     Font robo = Font.createFont(Font.PLAIN, new File("src/main/resources/Roboto-Regular.ttf"));
-    chart.getLegend().setItemFont(robo.deriveFont(17f));
+    chart.getLegend().setItemFont(robo.deriveFont(22f));
     chart.setBackgroundPaint(Color.white);
 
     CategoryPlot plot = chart.getCategoryPlot();
@@ -46,16 +46,27 @@ public class Chart {
     renderer.setDrawBarOutline(false);
 
     CategoryAxis domainAxis = plot.getDomainAxis();
-    domainAxis.setLabelFont(robo.deriveFont(15f));
+    domainAxis.setLabelFont(robo.deriveFont(20f));
     domainAxis.setTickLabelFont(robo.deriveFont(15f));
+    domainAxis.setLowerMargin(0.005);
+    domainAxis.setUpperMargin(0.005);
 
     ValueAxis rangeAxis = plot.getRangeAxis();
-    rangeAxis.setLabelFont(robo.deriveFont(15f));
+    rangeAxis.setLabelFont(robo.deriveFont(20f));
     rangeAxis.setTickLabelFont(robo.deriveFont(15f));
     rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
-    int width = 640;
-    int height = 480;
+    if (dataset.getColumnCount() > 40) {
+      domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
+    }
+
+    if (dataset.getColumnCount() > 60) {
+      domainAxis.setTickLabelFont(robo.deriveFont(10f));
+      rangeAxis.setTickLabelFont(robo.deriveFont(10f));
+    }
+
+    int width = 1000;
+    int height = 750;
     File file = new File("chart.jpg");
     ChartUtils.saveChartAsJPEG(file, chart, width, height);
     return file;
