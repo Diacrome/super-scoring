@@ -108,14 +108,12 @@ values ('admin', 'LyB7wiGICF5mCQizydjYMA', 'Ivan', 'ADMIN'),-- pass: admin1
        ('user2', 'pfH0FU_RuP4PRaTB84uFqw', 'Anna', 'USER');   --  pass: user2
 
 
-insert into test (creator_id, name, description, date_created, date_modified, time_limit)
-values (1, 'Математический тест', 'Тест на знание таблицы умножения', now(), now(), 300),
-       (2, 'Тест по английскому языку', 'Тест на знание английского языка', now(), now(), 300),
-       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', now(), now(), 300),
-       (4, 'Проверь свой уровень английского','Тестирование профессионального английского языка',now(),now(),1800);
-
-UPDATE test SET question_quantity = 20 WHERE id = 4;
-
+insert into test (creator_id, name, description, question_quantity, date_created, date_modified, time_limit)
+values (1, 'Математический тест', 'Тест на знание таблицы умножения', 10, now(), now(), 300),
+       (2, 'Тест по английскому языку', 'Тест на знание английского языка', 10, now(), now(), 300),
+       (3, 'Тест по автослесарному делу', 'Тест на знание профессии автослесаря', 10, now(), now(), 300),
+       (4, 'Проверь свой уровень английского','Тестирование профессионального английского языка', 20,now(),now(),1800),
+       (1, 'ШП 2022', 'Тест для оценки знаний выпускников школ программистов и продактов 2021-2022', 4, now(), now(), 200);
 
 
 insert into qualification (test_id,qualification_score,qualification_name)
@@ -140,7 +138,8 @@ values (1,24,'Доктор математических наук'),
        (4,36,'Pre-Intermediate'),
        (4,54,'Intermediate'),
        (4,72,'Upper-Intermediate'),
-       (4,90,'Advanced');
+       (4,90,'Advanced'),
+       (5, 10, 'Выпускник ШП');
 
 
 insert into question(test_id, question_wording, payload, answer, question_content, answer_type, weight, date_created, date_modified,
@@ -219,7 +218,11 @@ values (1, '1*1 = ', '{"1": 1, "2": 3, "3": 4, "4": 1}', '{"answer": "1"}', null
        (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ДЭНИ ЗА СТОЛОМ. ДЖОРДАН СТУЧИТСЯ, ЗАХОДИТ В ДВЕРЬ\nВыберите правильный ответ. What is Jordan’s request and why does he make it?', '{"1": "He wants a bigger salary because he has shown good results", "2": "He wants a position with greater responsibilities", "3": "He wants a bonus for staying with the company for so long"}', '{"answer": "1"}', '[{ "url": "audio/4.mp3", "type": "audio" }]','SINGLE_CHOICE', 4, now(), now(), 30),
        (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ДЭНИ ЗА СТОЛОМ. ДЖОРДАН СТУЧИТСЯ, ЗАХОДИТ В ДВЕРЬ\nК вам обратился подчиненный. Ответьте ему на запрос: It’s time that my work was recognised', '{"1": "I know you are responsible for the mistake", "2": "We do value your input", "3": "We’re way past the deadline"}', '{"answer": "2"}', '[{ "url": "audio/4.mp3", "type": "audio" }]','SINGLE_CHOICE', 4, now(), now(), 30),
        (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ПЕРЕГОВОРЫ, СИДЯТ ЗА СТОЛОМ\nВыберите правильный ответ. Why does Dany think an ad in a business magazine is a better idea?', '{"1": "Their target audience doesn’t watch TV", "2": "They don’t have expertise to make a commercial better than their competitors", "3": "Their budget is not enough for a TV-commercial"}', '{"answer": "3"}', '[{ "url": "audio/5.mp3", "type": "audio" }]','SINGLE_CHOICE', 5, now(), now(), 30),
-       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ПЕРЕГОВОРЫ, СИДЯТ ЗА СТОЛОМ\nВы на совещании. Что скажете на предложение коллеги: We all need to let the steam off', '{"1": "I agree, let’s call it a day", "2": "Well, it’s not rocket science", "3": "Right, it’s time to get the ball rolling"}', '{"answer": "1"}', '[{ "url": "audio/5.mp3", "type": "audio" }]','SINGLE_CHOICE', 5, now(), now(), 30);
+       (4, 'ПРОСЛУШАЙТЕ АУДИО ФАЙЛ - СЦЕНА: ПЕРЕГОВОРЫ, СИДЯТ ЗА СТОЛОМ\nВы на совещании. Что скажете на предложение коллеги: We all need to let the steam off', '{"1": "I agree, let’s call it a day", "2": "Well, it’s not rocket science", "3": "Right, it’s time to get the ball rolling"}', '{"answer": "1"}', '[{ "url": "audio/5.mp3", "type": "audio" }]','SINGLE_CHOICE', 5, now(), now(), 30),
+       (5, 'Какова оптимальная продолжительность школьной программы?', '{"1": "9 лет", "2": "10 лет", "3": "11 лет", "4": "4 месяца теория, 3 месяца проект"}', '{"answer": "4"}', '[{ "url": "image/5-1.png", "type": "image" }]', 'SINGLE_CHOICE', 1, now(), now(), 30),
+       (5, 'Лучший фреймворк для разработки web приложений на Java', '{"1": "Spring Boot", "2": "Nuts and Bolts"}', '{"multiple_answer1": "1", "multiple_answer2": "2"}', '[{ "url": "image/5-2.png", "type": "image" }]', 'MULTIPLE_CHOICE', 1, now(), now(), 30),
+       (5, 'Прослушайте видеозапись и вставьте пропущенные слова:\n-----------------\nOnce again, can you tell which is the superior %answer1?\nApplication server or web server?\n%answer2 server.\nJ2EE compatible server is application server or %answer3?\nApplication server.', '{"answer1": {"1": "sarvar", "2": "sarver", "3": "server"}, "answer2": {"1": "Applikazon", "2": "Application", "3": "Abligazion"}, "answer3": {"1": "web server", "2": "vap sarvar", "3": "wappp sssarvvar"}}', '{"answer1": "3", "answer2": "2", "answer3": "1"}', '[{ "url": "video/5-3.mp4", "type": "video" }]', 'MULTIPLE_QUESTIONS_SINGLE_CHOICE', 1, now(), now(), 30),
+       (5, 'Прослушайте аудиозапись.\nК каким результатам приведёт выполнение данного кода?', '{"1": "Вывод Hello world", "2": "Вычисление первых 100 знаков числа Пи", "3": "Вывод текущей даты", "4": "Запуск NaB приложения"}', '{"answer": "4"}', '[{ "url": "audio/5-4.mp3", "type": "audio" }]', 'SINGLE_CHOICE', 1, now(), now(), 30);
 
 
 insert into question_distribution (test_id, weight, question_count)
@@ -235,7 +238,8 @@ values (1, 1, 5),
        (4, 5, 2),
        (4, 6, 2),
        (4, 8, 2),
-       (4, 10, 2);
+       (4, 10, 2),
+       (5,1,4);
 
 
 insert into test_pass (test_id, user_id, time_started, time_finished, final_score, status, max_possible)
