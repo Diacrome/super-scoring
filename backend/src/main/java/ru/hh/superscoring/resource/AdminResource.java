@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import ru.hh.superscoring.dto.Model;
@@ -30,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "Админка", description = "API принадлежащие админке")
 @Path("/admin")
 public class AdminResource {
   private final AuthService authService;
@@ -47,6 +52,9 @@ public class AdminResource {
   }
 
   @GET
+  @Operation(summary = "Главная страница админки", description = "Проверяет наличие прав доступа и возвращает главную страницу")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Возвращает главную страницу админки"
+  ), @ApiResponse(responseCode = "400", description = "Не достаточно прав")})
   @GeneratedValue(generator = MediaType.TEXT_HTML)
   public Response checkAuthorization(@CookieParam("Authorization") String token) throws TemplateException, IOException {
     if (notAdmin(token)) {
@@ -71,6 +79,9 @@ public class AdminResource {
 
   @GET
   @Path("test/new")
+  @Operation(summary = "Страница добавления теста", description = "Проверяет наличие прав доступа и возвращает страницу")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Возвращает страницу добавления теста"
+  ), @ApiResponse(responseCode = "400", description = "Не достаточно прав")})
   @GeneratedValue(generator = MediaType.TEXT_HTML)
   public Response newTest(@CookieParam("Authorization") String token) throws TemplateException, IOException {
     if (notAdmin(token)) {
@@ -81,6 +92,9 @@ public class AdminResource {
 
   @POST
   @Path("test/add")
+  @Operation(summary = "Сохранение теста", description = "Сохраняет тест и все вопросы в базе")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Возвращает главную страницу админки"
+  ), @ApiResponse(responseCode = "400", description = "Не достаточно прав")})
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response addTest(FormDataMultiPart multiPart,
                           @CookieParam("Authorization") String token)

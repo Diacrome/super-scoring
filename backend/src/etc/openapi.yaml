@@ -1,5 +1,5 @@
 openapi: "3.0.2"
 info:
-  title: "Super Scoring App API"
+  title: "GradeCheck App API"
   version: 0.1.0
-  description: "SuperScoring App API description"
+  description: "GradeCheck App API description"
