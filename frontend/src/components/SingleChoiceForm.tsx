@@ -1,5 +1,8 @@
-import React, { ChangeEventHandler, FC } from "react";
-import { SingleQuestionFormProps } from "../types/questions";
+import React, { FC } from "react";
+import {
+  HandleOptionChange,
+  SingleQuestionFormProps,
+} from "../types/questions";
 import SingleChoiceWithRadioInputs from "./SingleChoiceWithRadioInputs";
 import QuestionFormWithPlaceholders from "./QuestionFormWithPlaceholders";
 import { checkIsSelectInputType } from "../functions/checkIsSelectInputType";
@@ -12,9 +15,7 @@ const SingleChoiceForm: FC<SingleQuestionFormProps> = ({
 }) => {
   const isSelectInputType = checkIsSelectInputType(questionText);
 
-  const handleOptionChange: ChangeEventHandler<
-    HTMLInputElement | HTMLSelectElement
-  > = (e) => {
+  const handleOptionChange: HandleOptionChange = (e) => {
     setSelectedOption([+e.target.value]);
   };
 
@@ -24,7 +25,6 @@ const SingleChoiceForm: FC<SingleQuestionFormProps> = ({
         <QuestionFormWithPlaceholders
           questionText={questionText}
           questionAnswers={[questionAnswers]}
-          selectedOption={selectedOption}
           handleOptionChange={handleOptionChange}
         />
       ) : (

@@ -17,3 +17,9 @@ export enum LoginMode {
 export interface FormProps {
   handleMode: () => void;
 }
+
+export enum IsRegister {
+  No = "No",
+  Yes = "Yes",
+  Bad = "Bad",
+}

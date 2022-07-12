@@ -1,5 +1,3 @@
-import { ChangeEventHandler } from "react";
-
 export const ANSWER_PLH = /%answer\d*/;
 
 export enum AnswerType {
@@ -82,15 +80,39 @@ export interface MultipleQuestionFormProps extends BasicFormProps {
 export interface QuestionFormWithInputsProps extends BasicFormProps {
   questionAnswers: SingleQuestionAnswers;
   selectedOption: SelectedOption;
-  handleOptionChange: ChangeEventHandler<HTMLInputElement>;
+  handleOptionChange: HandleOptionChange;
 }
 
 export interface QuestionFormWithPlaceholdersProps extends BasicFormProps {
   questionAnswers: MultipleQuestionAnswers;
-  selectedOption: SelectedOption;
-  handleOptionChange: ChangeEventHandler<HTMLSelectElement>;
+  handleOptionChange: HandleOptionChange;
+}
+
+export interface QuestionTextWithPlaceholdersProps {
+  text: string;
+  questionAnswers: MultipleQuestionAnswers;
+  handleOptionChange: HandleOptionChange;
+  getAnswerNumber: () => number;
+}
+
+export interface QuestionPlaceholderProps {
+  handleOptionChange: HandleOptionChange;
+  questionAnswers: MultipleQuestionAnswers;
+  questionNumber: number;
 }
 
 export interface QuestionContentProps {
   content: QuestionContent;
 }
+
+export interface ReactSelectedOption {
+  value: number;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface HandleOptionChangeEvent {
+  target: { name: string | number; value: string | number };
+}
+
+export type HandleOptionChange = (e: HandleOptionChangeEvent) => void;

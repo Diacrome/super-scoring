@@ -8,7 +8,6 @@ import QuestionTextWithPlaceholders from "./QuestionTextWithPlaceholders";
 const QuestionFormWithPlaceholders: FC<QuestionFormWithPlaceholdersProps> = ({
   questionText,
   questionAnswers,
-  selectedOption,
   handleOptionChange,
 }) => {
   let answerNumber = 0;
@@ -19,12 +18,11 @@ const QuestionFormWithPlaceholders: FC<QuestionFormWithPlaceholdersProps> = ({
 
   return (
     <div className="test__question-text">
-      {questionText.map((paragraphText) => (
-        <p className="test__question-paragraph" key={paragraphText}>
+      {questionText.map((paragraphText, number) => (
+        <p className="test__question-paragraph" key={number}>
           {paragraphText.match(ANSWER_PLH) ? (
             <QuestionTextWithPlaceholders
               text={paragraphText}
-              selectedOption={selectedOption}
               questionAnswers={questionAnswers}
               handleOptionChange={handleOptionChange}
               getAnswerNumber={getAnswerNumber}
