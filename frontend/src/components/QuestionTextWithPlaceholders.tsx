@@ -1,22 +1,12 @@
-import React, { ChangeEventHandler, FC, Fragment } from "react";
+import React, { FC, Fragment } from "react";
 import {
   ANSWER_PLH,
-  MultipleQuestionAnswers,
-  SelectedOption,
+  QuestionTextWithPlaceholdersProps,
 } from "../types/questions";
 import QuestionPlaceholder from "./QuestionPlaceholder";
 
-interface QuestionTextWithPlaceholdersProps {
-  text: string;
-  selectedOption: SelectedOption;
-  questionAnswers: MultipleQuestionAnswers;
-  handleOptionChange: ChangeEventHandler<HTMLSelectElement>;
-  getAnswerNumber: () => number;
-}
-
 const QuestionTextWithPlaceholders: FC<QuestionTextWithPlaceholdersProps> = ({
   text,
-  selectedOption,
   questionAnswers,
   handleOptionChange,
   getAnswerNumber,
@@ -30,7 +20,6 @@ const QuestionTextWithPlaceholders: FC<QuestionTextWithPlaceholdersProps> = ({
         <Fragment key={number}>
           {!!number && (
             <QuestionPlaceholder
-              selectedOption={selectedOption}
               handleOptionChange={handleOptionChange}
               questionAnswers={questionAnswers}
               questionNumber={getAnswerNumber()}

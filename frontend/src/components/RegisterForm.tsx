@@ -1,7 +1,7 @@
 import React, { FC, FormEventHandler, useState } from "react";
 import TextInput from "./Input/TextInput";
 import Button from "./Button/Button";
-import { FormProps, RegisterParams } from "../types/login";
+import { FormProps, IsRegister, RegisterParams } from "../types/login";
 import { userRegister } from "../functions/userRegister";
 
 const RegisterForm: FC<FormProps> = ({ handleMode }) => {
@@ -10,14 +10,14 @@ const RegisterForm: FC<FormProps> = ({ handleMode }) => {
     login: "",
     password: "",
   });
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isRegistered, setIsRegistered] = useState<IsRegister>(IsRegister.No);
 
   const handleRegister: FormEventHandler = (e) => {
     e.preventDefault();
-    userRegister(registerParams).then(() => setIsRegistered(true));
+    userRegister(registerParams, setIsRegistered);
   };
 
-  if (isRegistered) {
+  if (isRegistered === IsRegister.Yes) {
     return (
       <>
         <div className="register-text">Вы успешно зарегистрированы</div>
@@ -28,6 +28,11 @@ const RegisterForm: FC<FormProps> = ({ handleMode }) => {
 
   return (
     <form className="login-form" onSubmit={handleRegister} method="post">
+      {isRegistered === IsRegister.Bad && (
+        <div className="form-block">
+          Такой пользователь уже существует, попробуйте еще раз
+        </div>
+      )}
       <div className="form-block">
         <label className="input-label" htmlFor="name">
           Имя
@@ -50,7 +55,10 @@ const RegisterForm: FC<FormProps> = ({ handleMode }) => {
           id="login"
           value={registerParams.login}
           onChange={(event) =>
-            setRegisterParams({ ...registerParams, login: event.target.value })
+            setRegisterParams({
+              ...registerParams,
+              login: event.target.value,
+            })
           }
         />
       </div>
