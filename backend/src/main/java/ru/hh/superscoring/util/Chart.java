@@ -10,7 +10,6 @@ import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
@@ -20,18 +19,17 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Chart {
 
-  public static File createBarChart(DefaultCategoryDataset dataset) throws IOException, FontFormatException {
+  public static File createTwoСolumnChart(DefaultCategoryDataset dataset) throws IOException, FontFormatException {
     ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
     JFreeChart chart = ChartFactory.createStackedBarChart(
         "",
-        "Набрано баллов",
-        "Количество тестируемых",
+        "",
+        "% от максимального балла",
         dataset,
         PlotOrientation.VERTICAL,
-        true, true, false);
+        false, true, false);
 
     Font robo = Font.createFont(Font.PLAIN, new File("src/main/resources/Roboto-Regular.ttf"));
-    chart.getLegend().setItemFont(robo.deriveFont(22f));
     chart.setBackgroundPaint(Color.white);
 
     CategoryPlot plot = chart.getCategoryPlot();
@@ -47,28 +45,20 @@ public class Chart {
 
     CategoryAxis domainAxis = plot.getDomainAxis();
     domainAxis.setLabelFont(robo.deriveFont(20f));
-    domainAxis.setTickLabelFont(robo.deriveFont(15f));
-    domainAxis.setLowerMargin(0.005);
-    domainAxis.setUpperMargin(0.005);
+    domainAxis.setTickLabelFont(robo.deriveFont(20f));
+    domainAxis.setLowerMargin(0.10);
+    domainAxis.setUpperMargin(0.10);
 
     ValueAxis rangeAxis = plot.getRangeAxis();
     rangeAxis.setLabelFont(robo.deriveFont(20f));
     rangeAxis.setTickLabelFont(robo.deriveFont(15f));
     rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
-    if (dataset.getColumnCount() > 40) {
-      domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
-    }
-
-    if (dataset.getColumnCount() > 60) {
-      domainAxis.setTickLabelFont(robo.deriveFont(10f));
-      rangeAxis.setTickLabelFont(robo.deriveFont(10f));
-    }
-
-    int width = 1000;
-    int height = 750;
+    int width = 800;
+    int height = 600;
     File file = new File("chart.jpg");
     ChartUtils.saveChartAsJPEG(file, chart, width, height);
     return file;
   }
+
 }

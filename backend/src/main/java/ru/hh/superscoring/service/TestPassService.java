@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.stream.IntStream;
 import org.hibernate.PropertyValueException;
@@ -153,18 +154,19 @@ public class TestPassService {
     }
     Integer pivotFinalScore = userPass.getFinalScore();
     List<StatisticDto> data = testPassDao.getDataForChartByTestId(userPass.getTestId());
-
-    Long[] resultVector = new Long[userPass.getMaxPossible() + 1];
-    Arrays.fill(resultVector, 0L);
-    data.stream().forEach(stdto -> resultVector[stdto.finalScore] = stdto.getNumberOfResults());
+    Integer maxPossible = userPass.getMaxPossible();
+    Double averageFinalScore = data.stream()
+        .map(StatisticDto::getFinalScore)
+        .mapToInt(score -> score)
+        .average().getAsDouble();
 
     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    IntStream.rangeClosed(1, userPass.getMaxPossible()).forEach(
-        score -> dataset.addValue(
-            resultVector[score],
-            (score < pivotFinalScore ? "прошли тест хуже вас    " : "прошли тест не хуже вас"),
-            Integer.toString(score)));
-
-    return Chart.createBarChart(dataset);
+    dataset.addValue( Math.round(pivotFinalScore * 100 / maxPossible),
+        "Ваш результат",
+        "Ваш результат");
+    dataset.addValue( Math.round(averageFinalScore * 100 / maxPossible),
+        "Средний результат",
+        "Средний результат");
+    return Chart.createTwoСolumnChart(dataset);
   }
 }
