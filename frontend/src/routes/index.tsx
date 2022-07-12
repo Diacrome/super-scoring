@@ -9,6 +9,7 @@ import TestScreen from "../pages/TestScreen";
 
 export const notAuthorizedRoutes: IRoutes = [
   { path: "/auth", element: <LoginScreen /> },
+  { path: "/:testId/:testPassId", element: <Results /> },
   { path: "*", element: <Navigate replace to="/auth" /> },
 ];
 
